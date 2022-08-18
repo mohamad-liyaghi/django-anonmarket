@@ -42,6 +42,11 @@ INSTALLED_APPS = [
 
     # third party
     'crispy_forms',
+    'allauth',
+    'allauth.account',
+
+    # local apps
+    'apps.authentication.apps.AuthenticationConfig',
 ]
 
 MIDDLEWARE = [
