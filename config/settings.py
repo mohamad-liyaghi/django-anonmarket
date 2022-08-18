@@ -137,3 +137,11 @@ SITE_ID = 1
 
 # Authentication
 AUTH_USER_MODEL = "authentication.Account"
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend"
+)
+
+ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_EMAIL_VERIFICATION = "none"
