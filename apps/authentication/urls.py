@@ -1,5 +1,8 @@
 from django.urls import path
+from . import views
 
 app_name = "authentication"
 
-urlpatterns = []
+urlpatterns = [
+    path("profile/<int:id>/<str:token>/", views.Profile.as_view(), name="profile")
+]
