@@ -9,6 +9,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     username = models.CharField(max_length=120, unique=True)
     balance = models.IntegerField(default=0)
+    token = models.CharField(max_length=20, unique=True)
 
     date_joined = models.DateField(auto_now_add=True)
     is_superuser = models.BooleanField(default=False)

@@ -1,11 +1,12 @@
 from django.contrib.auth.models import BaseUserManager
+import random
 
 class AccountManager(BaseUserManager):
 
     def create_user(self, username, password, **kwargs):
         '''Create a new user'''
-
-        user = self.model(username= username, **kwargs)
+        token = random.randint(0, 9999999999999999999)
+        user = self.model(username= username, token=token, **kwargs)
         user.set_password(password)
         user.save()
 

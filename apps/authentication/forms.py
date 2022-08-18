@@ -1,5 +1,6 @@
 from django import forms
 from authentication.models import Account
+import random
 
 class RegisterForm(forms.ModelForm):
     '''A form for creating user'''
@@ -16,5 +17,6 @@ class RegisterForm(forms.ModelForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.is_active = True
+        user.token = random.randint(0, 9999999999999999999)
         user.save()
         return user
