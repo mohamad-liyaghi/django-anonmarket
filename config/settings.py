@@ -145,3 +145,8 @@ AUTHENTICATION_BACKENDS = (
 
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
+
+
+ACCOUNT_FORMS = {
+    'signup': 'apps.authentication.forms.RegisterForm'
+}

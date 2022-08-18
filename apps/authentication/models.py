@@ -21,5 +21,5 @@ class Account(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     def __str__(self):
-        return self.nick_name
+        return self.username
 
