@@ -133,3 +133,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+SITE_ID = 1
+
+# Authentication
+AUTH_USER_MODEL = "authentication.Account"
