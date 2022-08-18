@@ -1,0 +1,8 @@
+__pycache__
+venv/
+.idea/
+*.log
+*.pot
+*.pyc
+*.env
+db.sqlite3
