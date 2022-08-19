@@ -37,5 +37,5 @@ class Rate(models.Model):
     vote = models.CharField(max_length=1, choices=Choice.choices, default=Choice.like)
 
     def __str__(self):
-        return self.customer
+        return self.customer.username
 
