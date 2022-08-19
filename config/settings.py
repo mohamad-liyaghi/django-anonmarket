@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
     # local apps
     'apps.authentication.apps.AuthenticationConfig',
+    'apps.vendor.apps.VendorConfig',
 ]
 
 MIDDLEWARE = [

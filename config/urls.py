@@ -21,5 +21,6 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
 
     path("auth/", include("apps.authentication.urls")),
+    path("vendor/", include("apps.vendor.urls")),
 
 ]
