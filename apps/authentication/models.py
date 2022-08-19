@@ -24,3 +24,18 @@ class Account(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.username
 
+
+class Rate(models.Model):
+    '''A model that allows users to rate vendors.'''
+
+    class Choice(models.TextChoices):
+        like = ("l", "Like")
+        dislike = ("d", "Dislike")
+
+    customer = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="customer_rate")
+    vendor = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="likes")
+    vote = models.CharField(max_length=1, choices=Choice.choices, default=Choice.like)
+
+    def __str__(self):
+        return self.customer
+
