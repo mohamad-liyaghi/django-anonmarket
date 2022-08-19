@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import View, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -61,3 +61,14 @@ class DisLike(LoginRequiredMixin, View):
 
         messages.success(self.request, "You have already rated this user.", "warning")
         return redirect("authentication:profile", id=id, token=token)
+
+
+class Exchange(LoginRequiredMixin, View):
+    '''
+        This page gives user 20 coin.
+        you should add payment methods here
+    '''
+    def get(self, request):
+        self.request.user.balance = self.request.user.balance + 20
+        self.request.user.save()
+        return render(self.request, "authentication/exchange.html")
