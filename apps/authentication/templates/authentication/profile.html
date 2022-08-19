@@ -13,7 +13,7 @@
 <hr>
 <p>You can also rate this user via links below</p>
 <a href="{% url 'authentication:like' user.id user.token %}"><i class="fa fa-thumbs-up"></i></a>
-<a href="#"><i class="fa fa-thumbs-down"></i></a>
+<a href="{% url 'authentication:dislike' user.id user.token %}"><i class="fa fa-thumbs-down"></i></a>
 <hr>
 <h6>Products:</h6>
 <!--list of products-->

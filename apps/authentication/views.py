@@ -30,5 +30,23 @@ class Like(LoginRequiredMixin, View):
             messages.success(self.request, "You have liked this user.", "success")
             return redirect("authentication:profile", id=id, token=token)
 
-        messages.success(self.request, "You have already liked this user.", "warning")
+        messages.success(self.request, "You have already rated this user.", "warning")
+        return redirect("authentication:profile", id=id, token=token)
+
+
+class DisLike(LoginRequiredMixin, View):
+    '''DisLike a user'''
+    def get(self, request, id, token):
+        vendor = get_object_or_404(Account, id= id, token= token)
+
+        if vendor == self.request.user:
+            messages.success(self.request, "You cant rate yourself.", "danger")
+            return redirect("authentication:profile", id=id, token=token)
+
+        if not self.request.user.customer_rate.filter(vendor=vendor):
+            Rate.objects.create(customer= self.request.user, vendor= vendor, vote="d")
+            messages.success(self.request, "You have disliked this user.", "success")
+            return redirect("authentication:profile", id=id, token=token)
+
+        messages.success(self.request, "You have already rated this user.", "warning")
         return redirect("authentication:profile", id=id, token=token)
