@@ -9,7 +9,9 @@
 <hr>
 <h6>Username: {{ user.username }}</h6>
 <h6>Date joined: {{ user.date_joined }}</h6>
-<h6>Reliability level: ...</h6>
+<hr>
+<h6>Likes: {{ likes }}</h6>
+<h6>DisLikes: {{ dislikes }}</h6>
 <hr>
 <p>You can also rate this user via links below</p>
 <a href="{% url 'authentication:like' user.id user.token %}"><i class="fa fa-thumbs-up"></i></a>

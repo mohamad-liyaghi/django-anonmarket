@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import View, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.db.models import F
 
 from authentication.models import Account, Rate
 
@@ -14,6 +15,16 @@ class Profile(DetailView):
 
     def get_object(self):
         return get_object_or_404(Account, id=self.kwargs['id'], token=self.kwargs["token"])
+
+    def get_context_data(self, **kwargs):
+        context = super(Profile, self).get_context_data(**kwargs)
+        # get values of all votes related to a user
+        rate = self.get_object().likes.values("vote")
+
+        context['likes'] = rate.filter(vote="l").count()
+        context['dislikes'] = rate.filter(vote="d").count()
+
+        return context
 
 
 class Like(LoginRequiredMixin, View):
