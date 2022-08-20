@@ -1,3 +1,6 @@
 from django.contrib import admin
+from vendor.models import Category, Country
 
-# Register your models here.
+admin.site.register(Category)
+admin.site.register(Country)
+
