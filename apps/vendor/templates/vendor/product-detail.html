@@ -9,7 +9,7 @@
 
             <div class="col-auto">
                 {% if product.picture %}
-                        <img src="{{ product.picture.url }}" width="400px;" class="rounded float-left">
+                        <img src="{{ product.picture.url }}" width="470px;" class="rounded float-left">
                 {% endif %}
             </div>
 
@@ -29,7 +29,7 @@
                         {% endif %}
                         <hr>
                         <a href="{% url 'vendor:like-product' product.id product.slug %}"><i class="fa fa-thumbs-up"></i></a>
-                        <a href="#"><i class="fa fa-thumbs-down"></i></a>
+                        <a href="{% url 'vendor:dislike-product' product.id product.slug %}"><i class="fa fa-thumbs-down"></i></a>
                     </div>
                 </div>
             </div>
