@@ -1,0 +1,14 @@
+{% extends 'base/_base.html' %}
+
+{% block title %} Delete Product {% endblock title %}
+
+
+{% block body %}
+    <h3>Delete "{{product.title}}"</h3> <br>
+
+    <form method="post"> {% csrf_token %}
+        <h6>Dear {{ object.seller }} are you sure you want to <strong>delete</strong> this product??</h6> <br>
+        <br><button class="btn btn-danger">Delete</button>
+    </form>
+
+{% endblock body %}
