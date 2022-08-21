@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.db.models import F
 
-from authentication.models import Account, Rate
+from authentication.models import Account, VendorRate
 
 
 class Profile(DetailView):
@@ -37,7 +37,7 @@ class Like(LoginRequiredMixin, View):
             return redirect("authentication:profile", id=id, token=token)
 
         if not self.request.user.customer_rate.filter(vendor=vendor):
-            Rate.objects.create(customer= self.request.user, vendor= vendor, vote="l")
+            VendorRate.objects.create(customer= self.request.user, vendor= vendor, vote="l")
             messages.success(self.request, "You have liked this user.", "success")
             return redirect("authentication:profile", id=id, token=token)
 
@@ -55,7 +55,7 @@ class DisLike(LoginRequiredMixin, View):
             return redirect("authentication:profile", id=id, token=token)
 
         if not self.request.user.customer_rate.filter(vendor=vendor):
-            Rate.objects.create(customer= self.request.user, vendor= vendor, vote="d")
+            VendorRate.objects.create(customer= self.request.user, vendor= vendor, vote="d")
             messages.success(self.request, "You have disliked this user.", "success")
             return redirect("authentication:profile", id=id, token=token)
 

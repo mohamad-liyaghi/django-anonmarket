@@ -1,5 +1,5 @@
 from django.contrib import admin
-from authentication.models import Account, Rate
+from authentication.models import Account, VendorRate
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
@@ -7,7 +7,7 @@ class AccountAdmin(admin.ModelAdmin):
     readonly_fields = ("username", "balance", "password", "groups", "user_permissions",
                         "is_staff", "is_superuser", "is_active", "last_login", "token")
 
-@admin.register(Rate)
-class RateAdmin(admin.ModelAdmin):
+@admin.register(VendorRate)
+class VendorRateAdmin(admin.ModelAdmin):
     list_display = ("customer", "vendor", "vote")
     readonly_fields = ("customer", "vendor", "vote")
