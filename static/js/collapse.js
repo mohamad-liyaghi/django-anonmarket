@@ -1,4 +1,3 @@
-console.log("HI")
 var coll = document.getElementsByClassName("collapsible");
 var i;
 
