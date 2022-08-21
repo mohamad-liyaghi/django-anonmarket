@@ -1,4 +1,4 @@
-from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.template.defaultfilters import slugify
@@ -71,3 +71,13 @@ class DeleteProduct(LoginRequiredMixin, DeleteView):
 
     def get_object(self):
         return get_object_or_404(Product, id= self.kwargs["id"], slug= self.kwargs["slug"], seller=self.request.user)
+
+
+class ProductDetail(DetailView):
+    '''Return detail of a product'''
+
+    template_name = "vendor/product-detail.html"
+    context_object_name = "product"
+
+    def get_object(self):
+        return get_object_or_404(Product, id=self.kwargs["id"], slug=self.kwargs["slug"])

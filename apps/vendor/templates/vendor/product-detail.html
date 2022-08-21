@@ -1,0 +1,45 @@
+{% extends 'base/_base.html' %}
+
+
+{% block title %} {{product.title}}'s Detail page {% endblock title %}
+
+
+{% block body %}
+<div class="row no-gutters">
+
+            <div class="col-auto">
+                {% if product.picture %}
+                        <img src="{{ product.picture.url }}" width="400px;" class="rounded float-left">
+                {% endif %}
+            </div>
+
+            <div class="col">
+                <div class="card-block px-2">
+                    <h4 class="card-title">{{ product.title }}</h4> <br>
+                    <p class="card-text" style="color:red;">Price: ©{{ product.price }}</p>
+                    <div class="shadow-none p-3 mb-5 bg-light rounded">
+                        <p>Seller: <a href="{% url 'authentication:profile' product.seller.id product.seller.token %}">{{ product.seller }}</a></p>
+                        <p>Ship from: {{ product.shipping_from }}</p>
+                        <p>Ship to: {{ product.shipping_to }}</p>
+                        <p>Category: <a href="#">{{ product.category.parent }} | {{ product.category }}</a></p>
+                        {% if product.is_available %}
+                            <a href="#" class="btn btn-success">Add to cart</a>
+                        {% else %}
+                            <p style="color:red;">This item is unavailable.</p>
+                        {% endif %}
+                        <hr>
+                        <a href="#"><i class="fa fa-thumbs-up"></i></a>
+                        <a href="#"><i class="fa fa-thumbs-down"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer w-100 text-muted">
+            <hr>
+            <h3>Description</h3>
+            <p>{{ product.description }}</p>
+        </div>
+
+
+
+{% endblock body %}
