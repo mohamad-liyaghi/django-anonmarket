@@ -52,4 +52,4 @@ class ProductRate(Rate):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="likes")
 
     def __str__(self):
-        return self.user.username
+        return self.customer.username

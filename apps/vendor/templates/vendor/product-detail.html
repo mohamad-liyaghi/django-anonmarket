@@ -28,7 +28,7 @@
                             <p style="color:red;">This item is unavailable.</p>
                         {% endif %}
                         <hr>
-                        <a href="#"><i class="fa fa-thumbs-up"></i></a>
+                        <a href="{% url 'vendor:like-product' product.id product.slug %}"><i class="fa fa-thumbs-up"></i></a>
                         <a href="#"><i class="fa fa-thumbs-down"></i></a>
                     </div>
                 </div>
