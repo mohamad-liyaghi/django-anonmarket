@@ -23,6 +23,7 @@ class Profile(DetailView):
 
         context['likes'] = rate.filter(vote="l").count()
         context['dislikes'] = rate.filter(vote="d").count()
+        context['products'] = self.get_object().products.all().order_by("likes")
 
         return context
 
