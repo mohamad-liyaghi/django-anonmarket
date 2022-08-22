@@ -8,7 +8,7 @@
 <hr>
 
     <div class="shadow-none p-3 mb-5 bg-light rounded">
-        <div style="height:400px; overflow-y: scroll;">
+        <div style="height:350px; overflow-y: scroll;">
             {% for message in all_messages %}
                 <div class="card">
                   <div class="card-header">
@@ -25,6 +25,15 @@
                 <h1>No message available</h1>
             {% endfor %}
         </div>
+        <br>
+        <form action="" method="post">{% csrf_token %}
+            <div class="input-group mb-3">
+              <input type="text" name="text" id="id_text" class="form-control" placeholder="New Message" aria-label="Recipient's username" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button">Send</button>
+              </div>
+            </div>
+        </form>
     </div>
 
 {% endblock body %}

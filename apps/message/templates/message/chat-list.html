@@ -9,7 +9,7 @@
     <br>
     <div class="card">
       <div class="card-body">
-        <a href="#">{{ chat }}</a>
+        <a href="{% url 'message:chat-detail' chat.id chat.code %}">{{ chat }}</a>
       </div>
     </div>
 
