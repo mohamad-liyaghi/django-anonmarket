@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView, View
+from django.views.generic import TemplateView, View, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, get_object_or_404, render
 from django.db.models import Q
@@ -6,7 +6,7 @@ from django.db.models import Q
 import random
 
 from authentication.models import Account
-from message.models import Chat
+from message.models import Chat, Message
 from .forms import MessageForm
 
 
@@ -75,7 +75,6 @@ class ChatDetail(LoginRequiredMixin, View):
                       {"all_messages" : messages[:50], "chat" : self.chat, "form" : form})
 
 
-
     def post(self, request, *args, **kwargs):
         '''Create a message in chat'''
 
@@ -88,3 +87,21 @@ class ChatDetail(LoginRequiredMixin, View):
             form.save()
 
         return redirect("message:chat-detail", self.chat.pk, self.chat.code)
+
+
+
+class UpdateMessage(LoginRequiredMixin, UpdateView):
+    '''Update a message by its sender'''
+
+    template_name = "message/update-message.html"
+    context_object_name = "message"
+    fields = ["text"]
+
+    def get_object(self):
+        return get_object_or_404(Message, Q(id=self.kwargs["id"]) & Q(sender=self.request.user) & ~Q(is_seen=True))
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.is_edited = True
+        instance.save()
+        return redirect("message:chat-detail", self.get_object().chat.id, self.get_object().chat.code)
