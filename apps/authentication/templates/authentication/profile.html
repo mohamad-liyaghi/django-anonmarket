@@ -16,6 +16,7 @@
 <p>You can also rate this user via links below</p>
 <a href="{% url 'authentication:like' user.id user.token %}"><i class="fa fa-thumbs-up"></i></a>
 <a href="{% url 'authentication:dislike' user.id user.token %}"><i class="fa fa-thumbs-down"></i></a>
+<br><a href="{% url 'message:get-chat' user.id user.token %}">Contact This User</a>
 <hr>
 <h6>Products:</h6>
 {% for product in products %}
