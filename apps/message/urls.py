@@ -10,6 +10,8 @@ urlpatterns = [
     path("chat-detail/<int:id>/<str:code>/", views.ChatDetail.as_view(), name="chat-detail"),
 
     path("update-message/<int:id>/", views.UpdateMessage.as_view(), name="update-message"),
+    path("delete-message/<int:id>/", views.DeleteMessage.as_view(), name="delete-message"),
+
 
 
 ]

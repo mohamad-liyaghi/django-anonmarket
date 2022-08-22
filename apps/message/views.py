@@ -1,6 +1,7 @@
-from django.views.generic import TemplateView, View, UpdateView
+from django.views.generic import TemplateView, View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, get_object_or_404, render
+from django.urls import reverse_lazy
 from django.db.models import Q
 
 import random
@@ -12,7 +13,7 @@ from .forms import MessageForm
 
 class ChatList(LoginRequiredMixin, TemplateView):
     '''Show All Available chats of a user'''
-    template_name = "message/chat-list.html"
+    template_name = "message/chat-list.html"\
 
 
     def get_context_data(self, **kwargs):
@@ -98,10 +99,28 @@ class UpdateMessage(LoginRequiredMixin, UpdateView):
     fields = ["text"]
 
     def get_object(self):
-        return get_object_or_404(Message, Q(id=self.kwargs["id"]) & Q(sender=self.request.user) & ~Q(is_seen=True))
+        return get_object_or_404(Message, Q(id=self.kwargs["id"])
+                                 & Q(sender=self.request.user) & ~Q(is_seen=True))
 
     def form_valid(self, form):
         instance = form.save(commit=False)
         instance.is_edited = True
         instance.save()
         return redirect("message:chat-detail", self.get_object().chat.id, self.get_object().chat.code)
+
+
+
+class DeleteMessage(DeleteView):
+    '''Delete a Message'''
+
+    template_name = "message/delete-message.html"
+
+
+    def get_object(self):
+        return get_object_or_404(Message, Q(id=self.kwargs["id"])
+                                 & Q(sender=self.request.user) & ~Q(is_seen=True))
+
+    def get_success_url(self):
+        return reverse_lazy("message:chat-detail",
+                            args=(self.get_object().chat.id, self.get_object().chat.code))
+
