@@ -1,0 +1,30 @@
+{% extends 'base/_base.html' %}
+
+{% block title %} {% endblock title %}
+
+{% block body %}
+
+{{ chat }}
+<hr>
+
+    <div class="shadow-none p-3 mb-5 bg-light rounded">
+        <div style="height:400px; overflow-y: scroll;">
+            {% for message in all_messages %}
+                <div class="card">
+                  <div class="card-header">
+                      {{ message.sender }} | {{ message.date }} | Seen: {{ message.is_seen }} | Edited: {{ message.is_edited }}
+                  </div>
+                  <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                      <p>{{ message.text }}</p>
+                    </blockquote>
+                  </div>
+                </div>
+            <br>
+            {% empty %}
+                <h1>No message available</h1>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock body %}

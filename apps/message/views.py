@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render
 from django.db.models import Q
 
 import random
@@ -42,7 +42,16 @@ class GetChat(LoginRequiredMixin, View):
                                 code= random.randint(-2147483648, 2147483647))
 
         # then we redirect to the chat detail page
-        return redirect("message:chat-detail", existing_chat.pk, existing_chat.code)
+        return redirect("message:chat-detail", existing_chat.first().pk, existing_chat.first().code)
 
 
 
+class ChatDetail(LoginRequiredMixin, View):
+    '''Page of a chat that user can send, read a message'''
+
+    def get(self, request, id, code):
+        chat = get_object_or_404(Chat, Q(id=id) & Q(code=code)
+                                 & Q(creator=self.request.user) | Q(member=self.request.user))
+        messages = chat.chats.all().order_by("-date") [:50]
+
+        return render(self.request, "message/chat-detail.html", {"all_messages" : messages, "chat" : chat})
