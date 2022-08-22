@@ -1,0 +1,32 @@
+{% extends 'base/_base.html' %}
+
+{% block title %} Messages List{% endblock title %}
+
+{% block body %}
+
+
+  {% for chat in creator_chats  %}
+    <br>
+    <div class="card">
+      <div class="card-body">
+        <a href="#">{{ chat }}</a>
+      </div>
+    </div>
+
+  {% empty %}
+
+    <h3>Your chat list is empty...</h3>
+
+  {% endfor %}
+
+{% for chat in member_chats  %}
+    <br>
+    <div class="card">
+      <br><div class="card-body">
+        <a href="#">{{ chat }}</a>
+      </div>
+    </div>
+
+  {% endfor %}
+
+{% endblock body %}
