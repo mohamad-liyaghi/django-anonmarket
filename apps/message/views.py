@@ -63,11 +63,16 @@ class ChatDetail(LoginRequiredMixin, View):
     def get(self, request, id, code):
         """Return the messages of a chat"""
 
-        messages = self.chat.chats.all().order_by("-date") [:50]
+        messages = self.chat.chats.all().order_by("-date")
+
+        # seen messages
+        messages.filter(~Q(sender=self.request.user)
+                                        & Q(is_seen=False)).update(is_seen=True)
 
         form = MessageForm
 
-        return render(self.request, "message/chat-detail.html", {"all_messages" : messages, "chat" : self.chat, "form" : form})
+        return render(self.request, "message/chat-detail.html",
+                      {"all_messages" : messages[:50], "chat" : self.chat, "form" : form})
 
 
 
