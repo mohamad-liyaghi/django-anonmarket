@@ -23,7 +23,9 @@
                         <p>Ship to: {{ product.shipping_to }}</p>
                         <p>Category: <a href="#">{{ product.category.parent }} | {{ product.category }}</a></p>
                         {% if product.is_available %}
-                            <a href="#" class="btn btn-success">Add to cart</a>
+                            <a href="{% url 'customer:add-order' product.id product.slug %}" class="btn btn-success">
+                                Add Order
+                            </a>
                         {% else %}
                             <p style="color:red;">This item is unavailable.</p>
                         {% endif %}
