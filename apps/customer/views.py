@@ -1,8 +1,9 @@
-from django.views.generic import FormView
+from django.views.generic import FormView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Q
 from django.contrib import messages
+from django.urls import reverse_lazy
 
 import random
 
@@ -22,7 +23,8 @@ class AddOrder(LoginRequiredMixin, FormView):
         """Check if object exist and has an appropriate customer"""
 
         # Get the available item
-        self.object = get_object_or_404(Product, Q(id=kwargs["id"]) & Q(slug=kwargs["slug"]) & Q(is_available=True))
+        self.object = get_object_or_404(Product, Q(id=kwargs["id"]) & Q(slug=kwargs["slug"])
+                                        & Q(is_available=True))
 
         # check if customer is not the items vendor
         if self.object.seller == self.request.user:
@@ -55,9 +57,15 @@ class AddOrder(LoginRequiredMixin, FormView):
 
 
 
+class DeleteOrder(LoginRequiredMixin, DeleteView):
+    '''Delete orders that vendor have not seen them'''
 
+    template_name = "customer/delete-order.html"
+    context_object_name = "order"
 
+    def get_object(self):
+        return get_object_or_404(Order, Q(id=self.kwargs["id"]) & Q(code=self.kwargs["code"])
+                                        & Q(status="o") & Q(customer=self.request.user))
 
-
-
-
+    def get_success_url(self):
+        return reverse_lazy("vendor:product-detail", args = (self.get_object().item.pk, self.get_object().item.slug))

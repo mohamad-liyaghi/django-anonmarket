@@ -1,0 +1,16 @@
+{% extends 'base/_base.html' %}
+
+{% block title %} Delete Order {% endblock title %}
+
+
+{% block body %}
+    <h3>Delete Order</h3>
+
+    <form method="post"> {% csrf_token %}
+        <br><h5>Are you sure that you want to delete {{ order.code }} order??</h5>
+        <br>
+
+        <button class="btn btn-danger">Yes, delete it.</button>
+    </form>
+
+{% endblock body %}
