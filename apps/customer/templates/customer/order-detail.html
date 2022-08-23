@@ -1,0 +1,25 @@
+{% extends 'base/_base.html' %}
+
+{% block title %}  Detail | {{ order.code }} {% endblock title %}
+
+
+{% block body %}
+
+    <h5>Code: {{ order.code }}</h5>
+    <hr>
+    <h6>Item: {{ order.item }}</h6> <br>
+    <h6>Status: {{ order.status }}</h6> <br>
+    <h6>Customer: <a href="{% url 'authentication:profile' order.customer.id order.customer.token %}">{{ order.customer }}</a></h6> <br>
+
+    <hr>
+    <h6>Description:</h6>
+    <p>{{ order.description }}</p>
+    <hr>
+
+    {% if order.status == "o" %}
+        <a href="#" class="btn btn-success">Accept</a>
+        <a href="#" class="btn btn-danger">Decline</a>
+    {% endif %}
+
+
+{% endblock body %}

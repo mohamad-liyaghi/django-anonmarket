@@ -1,4 +1,4 @@
-from django.views.generic import FormView, DeleteView
+from django.views.generic import FormView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Q
@@ -69,3 +69,15 @@ class DeleteOrder(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy("vendor:product-detail", args = (self.get_object().item.pk, self.get_object().item.slug))
+
+
+
+class OrderDetail(LoginRequiredMixin, DetailView):
+    '''Show orders description (address) for vendor'''
+
+    template_name = "customer/order-detail.html"
+    context_object_name = "order"
+
+    def get_object(self):
+        return  get_object_or_404(Order, Q(id=self.kwargs["id"]) & Q(code=self.kwargs["code"])
+                          & Q(item__seller=self.request.user))
