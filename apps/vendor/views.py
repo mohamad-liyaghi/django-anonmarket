@@ -133,3 +133,16 @@ class AcceptOrder(LoginRequiredMixin, View):
 
         messages.success(self.request, "Order accepted, wait for payment.", "success")
         return redirect("customer:order-detail", id, code)
+
+
+class RejectOrder(LoginRequiredMixin, View):
+    '''Reject a User Order'''
+
+    def get(self, request, id, code):
+        object = get_object_or_404(Order, id=id, code=code,
+                                    item__seller=self.request.user, status="o")
+        object.status = "r"
+        object.save()
+
+        messages.success(self.request, "Order rejected.", "danger")
+        return redirect("customer:order-detail", id, code)

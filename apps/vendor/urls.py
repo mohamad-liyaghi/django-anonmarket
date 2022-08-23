@@ -14,5 +14,7 @@ urlpatterns = [
     path("dislike-product/<int:id>/<str:slug>/", views.DisLikeProduct.as_view(), name="dislike-product"),
 
     path("accept-order/<int:id>/<int:code>/", views.AcceptOrder.as_view(), name="accept-order"),
+    path("reject-order/<int:id>/<int:code>/", views.RejectOrder.as_view(), name="reject-order"),
+
 
 ]

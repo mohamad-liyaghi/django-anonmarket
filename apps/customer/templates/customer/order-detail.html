@@ -9,6 +9,8 @@
     <hr>
     <h6>Item: {{ order.item }}</h6> <br>
     <h6>Status: {{ order.status }}</h6> <br>
+    <h6>Price: {{ order.price }}</h6> <br>
+
     <h6>Customer: <a href="{% url 'authentication:profile' order.customer.id order.customer.token %}">{{ order.customer }}</a></h6> <br>
 
     <hr>
@@ -18,7 +20,7 @@
 
     {% if order.status == "o" %}
         <a href="{% url 'vendor:accept-order' order.id order.code %}" class="btn btn-success">Accept</a>
-        <a href="#" class="btn btn-danger">Decline</a>
+        <a href="{% url 'vendor:reject-order' order.id order.code %}" class="btn btn-danger">Decline</a>
     {% endif %}
 
 
