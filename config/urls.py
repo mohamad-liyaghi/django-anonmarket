@@ -26,7 +26,7 @@ urlpatterns = [
     path("auth/", include("apps.authentication.urls")),
     path("vendor/", include("apps.vendor.urls")),
     path("message/", include("apps.message.urls")),
-
+    path("", include("apps.customer.urls")),
 
 
 ]+ static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)

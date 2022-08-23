@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'apps.authentication.apps.AuthenticationConfig',
     'apps.vendor.apps.VendorConfig',
     'apps.message.apps.MessageConfig',
+    'apps.customer.apps.CustomerConfig',
+
 ]
 
 MIDDLEWARE = [
