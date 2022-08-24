@@ -1,4 +1,4 @@
-from django.views.generic import FormView, DeleteView, DetailView
+from django.views.generic import FormView, DeleteView, DetailView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Q
@@ -81,3 +81,25 @@ class OrderDetail(LoginRequiredMixin, DetailView):
     def get_object(self):
         return  get_object_or_404(Order, Q(id=self.kwargs["id"]) & Q(code=self.kwargs["code"])
                           & Q(item__seller=self.request.user))
+
+
+
+class PayOrder(LoginRequiredMixin, View):
+    '''Pay for an order'''
+
+    def get(self, request, id, code):
+        order = get_object_or_404(Order, id=id, code=code, customer=self.request.user, status="a")
+
+        # check if user has enough money
+        if self.request.user.balance >= order.price:
+            self.request.user.balance = self.request.user.balance - order.price
+            order.item.seller.balance = order.item.seller.balance + order.price
+            order.status = "p"
+
+            order.item.seller.save()
+            self.request.user.save()
+            order.save()
+            messages.success(self.request, "order is paid now, wait for vendor to send the product.", "success")
+
+        messages.success(self.request, "You dont have money to pay for this order", "danger")
+
