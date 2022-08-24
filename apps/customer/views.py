@@ -1,4 +1,4 @@
-from django.views.generic import FormView, DeleteView, DetailView, View
+from django.views.generic import FormView, DeleteView, DetailView, View, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Q
@@ -103,3 +103,13 @@ class PayOrder(LoginRequiredMixin, View):
 
         messages.success(self.request, "You dont have money to pay for this order", "danger")
 
+
+
+class Cart(LoginRequiredMixin, ListView):
+    '''Show a users orders'''
+
+    template_name = "customer/cart.html"
+    context_object_name = "orders"
+
+    def get_queryset(self):
+        return self.request.user.orders.all()

@@ -11,6 +11,6 @@ urlpatterns = [
 
     path("pay-order/<int:id>/<str:code>/", views.PayOrder.as_view(), name="pay-order"),
 
-
+    path("cart/", views.Cart.as_view(), name="cart"),
 
 ]
