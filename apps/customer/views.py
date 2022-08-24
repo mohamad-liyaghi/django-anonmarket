@@ -100,8 +100,10 @@ class PayOrder(LoginRequiredMixin, View):
             self.request.user.save()
             order.save()
             messages.success(self.request, "order is paid now, wait for vendor to send the product.", "success")
+            return redirect("customer:cart")
 
         messages.success(self.request, "You dont have money to pay for this order", "danger")
+        return redirect("customer:cart")
 
 
 
