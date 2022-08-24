@@ -1,9 +1,10 @@
-from django.views.generic import CreateView, UpdateView, DeleteView, DetailView, View
+from django.views.generic import CreateView, UpdateView, DeleteView, DetailView, View, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.template.defaultfilters import slugify
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
+from django.db.models import Q
 
 
 from vendor.models import Country, Category, Product, ProductRate
@@ -132,7 +133,7 @@ class AcceptOrder(LoginRequiredMixin, View):
         object.save()
 
         messages.success(self.request, "Order accepted, wait for payment.", "success")
-        return redirect("customer:order-detail", id, code)
+        return redirect("vendor:order-list")
 
 
 class RejectOrder(LoginRequiredMixin, View):
@@ -145,4 +146,14 @@ class RejectOrder(LoginRequiredMixin, View):
         object.save()
 
         messages.success(self.request, "Order rejected.", "danger")
-        return redirect("customer:order-detail", id, code)
+        return redirect("vendor:order-list")
+
+
+class OrderList(LoginRequiredMixin, ListView):
+    '''List of all orders'''
+
+    template_name = "vendor/order-list.html"
+    context_object_name = "orders"
+
+    def get_queryset(self):
+        return Order.objects.filter(Q(item__seller=self.request.user) & ~Q(status="r"))
