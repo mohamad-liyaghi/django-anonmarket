@@ -1,0 +1,33 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %} Home page {% endblock title %}
+
+
+{% block main %}
+<link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div class="sidenav">
+    {% for parent in parent_categories %}
+
+          <button class="dropdown-btn">{{parent}}
+            <i class="fa fa-caret-down"></i>
+          </button>
+
+              <div class="dropdown-container">
+                  {% for child in parent.children.all %}
+                    <a href="#">{{ child }}</a>
+                  {% endfor %}
+              </div>
+
+    {% endfor %}
+
+</div>
+
+<div class="main">
+  <h2>Body</h2>
+
+</div>
+<script src="{% static 'js/dropdown.js' %}"></script>
+{% endblock main %}

@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 import random
 
 from customer.forms import OrderForm
-from vendor.models import Product
+from vendor.models import Product, Category
 from customer.models import Order
 
 
@@ -115,3 +115,22 @@ class Cart(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return self.request.user.orders.all()
+
+
+class Home(ListView):
+    '''The main page that shows 20 most popular products'''
+
+    template_name = "customer/home.html"
+    context_object_name = "products"
+
+    def get_queryset(self):
+        return Product.objects.all()
+
+
+    def get_context_data(self, **kwargs):
+        context = super(Home, self).get_context_data(**kwargs)
+
+        context['parent_categories'] = Category.objects.filter(parent__isnull=True)[:50]
+
+        return context
+

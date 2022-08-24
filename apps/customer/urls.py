@@ -4,6 +4,7 @@ from . import views
 app_name = "customer"
 
 urlpatterns = [
+    path("", views.Home.as_view(), name="home"),
     path("add-order/<int:id>/<str:slug>/", views.AddOrder.as_view(), name="add-order"),
     path("delete-order/<int:id>/<str:code>/", views.DeleteOrder.as_view(), name="delete-order"),
 
