@@ -15,6 +15,8 @@ urlpatterns = [
 
     path("accept-order/<int:id>/<int:code>/", views.AcceptOrder.as_view(), name="accept-order"),
     path("reject-order/<int:id>/<int:code>/", views.RejectOrder.as_view(), name="reject-order"),
+    path("send-order/<int:id>/<int:code>/", views.SendOrder.as_view(), name="send-order"),
+
 
     path("orders/", views.OrderList.as_view(), name="order-list"),
 

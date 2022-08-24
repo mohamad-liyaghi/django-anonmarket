@@ -157,3 +157,16 @@ class OrderList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Order.objects.filter(Q(item__seller=self.request.user) & ~Q(status="r"))
+
+
+class SendOrder(LoginRequiredMixin, View):
+    '''Change Order status to "send" '''
+
+    def get(self, request, id, code):
+        object = get_object_or_404(Order, id=id, code=code,
+                                    item__seller=self.request.user, status="p")
+        object.status = "s"
+        object.save()
+
+        messages.success(self.request, "Order Sent.", "success")
+        return redirect("vendor:order-list")
