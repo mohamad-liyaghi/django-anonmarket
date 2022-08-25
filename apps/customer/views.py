@@ -155,3 +155,14 @@ class ProductSearch(ListView):
 
 
 
+
+class FilterCategory(ListView):
+    '''Show all products with the filtered category'''
+
+    template_name = "customer/product-search.html"
+    context_object_name = "products"
+
+    def get_queryset(self):
+        return Product.objects.filter(category__id=self.kwargs["id"],
+                                      category__slug=self.kwargs["slug"])
+

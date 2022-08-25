@@ -8,7 +8,7 @@ class Category(models.Model):
                                related_name='children')
 
     title = models.CharField(max_length=120)
-    slug = models.SlugField(unique=True, max_length=120)
+    slug = models.SlugField(max_length=120)
 
     def __str__(self):
         return self.title
@@ -18,7 +18,7 @@ class Country(models.Model):
     '''supported countries that vendors ship product to'''
 
     name = models.CharField(max_length=120)
-    slug = models.SlugField(unique=True, max_length=120)
+    slug = models.SlugField(max_length=120)
 
     def __str__(self):
         return self.name

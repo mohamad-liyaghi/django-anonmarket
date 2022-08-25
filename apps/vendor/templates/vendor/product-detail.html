@@ -21,7 +21,7 @@
                         <p>Seller: <a href="{% url 'authentication:profile' product.seller.id product.seller.token %}">{{ product.seller }}</a></p>
                         <p>Ship from: {{ product.shipping_from }}</p>
                         <p>Ship to: {{ product.shipping_to }}</p>
-                        <p>Category: <a href="#">{{ product.category.parent }} | {{ product.category }}</a></p>
+                        <p>Category: <a href="{% url 'customer:filter-category' product.category.id product.category.slug %}">{{ product.category.parent }} | {{ product.category }}</a></p>
                         {% if product.is_available %}
                             <a href="{% url 'customer:add-order' product.id product.slug %}" class="btn btn-success">
                                 Add Order

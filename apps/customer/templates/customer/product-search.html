@@ -1,12 +1,12 @@
 {% extends 'base/_base.html' %}
 
-{% block title %}  Search Result {% endblock title %}
+{% block title %}  Result {% endblock title %}
 
 
 {% block body %}
 
     {% for product in products %}
-            <div class="card" style="width: 15rem; display:inline-block;">
+            <div class="card" style="width: 15rem mb-4; display:inline-block;">
                   {% if product.picture %}
                     <img class="card-img-top" src="{{ product.picture.url }}" alt="Card image cap" width="70px;" height="250px;">
                   {% endif %}
