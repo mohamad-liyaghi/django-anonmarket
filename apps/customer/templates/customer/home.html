@@ -26,7 +26,17 @@
 </div>
 
 <div class="main">
+
     <div class="shadow p-4 mb-5 bg-body rounded">
+        <form method="get" action="{% url 'customer:search-product' %}">{% csrf_token %}
+            <div class="input-group mb-3">
+                    <input type="text" name="q" class="form-control" placeholder="Search Your product" aria-describedby="basic-addon2">
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button">GO</button>
+                      </div>
+            </div>
+        </form>
+        <hr>
 
           {% for product in products %}
 

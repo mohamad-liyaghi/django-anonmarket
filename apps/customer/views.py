@@ -136,3 +136,22 @@ class Home(ListView):
 
         return context
 
+
+class ProductSearch(ListView):
+    '''Result of searchs'''
+
+    template_name = "customer/product-search.html"
+    context_object_name = "products"
+
+    def get_queryset(self):
+        q = self.request.GET.get('q')
+
+        if q:
+            return Product.objects.filter(
+                Q(title__icontains=q) | Q(category__title=q)
+            ).order_by("-is_available")
+
+        return None
+
+
+
