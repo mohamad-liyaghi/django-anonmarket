@@ -49,9 +49,11 @@ class AddProduct(LoginRequiredMixin, CreateView):
 
         form.save()
         messages.success(self.request, "Item added successfully.", "success")
+        return redirect("vendor:list-product")
 
     def form_invalid(self, form):
         messages.success(self.request, "There was an error while saving your information", "success")
+        return redirect("vendor:list-product")
 
 
 class UpdateProduct(LoginRequiredMixin, UpdateView):
@@ -170,3 +172,13 @@ class SendOrder(LoginRequiredMixin, View):
 
         messages.success(self.request, "Order Sent.", "success")
         return redirect("vendor:order-list")
+
+
+class UserProduct(LoginRequiredMixin, ListView):
+    '''Show all registered products of a user'''
+
+    template_name = "vendor/user-products.html"
+    context_object_name = "products"
+
+    def get_queryset(self):
+        return Product.objects.filter(seller=self.request.user)
