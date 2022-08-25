@@ -162,3 +162,5 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_FORMS = {
     'signup': 'apps.authentication.forms.RegisterForm'
 }
+
+LOGIN_REDIRECT_URL = 'customer:home'
