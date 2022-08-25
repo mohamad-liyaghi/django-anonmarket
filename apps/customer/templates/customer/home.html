@@ -26,8 +26,26 @@
 </div>
 
 <div class="main">
-  <h2>Body</h2>
+    <div class="shadow p-4 mb-5 bg-body rounded">
 
+          {% for product in products %}
+
+            <div class="card" style="width: 15rem; display:inline-block;">
+                  {% if product.picture %}
+                    <img class="card-img-top" src="{{ product.picture.url }}" alt="Card image cap" width="70px;" height="250px;">
+                  {% endif %}
+
+                  <div class="card-body">
+                      <a href="{% url 'vendor:product-detail' product.id product.slug %}"> <p class="card-text">{{ product.title }}</p> </a>
+                      <hr>
+                      <p class="card-text">©{{ product.price }}</p>
+                  </div>
+            </div>
+        {% empty %}
+            <h6>There is no product available.</h6>
+        {% endfor %}
+
+    </div>
 </div>
 <script src="{% static 'js/dropdown.js' %}"></script>
 {% endblock main %}

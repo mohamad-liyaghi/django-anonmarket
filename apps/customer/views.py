@@ -1,7 +1,7 @@
 from django.views.generic import FormView, DeleteView, DetailView, View, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.contrib import messages
 from django.urls import reverse_lazy
 
@@ -123,14 +123,16 @@ class Home(ListView):
     template_name = "customer/home.html"
     context_object_name = "products"
 
+
     def get_queryset(self):
-        return Product.objects.all()
+        # top 30 items
+        return Product.objects.annotate(likes_count=Count('likes')).order_by('-likes_count')[:30]
 
 
     def get_context_data(self, **kwargs):
         context = super(Home, self).get_context_data(**kwargs)
 
-        context['parent_categories'] = Category.objects.filter(parent__isnull=True)[:50]
+        context['parent_categories'] = Category.objects.filter(parent__isnull=True)[:20]
 
         return context
 
