@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'apps.vendor.apps.VendorConfig',
     'apps.message.apps.MessageConfig',
     'apps.customer.apps.CustomerConfig',
+    'apps.blog.apps.BlogConfig',
+
 
 ]
 
