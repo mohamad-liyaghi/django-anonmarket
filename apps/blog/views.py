@@ -1,8 +1,9 @@
-from django.views.generic import View, UpdateView
+from django.views.generic import View, UpdateView, DeleteView
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.defaultfilters import slugify
 from django.contrib import messages
+from django.urls import reverse_lazy
 
 from blog.forms import ArticleForm
 from blog.models import Article
@@ -57,3 +58,16 @@ class UpdateArticle(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+
+
+
+class DeleteArticle(LoginRequiredMixin, DeleteView):
+    """Delete an article"""
+
+    template_name = "blog/delete-article.html"
+    success_url = reverse_lazy("blog:article-list")
+
+
+    def get_object(self):
+        return get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"],
+                                 author= self.request.user)
