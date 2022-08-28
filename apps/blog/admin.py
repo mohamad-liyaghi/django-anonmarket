@@ -1,7 +1,9 @@
 from django.contrib import admin
-from blog.models import Article
+from blog.models import Article, ArticleRate
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ("title", "author", "published")
     prepopulated_fields = {"slug" : ("title",)}
+
+admin.site.register(ArticleRate)

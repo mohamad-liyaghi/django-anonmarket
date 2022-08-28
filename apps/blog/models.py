@@ -1,7 +1,7 @@
 from django.db import models
 
 from vendor.models import Product
-from authentication.models import Account
+from authentication.models import Account, Rate
 
 
 class Article(models.Model):
@@ -25,3 +25,13 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class ArticleRate(Rate):
+    '''Like or dislike an article'''
+
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="article_rate")
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="likes")
+
+    def __str__(self):
+        return self.customer.username
