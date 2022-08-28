@@ -1,5 +1,5 @@
 from django.contrib import admin
-from blog.models import Article, ArticleRate
+from blog.models import Article, ArticleRate, ArticleComment
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
@@ -7,3 +7,4 @@ class ArticleAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug" : ("title",)}
 
 admin.site.register(ArticleRate)
+admin.site.register(ArticleComment)
