@@ -98,6 +98,17 @@ class ArticleDetail(LoginRequiredMixin, DetailView):
     def get_object(self):
         return get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"])
 
+    def get_context_data(self, **kwargs):
+        context = super(ArticleDetail, self).get_context_data(**kwargs)
+
+        # get values of all votes related to a user
+        rate = self.get_object().likes.values("vote")
+
+        context['likes'] = rate.filter(vote="l").count()
+        context['dislikes'] = rate.filter(vote="d").count()
+
+        return context
+
 
 class PublishArticle(LoginRequiredMixin, View):
     '''Publish an article'''
