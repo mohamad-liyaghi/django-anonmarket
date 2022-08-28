@@ -34,4 +34,4 @@ class ArticleRate(Rate):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="likes")
 
     def __str__(self):
-        return self.customer.username
+        return self.user.username

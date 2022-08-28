@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 
 from blog.forms import ArticleForm
-from blog.models import Article
+from blog.models import Article, ArticleRate
 
 
 
@@ -147,3 +147,22 @@ class UserArticleList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Article.objects.filter(author=self.request.user)
+
+
+class LikeArticle(LoginRequiredMixin, View):
+    '''Like an article'''
+
+    def get(self, request, id, slug):
+        article = get_object_or_404(Article, id=id, slug=slug)
+
+        if article.author == self.request.user:
+            messages.success(self.request, "You cant rate your article.", "danger")
+            return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+
+        if not self.request.user.article_rate.filter(article=article):
+            ArticleRate.objects.create(user=self.request.user, article=article, vote="l")
+            messages.success(self.request, "You have liked this Article.", "success")
+            return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+
+        messages.success(self.request, "You have already rated this Article.", "warning")
+        return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
