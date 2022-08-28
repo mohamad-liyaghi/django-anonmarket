@@ -1,4 +1,4 @@
-from django.views.generic import View, UpdateView, DeleteView
+from django.views.generic import View, UpdateView, DeleteView, DetailView
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.defaultfilters import slugify
@@ -71,3 +71,29 @@ class DeleteArticle(LoginRequiredMixin, DeleteView):
     def get_object(self):
         return get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"],
                                  author= self.request.user)
+
+
+class ArticleDetail(LoginRequiredMixin, DetailView):
+    """Detail page of an article"""
+
+    template_name = "blog/article-detail.html"
+    context_object_name = "article"
+
+    def dispatch(self, request, *args, **kwargs):
+        object = self.get_object()
+
+        if object.price != 0:
+            # check if user has permission
+            if self.request.user in object.allowed_members.all():
+                return super().dispatch(request, *args, **kwargs)
+            return redirect("blog:list-articles")
+
+        # if blog is free
+        return super().dispatch(request, *args, **kwargs)
+
+
+    def get_object(self):
+        return get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"],
+                                 published=True)
+
+

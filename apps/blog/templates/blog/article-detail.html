@@ -1,0 +1,32 @@
+{% extends 'base/_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} Article Detail {% endblock title %}
+
+{% block body %}
+
+<div style="text-align:center;">
+    <h3>{{ article.title }}</h3>
+    <hr>
+    <small>Author: <a href="{% url 'authentication:profile' article.author.id article.author.token %}">{{ article.author }}</a>
+    at: {{ article.date }}</small>
+    <br>
+    {% if article.product %}
+        <small>
+            For product(s) <a href="{% url 'vendor:product-detail' article.product.id article.product.slug %}">{{ article.product }}</a>
+        </small>
+    {% endif %}
+    <br>
+    <hr>
+    <p>{{ article.body }}</p>
+    <hr>
+    <h2>Rate this article</h2>
+    <h6>Total likes:</h6>
+    <h6>Total dislikes:</h6>
+    <a href="#"><i class="fa fa-thumbs-up"></i></a>
+    <a href="#"><i class="fa fa-thumbs-down"></i></a>
+    <hr>
+    <h2>Comments</h2>
+</div>
+
+{% endblock body %}
