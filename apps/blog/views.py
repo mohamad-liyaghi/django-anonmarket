@@ -166,3 +166,22 @@ class LikeArticle(LoginRequiredMixin, View):
 
         messages.success(self.request, "You have already rated this Article.", "warning")
         return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+
+
+class DisLikeArticle(LoginRequiredMixin, View):
+    '''DisLike an article'''
+
+    def get(self, request, id, slug):
+        article = get_object_or_404(Article, id=id, slug=slug)
+
+        if article.author == self.request.user:
+            messages.success(self.request, "You cant rate your article.", "danger")
+            return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+
+        if not self.request.user.article_rate.filter(article=article):
+            ArticleRate.objects.create(user=self.request.user, article=article, vote="d")
+            messages.success(self.request, "You have disliked this Article.", "success")
+            return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+
+        messages.success(self.request, "You have already rated this Article.", "warning")
+        return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])

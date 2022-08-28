@@ -13,5 +13,7 @@ urlpatterns = [
     path("article-publish/<int:id>/<str:slug>/", views.PublishArticle.as_view(), name="article-publish"),
 
     path("like/<int:id>/<str:slug>/", views.LikeArticle.as_view(), name="like-article"),
+    path("dislike/<int:id>/<str:slug>/", views.DisLikeArticle.as_view(), name="dislike-article"),
+
 
 ]

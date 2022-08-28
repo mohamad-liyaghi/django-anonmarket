@@ -28,7 +28,7 @@
     <h6>Total likes:</h6>
     <h6>Total dislikes:</h6>
     <a href="{% url 'blog:like-article' article.id article.slug %}"><i class="fa fa-thumbs-up"></i></a>
-    <a href="#"><i class="fa fa-thumbs-down"></i></a>
+    <a href="{% url 'blog:dislike-article' article.id article.slug %}"><i class="fa fa-thumbs-down"></i></a>
     <hr>
     <h2>Comments</h2>
 </div>
