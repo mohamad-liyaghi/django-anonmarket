@@ -1,0 +1,12 @@
+{% extends 'base/_base.html' %}
+
+{% block title %} Buy Article {% endblock title %}
+
+{% block body %}
+<h4>This Item is not free, if you want to read it, you have to buy it.</h4>
+
+<form method="post"> {% csrf_token  %}
+    <button class="btn btn-success">Buy This article ©{{ article.price }}</button>
+</form>
+
+{% endblock body %}

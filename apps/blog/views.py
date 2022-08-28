@@ -86,7 +86,7 @@ class ArticleDetail(LoginRequiredMixin, DetailView):
             # check if user has permission
             if self.request.user in object.allowed_members.all():
                 return super().dispatch(request, *args, **kwargs)
-            return redirect("blog:list-articles")
+            return redirect("blog:buy-article", object.id, object.slug)
 
         # if blog is free
         return super().dispatch(request, *args, **kwargs)
@@ -97,3 +97,28 @@ class ArticleDetail(LoginRequiredMixin, DetailView):
                                  published=True)
 
 
+
+class BuyArticle(LoginRequiredMixin, View):
+    '''Buy an article'''
+
+    def get(self, request, *args, **kwargs):
+        object = get_object_or_404(Article, id=self.kwargs["id" ], slug=self.kwargs["slug"], published=True)
+        return render(self.request, "blog/buy-article.html", {"article" : object})
+
+
+    def post(self, request, *args, **kwargs):
+        object = get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"], published=True)
+        if not self.request.user in object.allowed_members.all():
+            if self.request.user.balance >= object.price:
+                self.request.user.balance = self.request.user.balance - object.price
+                object.allowed_members.add(self.request.user)
+
+                self.request.user.save()
+                object.save()
+                messages.success(self.request, "Article Purchased")
+                return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+
+            messages.success(self.request, "You dont have enough money :(", "success")
+
+        messages.success(self.request, "You have already bought this item", "success")
+        return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
