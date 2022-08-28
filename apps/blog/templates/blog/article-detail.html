@@ -16,6 +16,10 @@
             For product(s) <a href="{% url 'vendor:product-detail' article.product.id article.product.slug %}">{{ article.product }}</a>
         </small>
     {% endif %}
+    <br><br>
+    {% if not article.published %}
+        <a  class="btn btn-success" href="{% url 'blog:article-publish' article.id article.slug %}">Publish</a>
+    {% endif %}
     <br>
     <hr>
     <p>{{ article.body }}</p>

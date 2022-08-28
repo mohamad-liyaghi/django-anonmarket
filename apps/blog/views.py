@@ -82,20 +82,35 @@ class ArticleDetail(LoginRequiredMixin, DetailView):
     def dispatch(self, request, *args, **kwargs):
         object = self.get_object()
 
-        if object.price != 0:
-            # check if user has permission
-            if self.request.user in object.allowed_members.all():
-                return super().dispatch(request, *args, **kwargs)
-            return redirect("blog:buy-article", object.id, object.slug)
+        if object.published:
+            if object.price != 0:
+                # check if user has permission
+                if self.request.user in object.allowed_members.all():
+                    return super().dispatch(request, *args, **kwargs)
+                return redirect("blog:buy-article", object.id, object.slug)
 
-        # if blog is free
-        return super().dispatch(request, *args, **kwargs)
+            # if blog is free
+            return super().dispatch(request, *args, **kwargs)
+        if object.author == self.request.user:
+            return super().dispatch(request, *args, **kwargs)
 
 
     def get_object(self):
-        return get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"],
-                                 published=True)
+        return get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"])
 
+
+class PublishArticle(LoginRequiredMixin, View):
+    '''Publish an article'''
+
+    def get(self, request, *args,  **kwargs):
+
+        object = get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"],
+                                   author= self.request.user, published=False)
+
+        object.published = True
+        object.save()
+        messages.success(self.request, "Article published", "success")
+        return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
 
 
 class BuyArticle(LoginRequiredMixin, View):

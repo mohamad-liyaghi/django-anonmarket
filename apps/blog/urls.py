@@ -10,5 +10,6 @@ urlpatterns = [
     path("article-detail/<int:id>/<str:slug>/", views.ArticleDetail.as_view(), name="article-detail"),
     path("buy-article/<int:id>/<str:slug>/", views.BuyArticle.as_view(), name="buy-article"),
     path("user-articles/", views.UserArticleList.as_view(), name="user-articles"),
+    path("article-publish/<int:id>/<str:slug>/", views.PublishArticle.as_view(), name="article-publish"),
 
 ]
