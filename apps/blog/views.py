@@ -1,4 +1,4 @@
-from django.views.generic import View, UpdateView, DeleteView, DetailView
+from django.views.generic import View, UpdateView, DeleteView, DetailView, ListView
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.defaultfilters import slugify
@@ -38,10 +38,10 @@ class CreateArticle(LoginRequiredMixin, View):
             data.allowed_members.add(self.request.user.id)
 
             messages.success(self.request, "Article created", "success")
-            return redirect("blog:article-list")
+            return redirect("blog:user-articles")
 
         messages.success(self.request, "Sth went wrong with your information", "success")
-        return redirect("blog:article-list")
+        return redirect("blog:user-articles")
 
 
 class UpdateArticle(LoginRequiredMixin, UpdateView):
@@ -65,7 +65,7 @@ class DeleteArticle(LoginRequiredMixin, DeleteView):
     """Delete an article"""
 
     template_name = "blog/delete-article.html"
-    success_url = reverse_lazy("blog:article-list")
+    success_url = reverse_lazy("blog:user-articles")
 
 
     def get_object(self):
@@ -122,3 +122,13 @@ class BuyArticle(LoginRequiredMixin, View):
 
         messages.success(self.request, "You have already bought this item", "success")
         return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+
+
+class UserArticleList(LoginRequiredMixin, ListView):
+    '''Show all users articles'''
+
+    template_name = "blog/article-list.html"
+    context_object_name = "articles"
+
+    def get_queryset(self):
+        return Article.objects.filter(author=self.request.user)

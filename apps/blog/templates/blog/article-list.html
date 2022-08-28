@@ -1,0 +1,20 @@
+{% extends 'base/_base.html' %}
+
+{% block title %} Article List {% endblock title %}
+
+{% block body %}
+
+  {% for article in articles %}
+
+      <div class="card text-center">
+        <div class="card-body">
+          <a href="{% url 'blog:article-detail' article.id article.slug %}"><h5 class="card-title">{{ article.title | truncatechars:90 }}</h5></a>
+        </div>
+        <div class="card-footer text-muted">
+          Published: {{ article.published }} | {{ article.date }} | <a href="{% url 'authentication:profile' article.author.id article.author.token %}">{{ article.author }}</a>
+        </div>
+    </div> <br>
+
+  {% endfor %}
+
+{% endblock body %}
