@@ -224,3 +224,18 @@ class DisLikeArticle(LoginRequiredMixin, View):
 
         messages.success(self.request, "You have already rated this Article.", "warning")
         return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+
+
+class DeleteComment(LoginRequiredMixin, DeleteView):
+    '''Delete a comment by article owner or user'''
+
+    template_name = "blog/delete-article.html"
+
+    def get_object(self):
+        return get_object_or_404(ArticleComment, Q(user=self.request.user)
+                                 | Q(article__author=self.request.user))
+
+    def get_success_url(self):
+        obj = self.get_object()
+        return reverse_lazy("blog:article-detail",
+                            kwargs={"id" : obj.article.id, "slug" : obj.article.slug})
