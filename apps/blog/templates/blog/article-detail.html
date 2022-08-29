@@ -32,6 +32,31 @@
     <a href="{% url 'blog:dislike-article' article.id article.slug %}"><i class="fa fa-thumbs-down"></i></a>
     <hr>
     <h2>Comments</h2>
+    <form action="" method="post">{% csrf_token %}
+        <div class="input-group mb-3">
+          <input type="text" name="body" id="id_body" class="form-control" placeholder="Add Comment" aria-label="Recipient's username" aria-describedby="basic-addon2">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button">Add</button>
+          </div>
+        </div>
+    </form>
+    <hr>
+    {% for comment in comments %}
+        <div class="card">
+          <div class="card-header">
+              <a href="{% url 'authentication:profile' comment.user.id comment.user.token %}" >{{ comment.user }}</a> at {{ comment.date }}
+          </div>
+          <div class="card-body">
+            <blockquote class="blockquote mb-0">
+              <p>{{ comment.body }}</p>
+                <hr>
+            </blockquote>
+          </div>
+        </div>
+    <br>
+    {% empty %}
+        <h4>No comment available</h4>
+    {% endfor %}
 </div>
 
 {% endblock body %}

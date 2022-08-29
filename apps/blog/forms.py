@@ -1,6 +1,6 @@
 from django import forms
 from vendor.models import Product
-from blog.models import Article
+from blog.models import Article, ArticleComment
 
 
 class ArticleForm(forms.ModelForm):
@@ -15,3 +15,8 @@ class ArticleForm(forms.ModelForm):
         model = Article
         fields = ("title", "body", "product", "price", "published", "allowed_members")
 
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = ArticleComment
+        fields = ("article", "body", "user")

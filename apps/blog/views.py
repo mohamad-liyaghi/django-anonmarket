@@ -3,10 +3,11 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.defaultfilters import slugify
 from django.contrib import messages
+from django.db.models import Q
 from django.urls import reverse_lazy
 
-from blog.forms import ArticleForm
-from blog.models import Article, ArticleRate
+from blog.forms import ArticleForm, CommentForm
+from blog.models import Article, ArticleRate, ArticleComment
 
 
 
@@ -57,7 +58,7 @@ class UpdateArticle(LoginRequiredMixin, UpdateView):
 
 
     def get_success_url(self):
-        return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+        return reverse_lazy("blog:article-detail", kwargs={"id" : self.kwargs["id"], "slug" : self.kwargs["slug"]})
 
 
 
@@ -82,6 +83,27 @@ class ArticleDetail(LoginRequiredMixin, DetailView):
     def dispatch(self, request, *args, **kwargs):
         object = self.get_object()
 
+        if request.method == "POST" and object.published :
+            if self.request.user in object.allowed_members.all() or object.price == 0:
+                # get the comment field
+                comment = request.POST.get("body")
+
+                if comment:
+                    # save the comment
+                    form = CommentForm(self.request.POST)
+
+                    if form.is_valid():
+                        form = form.save(commit=False)
+                        form.article = object
+                        form.user = self.request.user
+                        form.save()
+                        messages.success(request, "comment added successfully", "success")
+                        return redirect("blog:article-detail", object.id, object.slug)
+
+                # redirect if comment was empty
+                return redirect("blog:article-detail", object.id, object.slug)
+
+
         if object.published:
             if object.price != 0:
                 # check if user has permission
@@ -91,9 +113,12 @@ class ArticleDetail(LoginRequiredMixin, DetailView):
 
             # if blog is free
             return super().dispatch(request, *args, **kwargs)
+
+
         if object.author == self.request.user:
             return super().dispatch(request, *args, **kwargs)
 
+        return redirect("blog:article-list", object.id, object.slug)
 
     def get_object(self):
         return get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"])
@@ -106,6 +131,7 @@ class ArticleDetail(LoginRequiredMixin, DetailView):
 
         context['likes'] = rate.filter(vote="l").count()
         context['dislikes'] = rate.filter(vote="d").count()
+        context["comments"] = self.get_object().comments.all().order_by('-date')
 
         return context
 
@@ -128,12 +154,14 @@ class BuyArticle(LoginRequiredMixin, View):
     '''Buy an article'''
 
     def get(self, request, *args, **kwargs):
-        object = get_object_or_404(Article, id=self.kwargs["id" ], slug=self.kwargs["slug"], published=True)
+        object = get_object_or_404(Article, Q(id=self.kwargs["id" ]) & Q(slug=self.kwargs["slug"])
+        & Q(published=True) & ~Q(price=0))
         return render(self.request, "blog/buy-article.html", {"article" : object})
 
 
     def post(self, request, *args, **kwargs):
-        object = get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"], published=True)
+        object = get_object_or_404(Article, Q(id=self.kwargs["id"]) & Q(slug=self.kwargs["slug"])
+                                   & Q(published=True) & ~Q(price=0))
         if not self.request.user in object.allowed_members.all():
             if self.request.user.balance >= object.price:
                 self.request.user.balance = self.request.user.balance - object.price
