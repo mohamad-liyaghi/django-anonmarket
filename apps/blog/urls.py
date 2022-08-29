@@ -4,6 +4,7 @@ from . import views
 app_name = "blog"
 
 urlpatterns = [
+    path("", views.TopArticleList.as_view(), name="article-list"),
     path("add-article/", views.CreateArticle.as_view(), name="add-article"),
     path("update-article/<int:id>/<str:slug>/", views.UpdateArticle.as_view(), name="update-article"),
     path("delete-article/<int:id>/<str:slug>/", views.DeleteArticle.as_view(), name="delete-article"),
@@ -16,6 +17,6 @@ urlpatterns = [
     path("dislike/<int:id>/<str:slug>/", views.DisLikeArticle.as_view(), name="dislike-article"),
 
     path("delete-comment/<int:id>/", views.DeleteComment.as_view(), name="delete-comment"),
-
+    path("article-search/", views.ArticleSearch.as_view(), name="article-search")
 
 ]

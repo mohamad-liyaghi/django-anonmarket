@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.defaultfilters import slugify
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.urls import reverse_lazy
 
 from blog.forms import ArticleForm, CommentForm
@@ -239,3 +239,34 @@ class DeleteComment(LoginRequiredMixin, DeleteView):
         obj = self.get_object()
         return reverse_lazy("blog:article-detail",
                             kwargs={"id" : obj.article.id, "slug" : obj.article.slug})
+
+
+
+class TopArticleList(LoginRequiredMixin, ListView):
+    '''List of 20 top Articles'''
+
+    template_name = "blog/article-list.html"
+    context_object_name = "articles"
+
+
+    def get_queryset(self):
+        return Article.objects.annotate(
+                    rate_count= Count('likes')
+                             ).filter(Q(published=True)).order_by('-rate_count') [:20]
+
+
+class ArticleSearch(ListView):
+    '''Result of search'''
+
+    template_name = "blog/article-list.html"
+    context_object_name = "articles"
+
+    def get_queryset(self):
+        q = self.request.GET.get('q')
+
+        if q:
+            return Article.objects.filter(
+                Q(published=True) & Q(title__icontains=q) | Q(author__username=q) & Q(published=True)
+            )
+
+        return None
