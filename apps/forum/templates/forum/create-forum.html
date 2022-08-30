@@ -1,0 +1,17 @@
+{% extends 'base/_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} Create Forum {% endblock title %}
+
+{% block body %}
+
+<form method="post"> {% csrf_token  %}
+    {{ form.title | as_crispy_field }} <br>
+    {{ form.body | as_crispy_field }} <br>
+    <small>Leave it empty if this forum is free</small>
+    {{ form.price | as_crispy_field }} <br>
+
+    <button class="btn btn-success">Create</button>
+</form>
+
+{% endblock body %}
