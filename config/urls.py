@@ -28,6 +28,7 @@ urlpatterns = [
     path("message/", include("apps.message.urls")),
     path("", include("apps.customer.urls")),
     path("blog/", include("apps.blog.urls")),
+    path("forum/", include("apps.forum.urls")),
 
 
 
