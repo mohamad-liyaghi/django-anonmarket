@@ -1,10 +1,13 @@
-from django.views.generic import FormView
+from django.views.generic import FormView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.defaultfilters import slugify
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
+from django.urls import reverse_lazy
 
 from .forms import ForumForm
+from forum.models import Forum
+
 
 
 class CreateForum(LoginRequiredMixin, FormView):
@@ -32,5 +35,17 @@ class CreateForum(LoginRequiredMixin, FormView):
         return redirect("forum:user-forums")
 
 
+class UpdateForum(LoginRequiredMixin, UpdateView):
+    '''Update a forum (close or change price)'''
 
+    template_name = "forum/update-forum.html"
+    fields = ["price", "closed", "title", "body"]
 
+    def get_object(self):
+        k = self.kwargs
+
+        return get_object_or_404(Forum, id=k["id"], slug=k["slug"],
+                                 author=self.request.user)
+
+    def get_success_url(self):
+        return reverse_lazy("forum:user-forums")

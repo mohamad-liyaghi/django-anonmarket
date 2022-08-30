@@ -1,0 +1,17 @@
+{% extends 'base/_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} Update Forum {% endblock title %}
+
+{% block body %}
+
+<form method="post"> {% csrf_token  %}
+    {{ form.title | as_crispy_field }} <br>
+    {{ form.body | as_crispy_field }}   <br>
+    {{ form.price | as_crispy_field }}  <br>
+    {{ form.closed | as_crispy_field }}  <br>
+
+    <button class="btn btn-success">Update</button>
+</form>
+
+{% endblock body %}
