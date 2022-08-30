@@ -7,6 +7,6 @@ urlpatterns = [
     path("create-forum/", views.CreateForum.as_view(), name="create-forum"),
     path("update-forum/<int:id>/<str:slug>/", views.UpdateForum.as_view(), name="update-forum"),
     path("delete-forum/<int:id>/<str:slug>/", views.DeleteForum.as_view(), name="delete-forum"),
-
+    path("forum-detail/<int:id>/<str:slug>/", views.ForumDetail.as_view(), name="forum-detail"),
 
 ]

@@ -1,0 +1,41 @@
+{% extends 'base/_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} Forum Detail {% endblock title %}
+
+{% block body %}
+
+<div>
+    <h3>{{ forum.title }}</h3>
+    <hr>
+    <small>Created by: <a href="{% url 'authentication:profile' forum.author.id forum.author.token %}">{{ forum.author }}</a>
+    at: {{ forum.date }}</small>
+    <br>
+    <hr>
+    <p>{{ forum.body }}</p>
+    <hr>
+    <h2>Rate this forum</h2>
+    <h6>Total likes</h6>
+    <h6>Total dislikes: </h6>
+
+    <a href="#"><i class="fa fa-thumbs-up"></i></a>
+    <a href="#"><i class="fa fa-thumbs-down"></i></a>
+    <hr>
+    <h2>Comments</h2>
+    {% if not forum.closed %}
+        <form action="" method="post">{% csrf_token %}
+            <div class="input-group mb-3">
+              <input type="text" name="body" id="id_body" class="form-control" placeholder="Answer this forum" aria-label="Recipient's username" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button">Add</button>
+              </div>
+            </div>
+        </form>
+    {% else %}
+        <h5>This Forum is closed</h5>
+    {% endif %}
+
+    <hr>
+</div>
+
+{% endblock body %}
