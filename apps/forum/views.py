@@ -1,4 +1,4 @@
-from django.views.generic import FormView, UpdateView
+from django.views.generic import FormView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.defaultfilters import slugify
 from django.contrib import messages
@@ -44,6 +44,19 @@ class UpdateForum(LoginRequiredMixin, UpdateView):
     def get_object(self):
         k = self.kwargs
 
+        return get_object_or_404(Forum, id=k["id"], slug=k["slug"],
+                                 author=self.request.user)
+
+    def get_success_url(self):
+        return reverse_lazy("forum:user-forums")
+
+
+class DeleteForum(LoginRequiredMixin, DeleteView):
+    '''Delete a forum'''
+    template_name = "forum/delete-forum.html"
+
+    def get_object(self):
+        k = self.kwargs
         return get_object_or_404(Forum, id=k["id"], slug=k["slug"],
                                  author=self.request.user)
 

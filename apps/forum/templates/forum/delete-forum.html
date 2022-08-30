@@ -1,0 +1,14 @@
+{% extends 'base/_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} Delete Forum {% endblock title %}
+
+{% block body %}
+
+<form method="post"> {% csrf_token  %}
+    <h5>Are you sure you wanna delete this Item??</h5> <br>
+
+    <button class="btn btn-danger">Delete</button>
+</form>
+
+{% endblock body %}
