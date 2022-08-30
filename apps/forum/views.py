@@ -2,6 +2,7 @@ from django.views.generic import FormView, UpdateView, DeleteView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.defaultfilters import slugify
 from django.contrib import messages
+from django.db.models import Q
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
 
@@ -91,3 +92,32 @@ class ForumDetail(LoginRequiredMixin, View):
         context = {"forum" : self.object}
 
         return render(self.request, self.template_name, context)
+
+
+class BuyForum(LoginRequiredMixin, View):
+    '''Buy a forum in order to read comments'''
+
+    def get(self, request, *args, **kwargs):
+        object = get_object_or_404(Forum, Q(id=self.kwargs["id" ]) & Q(slug=self.kwargs["slug"])
+        & ~Q(price=0))
+        return render(self.request, "forum/buy-forum.html", {"forum" : object})
+
+    def post(self, request, *args, **kwargs):
+        object = get_object_or_404(Forum, Q(id=self.kwargs["id"]) & Q(slug=self.kwargs["slug"])
+                                   & ~Q(price=0))
+
+        if not self.request.user in object.allowed_members.all():
+            if self.request.user.balance >= object.price:
+                self.request.user.balance = self.request.user.balance - object.price
+                object.allowed_members.add(self.request.user)
+
+                self.request.user.save()
+                object.save()
+                messages.success(self.request, "Forum Purchased")
+                return redirect("forum:forum-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+
+            messages.success(self.request, "You dont have enough money :(", "danger")
+            return redirect("forum:forum-list")
+
+        messages.success(self.request, "You have already bought this item", "warning")
+        return redirect("forum:forum-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
