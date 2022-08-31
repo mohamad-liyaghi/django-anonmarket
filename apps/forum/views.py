@@ -7,7 +7,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
 
 from .forms import ForumForm, CommentForm
-from forum.models import Forum
+from forum.models import Forum, ForumComment
 
 
 
@@ -141,3 +141,16 @@ class BuyForum(LoginRequiredMixin, View):
 
         messages.success(self.request, "You have already bought this item", "warning")
         return redirect("forum:forum-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+
+
+class DeleteComment(LoginRequiredMixin, DeleteView):
+    '''Delete a comment by forum owner or user'''
+
+    template_name = "forum/delete-forum.html"
+
+    def get_object(self):
+        return get_object_or_404(ForumComment, Q(user=self.request.user)| Q(forum__author=self.request.user))
+
+    def get_success_url(self):
+        return reverse_lazy("forum:forum-detail",
+                            kwargs={"id" : self.kwargs["id"], "slug" : self.kwargs["slug"]})
