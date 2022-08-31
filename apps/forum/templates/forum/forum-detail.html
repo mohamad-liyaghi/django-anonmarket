@@ -15,10 +15,10 @@
     <p>{{ forum.body }}</p>
     <hr>
     <h2>Rate this forum</h2>
-    <h6>Total likes</h6>
+    <h6>Total likes: {{ likes }}</h6>
     <h6>Total dislikes: </h6>
 
-    <a href="#"><i class="fa fa-thumbs-up"></i></a>
+    <a href="{% url 'forum:like-forum' forum.id forum.slug %}"><i class="fa fa-thumbs-up"></i></a>
     <a href="#"><i class="fa fa-thumbs-down"></i></a>
     <hr>
     <h2>Comments</h2>

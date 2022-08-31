@@ -11,6 +11,9 @@ urlpatterns = [
     path("buy-forum/<int:id>/<str:slug>/", views.BuyForum.as_view(), name="buy-forum"),
     path("delete-comment/<int:id>/<str:slug>/", views.DeleteComment.as_view(), name="delete-comment"),
 
+    path("like-forum/<int:id>/<str:slug>/", views.LikeForum.as_view(), name="like-forum"),
+
+
 
 
 ]
