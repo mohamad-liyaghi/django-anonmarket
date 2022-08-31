@@ -49,6 +49,17 @@
           </li>
 
         <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Forum
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'forum:forum-list' %}">Top Forums</a>
+              <a class="dropdown-item" href="{% url 'forum:user-forums' %}">My Forums</a>
+              <a class="dropdown-item" href="{% url 'forum:create-forum' %}">Create Forum</a>
+            </div>
+          </li>
+
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Account (©{{request.user.balance}})
           </a>

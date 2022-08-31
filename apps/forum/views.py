@@ -19,6 +19,15 @@ class ForumList(LoginRequiredMixin, ListView):
         return Forum.objects.all().order_by("-date")[:20]
 
 
+class UserForum(LoginRequiredMixin, ListView):
+    '''Show all user forums'''
+    template_name = "forum/forum-list.html"
+    context_object_name = "forums"
+
+    def get_queryset(self):
+        return Forum.objects.filter(author=self.request.user)
+
+
 class CreateForum(LoginRequiredMixin, FormView):
     '''Create a new forum'''
 

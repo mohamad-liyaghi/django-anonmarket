@@ -5,6 +5,7 @@ app_name = "forum"
 
 urlpatterns = [
     path("", views.ForumList.as_view(), name="forum-list"),
+    path("user/", views.UserForum.as_view(), name="user-forums"),
 
     path("search-result/", views.ForumSearch.as_view(), name="search-forum"),
     path("create-forum/", views.CreateForum.as_view(), name="create-forum"),
@@ -12,6 +13,7 @@ urlpatterns = [
     path("delete-forum/<int:id>/<str:slug>/", views.DeleteForum.as_view(), name="delete-forum"),
     path("forum-detail/<int:id>/<str:slug>/", views.ForumDetail.as_view(), name="forum-detail"),
     path("buy-forum/<int:id>/<str:slug>/", views.BuyForum.as_view(), name="buy-forum"),
+
     path("delete-comment/<int:id>/<str:slug>/", views.DeleteComment.as_view(), name="delete-comment"),
 
     path("like-forum/<int:id>/<str:slug>/", views.LikeForum.as_view(), name="like-forum"),
