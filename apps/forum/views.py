@@ -91,9 +91,11 @@ class ForumDetail(LoginRequiredMixin, View):
 
         form = CommentForm()
         comments = self.object.comments.all()
-        likes = self.object.likes.count()
+        likes = self.object.likes.filter(vote="l").count()
+        dislikes = self.object.likes.filter(vote="d").count()
 
-        context = {"forum" : self.object, "form" : form, "comments" : comments, "likes" : likes}
+        context = {"forum" : self.object, "form" : form, "comments" : comments,
+                   "likes" : likes, "dislikes" : dislikes}
         return render(self.request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -170,6 +172,29 @@ class LikeForum(LoginRequiredMixin, View):
 
             if not self.request.user.forum_rate.filter(forum=forum):
                 ForumRate.objects.create(user=self.request.user, forum=forum, vote="l")
+                messages.success(self.request, "You have liked this Forum.", "success")
+                return redirect("forum:forum-detail", id=id, slug=slug)
+
+            messages.success(self.request, "You have already rated this Forum.", "warning")
+            return redirect("forum:forum-detail", id=id, slug=slug)
+
+        messages.success(self.request, "You dont have access to rate this forum.", "danger")
+        return redirect("forum:buy-forum", id, slug)
+
+
+class DislikeForum(LoginRequiredMixin, View):
+    '''DisLike a forum'''
+
+    def get(self, request, id, slug):
+        forum = get_object_or_404(Forum, id=id, slug=slug)
+
+        if forum.price == 0 or self.request.user in forum.allowed_members.all():
+            if forum.author == self.request.user:
+                messages.success(self.request, "You cant rate your own forum.", "danger")
+                return redirect("forum:forum-detail", id=id, slug=slug)
+
+            if not self.request.user.forum_rate.filter(forum=forum):
+                ForumRate.objects.create(user=self.request.user, forum=forum, vote="d")
                 messages.success(self.request, "You have liked this Forum.", "success")
                 return redirect("forum:forum-detail", id=id, slug=slug)
 
