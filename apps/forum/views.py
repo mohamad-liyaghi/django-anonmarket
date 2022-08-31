@@ -90,8 +90,9 @@ class ForumDetail(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
 
         form = CommentForm()
+        comments = self.object.comments.all()
 
-        context = {"forum" : self.object, "form" : form}
+        context = {"forum" : self.object, "form" : form, "comments" : comments}
         return render(self.request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
