@@ -211,3 +211,20 @@ class DislikeForum(LoginRequiredMixin, View):
 
         messages.success(self.request, "You dont have access to rate this forum.", "danger")
         return redirect("forum:buy-forum", id, slug)
+
+
+class ForumSearch(ListView):
+    '''Result of search'''
+
+    template_name = "forum/forum-list.html"
+    context_object_name = "forums"
+
+    def get_queryset(self):
+        q = self.request.GET.get('q')
+
+        if q:
+            return Forum.objects.filter(
+                Q(title__icontains=q) | Q(author__username=q)
+            )
+
+        return None

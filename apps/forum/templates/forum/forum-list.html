@@ -3,7 +3,7 @@
 {% block title %} Forum List {% endblock title %}
 
 {% block body %}
-<form method="get" action="#">{% csrf_token %}
+    <form method="get" action="{% url 'forum:search-forum' %}">{% csrf_token %}
             <div class="input-group mb-3">
                     <input type="text" name="q" class="form-control" placeholder="Global search for Forums" aria-describedby="basic-addon2">
                       <div class="input-group-append">
