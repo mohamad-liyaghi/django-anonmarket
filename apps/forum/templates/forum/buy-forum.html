@@ -6,7 +6,7 @@
 <h4>This Item is not free, if you want to read it, you have to buy it.</h4> <br>
 
 <form method="post"> {% csrf_token  %}
-    <button class="btn btn-success">Buy This forum ©{{ article.price }}</button>
+    <button class="btn btn-success">Buy This forum ©{{ forum.price }}</button>
 </form>
 
 {% endblock body %}

@@ -1,6 +1,7 @@
 from django.db import models
 
 from authentication.models import Account
+from blog.models import Comment
 
 
 class Forum(models.Model):
@@ -23,3 +24,16 @@ class Forum(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class ForumComment(Comment):
+    """Comment model for Forums"""
+
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="forum_comment",
+                             blank=True, null=True)
+
+    forum = models.ForeignKey(Forum, on_delete=models.CASCADE,
+                              related_name="comments", blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.forum} | {self.user}"
