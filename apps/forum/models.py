@@ -1,7 +1,7 @@
 from django.db import models
 
 from authentication.models import Account
-from blog.models import Comment
+from blog.models import Comment, Rate
 
 
 class Forum(models.Model):
@@ -37,3 +37,13 @@ class ForumComment(Comment):
 
     def __str__(self):
         return f"{self.forum} | {self.user}"
+
+
+class ForumRate(Rate):
+    '''Like or dislike a forum'''
+
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="forum_rate")
+    forum = models.ForeignKey(Forum, on_delete=models.CASCADE, related_name="likes")
+
+    def __str__(self):
+        return self.user.username
