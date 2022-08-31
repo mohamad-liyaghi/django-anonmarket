@@ -1,4 +1,4 @@
-from django.views.generic import FormView, UpdateView, DeleteView, View
+from django.views.generic import FormView, UpdateView, DeleteView, View, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.defaultfilters import slugify
 from django.contrib import messages
@@ -9,6 +9,14 @@ from django.urls import reverse_lazy
 from .forms import ForumForm, CommentForm
 from forum.models import Forum, ForumComment, ForumRate
 
+
+class ForumList(LoginRequiredMixin, ListView):
+    '''Show all newest forums'''
+    template_name = "forum/forum-list.html"
+    context_object_name = "forums"
+
+    def get_queryset(self):
+        return Forum.objects.all().order_by("-date")[:20]
 
 
 class CreateForum(LoginRequiredMixin, FormView):
