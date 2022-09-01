@@ -1,6 +1,7 @@
 from django.views.generic import FormView, DeleteView, DetailView, View, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404, redirect
+from django.template import RequestContext
+from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models import Q, Count
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -166,3 +167,13 @@ class FilterCategory(ListView):
         return Product.objects.filter(category__id=self.kwargs["id"],
                                       category__slug=self.kwargs["slug"])
 
+
+
+
+
+def handler404(request, exception):
+    return render(request, "base/error/404.html")
+
+
+def handler500(request, *args, **argv):
+    return render(request, "base/error/500.html")
