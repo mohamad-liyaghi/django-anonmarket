@@ -1,6 +1,4 @@
 # Django AnonMarket
-<a href="djangoanonmarket.pythonanywhere.com">Live Preview</a>
-<hr>
 
 ## Introduction
 <p>
