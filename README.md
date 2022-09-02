@@ -1,5 +1,4 @@
 # Django AnonMarket
-<hr>
 
 ## Introduction
 <p>
@@ -96,7 +95,7 @@ This project contains 6 applications. <br>
 ### First you have to clone this project and cd to the source folder.
 
 ```commandline
-$ git clone https://github.com/Ml06py/`django-anonmarket`.git && cd https://github.com/Ml06py/django-anonmarket.git 
+$ git clone https://github.com/Ml06py/django-anonmarket.git && cd https://github.com/Ml06py/django-anonmarket.git 
 ```
 
 ### If you have docker installed of your pc, you can run the project with one command
