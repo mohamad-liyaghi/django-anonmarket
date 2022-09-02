@@ -5,7 +5,7 @@
 {% block body %}
 
 
-  {% for chat in creator_chats  %}
+  {% for chat in chats  %}
     <br>
     <div class="card">
       <div class="card-body">
@@ -23,16 +23,6 @@
   {% empty %}
 
     <h3>Your chat list is empty...</h3>
-
-  {% endfor %}
-
-{% for chat in member_chats  %}
-    <br>
-    <div class="card">
-      <br><div class="card-body">
-        <a href="{% url 'message:chat-detail' chat.id chat.code %}">{{ chat }}</a>
-      </div>
-    </div>
 
   {% endfor %}
 

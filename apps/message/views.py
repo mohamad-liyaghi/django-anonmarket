@@ -18,10 +18,8 @@ class ChatList(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ChatList, self).get_context_data(**kwargs)
-
-        context['creator_chats'] = self.request.user.chat_member.all()
-        context['member_chats'] = self.request.user.chat_creator.all()
-
+        context["chats"] = Chat.objects.filter(Q(creator=self.request.user)
+                                               | Q(member=self.request.user))
 
         return context
 
