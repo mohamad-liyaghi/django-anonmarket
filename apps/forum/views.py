@@ -149,10 +149,12 @@ class BuyForum(LoginRequiredMixin, View):
         if not self.request.user in object.allowed_members.all():
             if self.request.user.balance >= object.price:
                 self.request.user.balance = self.request.user.balance - object.price
+                object.author.balance = object.author.balance + object.price
                 object.allowed_members.add(self.request.user)
 
                 self.request.user.save()
                 object.save()
+                object.author.save()
                 messages.success(self.request, "Forum Purchased")
                 return redirect("forum:forum-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
 
