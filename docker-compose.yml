@@ -1,7 +1,7 @@
 services:
   web:
     build: .
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "python manage.py migrate && python manage.py runserver --insecure 0.0.0.0:8000"
     container_name: app
     volumes:
       - .:/code

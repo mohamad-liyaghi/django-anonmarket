@@ -111,7 +111,7 @@ $ git clone https://github.com/Ml06py/django-anonmarket.git && cd https://github
 ```
 
 ```commandline
-    $ python manage.py migrate && python manage.py runserver
+    $ python manage.py migrate && python manage.py runserver --insecure
 ```
 
 
