@@ -24,7 +24,6 @@ class CreateArticle(LoginRequiredMixin, View):
         return render(self.request, self.template_name, {"form" : form})
 
 
-
     def post(self, request):
         form = self.form_class(self.request.POST, request=self.request)
 
@@ -56,10 +55,8 @@ class UpdateArticle(LoginRequiredMixin, UpdateView):
         return get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"],
                                  author= self.request.user)
 
-
     def get_success_url(self):
         return reverse_lazy("blog:article-detail", kwargs={"id" : self.kwargs["id"], "slug" : self.kwargs["slug"]})
-
 
 
 class DeleteArticle(LoginRequiredMixin, DeleteView):
@@ -67,7 +64,6 @@ class DeleteArticle(LoginRequiredMixin, DeleteView):
 
     template_name = "blog/delete-article.html"
     success_url = reverse_lazy("blog:user-articles")
-
 
     def get_object(self):
         return get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"],
@@ -241,7 +237,6 @@ class DeleteComment(LoginRequiredMixin, DeleteView):
         obj = self.get_object()
         return reverse_lazy("blog:article-detail",
                             kwargs={"id" : obj.article.id, "slug" : obj.article.slug})
-
 
 
 class TopArticleList(LoginRequiredMixin, ListView):

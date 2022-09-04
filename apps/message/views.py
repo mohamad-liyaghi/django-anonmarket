@@ -15,14 +15,12 @@ class ChatList(LoginRequiredMixin, TemplateView):
     '''Show All Available chats of a user'''
     template_name = "message/chat-list.html"\
 
-
     def get_context_data(self, **kwargs):
         context = super(ChatList, self).get_context_data(**kwargs)
         context["chats"] = Chat.objects.filter(Q(creator=self.request.user)
                                                | Q(member=self.request.user))
 
         return context
-
 
 
 class GetChat(LoginRequiredMixin, View):
@@ -88,7 +86,6 @@ class ChatDetail(LoginRequiredMixin, View):
         return redirect("message:chat-detail", self.chat.pk, self.chat.code)
 
 
-
 class UpdateMessage(LoginRequiredMixin, UpdateView):
     '''Update a message by its sender'''
 
@@ -107,12 +104,10 @@ class UpdateMessage(LoginRequiredMixin, UpdateView):
         return redirect("message:chat-detail", self.get_object().chat.id, self.get_object().chat.code)
 
 
-
 class DeleteMessage(DeleteView):
     '''Delete a Message'''
 
     template_name = "message/delete-message.html"
-
 
     def get_object(self):
         return get_object_or_404(Message, Q(id=self.kwargs["id"])

@@ -13,7 +13,6 @@ from vendor.models import Product, Category
 from customer.models import Order
 
 
-
 class AddOrder(LoginRequiredMixin, FormView):
     '''Add an order'''
 
@@ -57,7 +56,6 @@ class AddOrder(LoginRequiredMixin, FormView):
         return redirect("vendor:product-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
 
 
-
 class DeleteOrder(LoginRequiredMixin, DeleteView):
     '''Delete orders that vendor have not seen them'''
 
@@ -72,7 +70,6 @@ class DeleteOrder(LoginRequiredMixin, DeleteView):
         return reverse_lazy("vendor:product-detail", args = (self.get_object().item.pk, self.get_object().item.slug))
 
 
-
 class OrderDetail(LoginRequiredMixin, DetailView):
     '''Show orders description (address) for vendor'''
 
@@ -82,7 +79,6 @@ class OrderDetail(LoginRequiredMixin, DetailView):
     def get_object(self):
         return  get_object_or_404(Order, Q(id=self.kwargs["id"]) & Q(code=self.kwargs["code"])
                           & Q(item__seller=self.request.user))
-
 
 
 class PayOrder(LoginRequiredMixin, View):
@@ -107,7 +103,6 @@ class PayOrder(LoginRequiredMixin, View):
         return redirect("customer:cart")
 
 
-
 class Cart(LoginRequiredMixin, ListView):
     '''Show a users orders'''
 
@@ -128,7 +123,6 @@ class Home(ListView):
     def get_queryset(self):
         # top 30 items
         return Product.objects.annotate(likes_count=Count('likes')).order_by('-likes_count')[:30]
-
 
     def get_context_data(self, **kwargs):
         context = super(Home, self).get_context_data(**kwargs)
@@ -155,8 +149,6 @@ class ProductSearch(ListView):
         return None
 
 
-
-
 class FilterCategory(ListView):
     '''Show all products with the filtered category'''
 
@@ -167,13 +159,9 @@ class FilterCategory(ListView):
         return Product.objects.filter(category__id=self.kwargs["id"],
                                       category__slug=self.kwargs["slug"])
 
-
-
-
-
+# error handling functions
 def handler404(request, exception):
     return render(request, "base/error/404.html")
-
 
 def handler500(request, *args, **argv):
     return render(request, "base/error/500.html")

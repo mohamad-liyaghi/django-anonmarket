@@ -82,7 +82,6 @@ class DeleteForum(LoginRequiredMixin, DeleteView):
         return reverse_lazy("forum:user-forums")
 
 
-
 class ForumDetail(LoginRequiredMixin, View):
     '''Detail page of forum and add comment'''
 
@@ -131,7 +130,6 @@ class ForumDetail(LoginRequiredMixin, View):
 
         messages.success(self.request, "sth went wrong with your information", "danger")
         return redirect("forum:forum-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
-
 
 
 class BuyForum(LoginRequiredMixin, View):
