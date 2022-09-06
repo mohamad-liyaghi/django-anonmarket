@@ -22,7 +22,7 @@
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'customer:cart' %}">Cart</a>
+          <a class="nav-link" href="{% url 'customer:cart' %}">Cart ({{ cart_count }})</a>
         </li>
 
         <li class="nav-item dropdown">
@@ -61,7 +61,7 @@
 
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Account (©{{request.user.balance}})
+            {{ request.user.username }} (©{{request.user.balance}})
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="{% url 'authentication:profile' request.user.id request.user.token %}">Profile</a>
