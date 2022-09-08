@@ -4,4 +4,4 @@ def cart_items_counter(request):
     if request.user.is_authenticated:
         return {"cart_count" : request.user.orders.count}
 
-    return None
+    return {"cart_count" : None}
