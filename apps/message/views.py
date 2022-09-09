@@ -51,8 +51,8 @@ class ChatDetail(LoginRequiredMixin, View):
 
     def setup(self, request, *args, **kwargs):
         '''Get The chat'''
-        self.chat = get_object_or_404(Chat, Q(id= kwargs["id"]) & Q(code=kwargs["code"])
-                                 & Q(creator=request.user) | Q(member=request.user))
+        self.chat = get_object_or_404(Chat, Q(id= kwargs["id"]) & Q(code=kwargs["code"]) & Q(creator=request.user)
+                                      | Q(member=request.user) & Q(id= kwargs["id"]) & Q(code=kwargs["code"]))
 
         return super().setup(request, *args, **kwargs)
 
