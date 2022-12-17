@@ -1,9 +1,36 @@
+version: '3.9'
+
 services:
-  web:
+
+  backend:
+
     build: .
-    command: sh -c "python manage.py migrate && python manage.py runserver --insecure 0.0.0.0:8000"
-    container_name: app
-    volumes:
-      - .:/code
+    command: sh docker-entrypoint.sh
+
+
+    container_name: backend
+    restart: on-failure
+
     ports:
       - 8000:8000
+
+    volumes:
+      - .:/backend
+
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.production
+    
+    depends_on:
+      - db
+
+  db:
+    image: postgres:11
+
+    container_name: database
+    restart: on-failure
+
+    ports: 
+          - "5432:5432"
+
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"

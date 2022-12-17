@@ -1,8 +1,17 @@
-FROM python:latest
+FROM python:3.9
 
-WORKDIR /source
+ENV PYTHONUNBUFFERED=1
 
-COPY requirement.txt /source/
+WORKDIR /backend
+
+RUN pip install --upgrade pip 
+
+COPY requirement.txt /backend
+
 RUN pip install -r requirement.txt
 
-COPY . /source/
+COPY . /backend
+
+RUN mv .env-sample .env
+
+EXPOSE 8000
