@@ -1,13 +1,11 @@
 from pathlib import Path
 import os, sys
-
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-# set apps default directory
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
-SECRET_KEY = 'django-insecure-)(l24zm8w=6(^%4r7a0qa@jm8-@*$^7ed1z9d#8tjwhra)(gt8'
-
+SECRET_KEY = config("SECRET_KEY")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -65,12 +63,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 
 AUTH_PASSWORD_VALIDATORS = [
