@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
+from vote.managers import VoteManager
 
 class Vote(models.Model):
     '''A vote model that can be used for products, users, etc.'''
@@ -17,6 +18,8 @@ class Vote(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
+
+    objects = VoteManager()
 
     def __str__(self) -> str:
         return self.vote
