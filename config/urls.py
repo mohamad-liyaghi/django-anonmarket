@@ -30,7 +30,7 @@ urlpatterns = [
     path("blog/", include("apps.blog.urls")),
     path("forum/", include("apps.forum.urls")),
 
-
+    path("vote/", include("apps.vote.urls")),
 
 ]+ static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
 

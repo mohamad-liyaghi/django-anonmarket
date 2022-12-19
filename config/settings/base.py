@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'apps.customer.apps.CustomerConfig',
     'apps.blog.apps.BlogConfig',
     'apps.forum.apps.ForumConfig',
+    'apps.vote.apps.VoteConfig',
 ]
 
 MIDDLEWARE = [
