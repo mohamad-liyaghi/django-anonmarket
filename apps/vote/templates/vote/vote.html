@@ -1,4 +1,5 @@
 {% load base_tags %}
+{% if request.user.is_authenticated %}
 <script src="https://code.jquery.com/jquery-3.6.2.js" integrity="sha256-pkn2CUZmheSeyssYw3vMp1+xyub4m+e+QK4sQskvuo4=" crossorigin="anonymous"></script>
 
 <p style="display:none;" id="content-type-id">{{ object|get_model_content_type_id }}</p>
@@ -20,18 +21,20 @@
     </button>
 </div>
 
+<script type="text/javascript"> window.CSRF_TOKEN = "{{ csrf_token }}"; </script> 
 <script>
-    var content_type_id = document.getElementById("content-type-id").innerHTML;
+    const content_type_id = document.getElementById("content-type-id").innerHTML;
 
     $(document).on('click', '#like-button', function (e) {
         e.preventDefault();
         $.ajax({
           type: 'POST',
-          url: '#',
+          url: "{% url 'vote:vote' %}",
           data: {
             object_id: $('#like-button').val(),
             content_type_id: content_type_id,
-            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+            vote_action: "like",
+            csrfmiddlewaretoken: window.CSRF_TOKEN,
             action: 'post'
           },
           success: function (json) {
@@ -47,11 +50,12 @@
         e.preventDefault();
         $.ajax({
           type: 'POST',
-          url: '#',
+          url: "{% url 'vote:vote' %}",
           data: {
             object_id: $('#dislike-button').val(),
             content_type_id: content_type_id,
-            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+            vote_action: "dislike",
+            csrfmiddlewaretoken: window.CSRF_TOKEN,
             action: 'post'
           },
           success: function (json) {
@@ -64,3 +68,6 @@
       });
 
 </script>
+{% else %}
+<a href={% url 'account_login' %}>Login to rate this object.</a>
+{% endif %}
