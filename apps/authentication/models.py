@@ -1,8 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import BaseUserManager,AbstractBaseUser ,PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.contenttypes.fields import GenericRelation
 
 from .managers import AccountManager
-
+from vote.models import Vote
 
 class Account(AbstractBaseUser, PermissionsMixin):
     '''Custom user model that allows user to log in with nick_name'''
@@ -16,6 +17,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
 
+    vote = GenericRelation(Vote, related_query_name="account_vote")
     objects = AccountManager()
 
     USERNAME_FIELD = "username"
@@ -36,13 +38,3 @@ class Rate(models.Model):
 
     class Meta:
         abstract = True
-
-
-class VendorRate(Rate):
-    '''Users can rate vendors'''
-
-    customer = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="customer_rate")
-    vendor = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="likes")
-
-    def __str__(self):
-        return self.customer.username

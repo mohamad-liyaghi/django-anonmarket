@@ -5,7 +5,7 @@
 <p style="display:none;" id="content-type-id">{{ object|get_model_content_type_id }}</p>
 
 <div class="pr-2">
-    <span class="" id="like_count">{{object.vote.like}}</span>
+    <span class="" id="like_count">{{object.vote.likes}}</span>
     <button class="btn btn-link text-dark p-0 border-0 btn-outline-light" id="like-button" value="{{object.id}}">
       <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-heart" fill="currentColor"
         xmlns="http://www.w3.org/2000/svg">
@@ -13,7 +13,7 @@
     </button>
 
     <br>
-    <span class="" id="dislike_count">{{object.vote.dislike}}</span>
+    <span class="" id="dislike_count">{{object.vote.dislikes}}</span>
     <button class="btn btn-link text-dark p-0 border-0 btn-outline-light" id="dislike-button" value="{{object.id}}">
       <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-heart" fill="currentColor"
         xmlns="http://www.w3.org/2000/svg">

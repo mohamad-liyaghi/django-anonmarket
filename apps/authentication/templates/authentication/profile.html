@@ -10,12 +10,8 @@
 <h6>Username: {{ user.username }}</h6>
 <h6>Date joined: {{ user.date_joined }}</h6>
 <hr>
-<h6>Likes: {{ likes }}</h6>
-<h6>DisLikes: {{ dislikes }}</h6>
-<hr>
 <p>You can also rate this user via links below</p>
-<a href="{% url 'authentication:like' user.id user.token %}"><i class="fa fa-thumbs-up"></i></a>
-<a href="{% url 'authentication:dislike' user.id user.token %}"><i class="fa fa-thumbs-down"></i></a>
+{% include "vote/vote.html" %}
 <br><a href="{% url 'message:get-chat' user.id user.token %}">Contact This User</a>
 <hr>
 <h6>Products:</h6>
