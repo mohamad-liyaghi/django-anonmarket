@@ -38,7 +38,8 @@
             action: 'post'
           },
           success: function (json) {
-            document.getElementById("like_count").innerHTML = json['result']
+            document.getElementById("like_count").innerHTML = json['likes']
+            document.getElementById("dislike_count").innerHTML = json['dislikes']
           },
           error: function (xhr, errmsg, err) {
     
@@ -59,7 +60,8 @@
             action: 'post'
           },
           success: function (json) {
-            document.getElementById("like_count").innerHTML = json['result']
+            document.getElementById("like_count").innerHTML = json['likes']
+            document.getElementById("dislike_count").innerHTML = json['dislikes']
           },
           error: function (xhr, errmsg, err) {
     

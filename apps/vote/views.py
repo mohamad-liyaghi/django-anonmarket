@@ -52,7 +52,7 @@ class VoteView(LoginRequiredMixin, View):
                                         content_type=content_type_model, object_id=object_id)
 
                 #TODO return the likes count
-                return JsonResponse({'foo':'bar'})
+                return JsonResponse({'likes': object.vote.likes(), "dislikes" : object.vote.dislikes()})
 
             return JsonResponse({'error':'invalid information'})
 
