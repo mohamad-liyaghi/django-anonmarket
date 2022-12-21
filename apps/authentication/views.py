@@ -1,10 +1,8 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import View, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
-from django.db.models import F
 
-from authentication.models import Account, VendorRate
+from authentication.models import Account
 
 
 class Profile(DetailView):
@@ -18,51 +16,11 @@ class Profile(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(Profile, self).get_context_data(**kwargs)
-        # get values of all votes related to a user
-        rate = self.get_object().likes.values("vote")
-
-        context['likes'] = rate.filter(vote="l").count()
-        context['dislikes'] = rate.filter(vote="d").count()
+        
         context['products'] = self.get_object().products.all().order_by("likes")
         context["articles"] = self.get_object().articles.all().filter(published=True)[:5]
 
         return context
-
-
-class Like(LoginRequiredMixin, View):
-    '''Like a user'''
-    def get(self, request, id, token):
-        vendor = get_object_or_404(Account, id= id, token= token)
-
-        if vendor == self.request.user:
-            messages.success(self.request, "You cant rate yourself.", "danger")
-            return redirect("authentication:profile", id=id, token=token)
-
-        if not self.request.user.customer_rate.filter(vendor=vendor):
-            VendorRate.objects.create(customer= self.request.user, vendor= vendor, vote="l")
-            messages.success(self.request, "You have liked this user.", "success")
-            return redirect("authentication:profile", id=id, token=token)
-
-        messages.success(self.request, "You have already rated this user.", "warning")
-        return redirect("authentication:profile", id=id, token=token)
-
-
-class DisLike(LoginRequiredMixin, View):
-    '''DisLike a user'''
-    def get(self, request, id, token):
-        vendor = get_object_or_404(Account, id= id, token= token)
-
-        if vendor == self.request.user:
-            messages.success(self.request, "You cant rate yourself.", "danger")
-            return redirect("authentication:profile", id=id, token=token)
-
-        if not self.request.user.customer_rate.filter(vendor=vendor):
-            VendorRate.objects.create(customer= self.request.user, vendor= vendor, vote="d")
-            messages.success(self.request, "You have disliked this user.", "success")
-            return redirect("authentication:profile", id=id, token=token)
-
-        messages.success(self.request, "You have already rated this user.", "warning")
-        return redirect("authentication:profile", id=id, token=token)
 
 
 class Exchange(LoginRequiredMixin, View):

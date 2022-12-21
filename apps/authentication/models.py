@@ -38,13 +38,3 @@ class Rate(models.Model):
 
     class Meta:
         abstract = True
-
-
-class VendorRate(Rate):
-    '''Users can rate vendors'''
-
-    customer = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="customer_rate")
-    vendor = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="likes")
-
-    def __str__(self):
-        return self.customer.username
