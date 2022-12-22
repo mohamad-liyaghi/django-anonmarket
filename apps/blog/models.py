@@ -27,16 +27,6 @@ class Article(models.Model):
         return self.title
 
 
-class ArticleRate(Rate):
-    '''Like or dislike an article'''
-
-    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="article_rate")
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="likes")
-
-    def __str__(self):
-        return self.user.username
-
-
 class Comment(models.Model):
     '''Base comment model'''
 

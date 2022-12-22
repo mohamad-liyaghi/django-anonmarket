@@ -7,7 +7,7 @@ from django.db.models import Q, Count
 from django.urls import reverse_lazy
 
 from blog.forms import ArticleForm, CommentForm
-from blog.models import Article, ArticleRate, ArticleComment
+from blog.models import Article, ArticleComment
 
 
 
@@ -121,12 +121,6 @@ class ArticleDetail(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ArticleDetail, self).get_context_data(**kwargs)
-
-        # get values of all votes related to a user
-        rate = self.get_object().likes.values("vote")
-
-        context['likes'] = rate.filter(vote="l").count()
-        context['dislikes'] = rate.filter(vote="d").count()
         context["comments"] = self.get_object().comments.all().order_by('-date')
 
         return context
@@ -184,44 +178,6 @@ class UserArticleList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Article.objects.filter(author=self.request.user)
-
-
-class LikeArticle(LoginRequiredMixin, View):
-    '''Like an article'''
-
-    def get(self, request, id, slug):
-        article = get_object_or_404(Article, id=id, slug=slug)
-
-        if article.author == self.request.user:
-            messages.success(self.request, "You cant rate your article.", "danger")
-            return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
-
-        if not self.request.user.article_rate.filter(article=article):
-            ArticleRate.objects.create(user=self.request.user, article=article, vote="l")
-            messages.success(self.request, "You have liked this Article.", "success")
-            return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
-
-        messages.success(self.request, "You have already rated this Article.", "warning")
-        return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
-
-
-class DisLikeArticle(LoginRequiredMixin, View):
-    '''DisLike an article'''
-
-    def get(self, request, id, slug):
-        article = get_object_or_404(Article, id=id, slug=slug)
-
-        if article.author == self.request.user:
-            messages.success(self.request, "You cant rate your article.", "danger")
-            return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
-
-        if not self.request.user.article_rate.filter(article=article):
-            ArticleRate.objects.create(user=self.request.user, article=article, vote="d")
-            messages.success(self.request, "You have disliked this Article.", "success")
-            return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
-
-        messages.success(self.request, "You have already rated this Article.", "warning")
-        return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
 
 
 class DeleteComment(LoginRequiredMixin, DeleteView):
