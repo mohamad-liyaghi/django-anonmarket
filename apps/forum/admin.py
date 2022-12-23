@@ -1,5 +1,5 @@
 from django.contrib import admin
-from forum.models import Forum, ForumComment, ForumRate
+from forum.models import Forum, ForumComment
 
 
 @admin.register(Forum)
@@ -8,4 +8,3 @@ class ForumAdmin(admin.ModelAdmin):
     list_display = ("title", "author", "closed")
 
 admin.site.register(ForumComment)
-admin.site.register(ForumRate)
