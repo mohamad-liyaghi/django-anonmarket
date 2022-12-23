@@ -15,11 +15,7 @@
     <p>{{ forum.body }}</p>
     <hr>
     <h2>Rate this forum</h2>
-    <h6>Total likes: {{ likes }}</h6>
-    <h6>Total dislikes: {{ dislikes }}</h6>
-
-    <a href="{% url 'forum:like-forum' forum.id forum.slug %}"><i class="fa fa-thumbs-up"></i></a>
-    <a href="{% url 'forum:dislike-forum' forum.id forum.slug %}"><i class="fa fa-thumbs-down"></i></a>
+      {% include "vote/vote.html" %}
     <hr>
     <h2>Comments</h2>
     {% if not forum.closed %}

@@ -204,7 +204,7 @@ class TopArticleList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Article.objects.annotate(
-                    rate_count= Count('likes')
+                    rate_count= Count('vote')
                              ).filter(Q(published=True)).order_by('-rate_count') [:20]
 
 

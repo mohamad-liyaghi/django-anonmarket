@@ -1,7 +1,9 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericRelation
 
 from authentication.models import Account
 from blog.models import Comment
+from vote.models import Vote
 
 
 class Forum(models.Model):
@@ -21,6 +23,7 @@ class Forum(models.Model):
     closed = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True)
 
+    vote = GenericRelation(Vote, related_query_name="forum_vote")
 
     def __str__(self):
         return self.title
