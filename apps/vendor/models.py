@@ -1,5 +1,7 @@
 from django.db import models
-from authentication.models import Account, Rate
+from django.contrib.contenttypes.fields import GenericRelation
+from authentication.models import Account
+from vote.models import Vote
 
 
 class Category(models.Model):
@@ -39,6 +41,8 @@ class Product(models.Model):
 
     price = models.IntegerField(default=0)
     is_available = models.BooleanField(default=False)
+
+    vote = GenericRelation(Vote, related_query_name="product_vote")
 
     def __str__(self):
         return self.title
