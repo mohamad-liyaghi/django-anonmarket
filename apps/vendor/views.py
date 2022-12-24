@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Q
 
 
-from vendor.models import Country, Category, Product, ProductRate
+from vendor.models import Country, Category, Product
 from customer.models import Order
 from .forms import ProductForm
 
@@ -85,44 +85,6 @@ class ProductDetail(DetailView):
 
     def get_object(self):
         return get_object_or_404(Product, id=self.kwargs["id"], slug=self.kwargs["slug"])
-
-
-class LikeProduct(LoginRequiredMixin, View):
-    '''Like a product'''
-
-    def get(self, request, id, slug):
-        product = get_object_or_404(Product, id=id, slug=slug)
-
-        if product.seller == self.request.user:
-            messages.success(self.request, "You cant rate your product.", "danger")
-            return redirect("vendor:product-detail", id=id, slug=slug)
-
-        if not self.request.user.product_rate.filter(product=product):
-            ProductRate.objects.create(customer=self.request.user, product=product, vote="l")
-            messages.success(self.request, "You have liked this Product.", "success")
-            return redirect("vendor:product-detail", id=id, slug=slug)
-
-        messages.success(self.request, "You have already rated this Product.", "warning")
-        return redirect("vendor:product-detail", id=id, slug=slug)
-
-
-class DisLikeProduct(LoginRequiredMixin, View):
-    '''DisLike a product'''
-
-    def get(self, request, id, slug):
-        product = get_object_or_404(Product, id=id, slug=slug)
-
-        if product.seller == self.request.user:
-            messages.success(self.request, "You cant rate your product.", "danger")
-            return redirect("vendor:product-detail", id=id, slug=slug)
-
-        if not self.request.user.product_rate.filter(product=product):
-            ProductRate.objects.create(customer=self.request.user, product=product, vote="d")
-            messages.success(self.request, "You have disliked this Product.", "success")
-            return redirect("vendor:product-detail", id=id, slug=slug)
-
-        messages.success(self.request, "You have already rated this Product.", "warning")
-        return redirect("vendor:product-detail", id=id, slug=slug)
 
 
 class AcceptOrder(LoginRequiredMixin, View):
