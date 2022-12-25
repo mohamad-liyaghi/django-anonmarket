@@ -1,0 +1,16 @@
+<div class="sidenav">
+    {% for parent in categories %}
+
+          <button class="dropdown-btn">{{parent}}
+            <i class="fa fa-caret-down"></i>
+          </button>
+
+              <div class="dropdown-container">
+                  {% for child in parent.children.all %}
+                    <a href="{% url 'customer:filter-category' child.id child.slug %}">{{ child }}</a>
+                  {% endfor %}
+              </div>
+
+    {% endfor %}
+
+</div>

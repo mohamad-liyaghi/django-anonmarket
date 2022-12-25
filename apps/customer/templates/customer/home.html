@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load category_tag %}
 
 {% block title %} Home page {% endblock title %}
 
@@ -8,22 +9,7 @@
 <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<div class="sidenav">
-    {% for parent in parent_categories %}
-
-          <button class="dropdown-btn">{{parent}}
-            <i class="fa fa-caret-down"></i>
-          </button>
-
-              <div class="dropdown-container">
-                  {% for child in parent.children.all %}
-                    <a href="{% url 'customer:filter-category' child.id child.slug %}">{{ child }}</a>
-                  {% endfor %}
-              </div>
-
-    {% endfor %}
-
-</div>
+{% category_sidebar %}
 
 <div class="main">
 

@@ -122,15 +122,7 @@ class Home(ListView):
 
     def get_queryset(self):
         # top 30 items
-        return Product.objects.annotate(likes_count=Count('likes')).order_by('-likes_count')[:30]
-
-    def get_context_data(self, **kwargs):
-        context = super(Home, self).get_context_data(**kwargs)
-
-        context['parent_categories'] = Category.objects.filter(parent__isnull=True)[:20]
-
-        return context
-
+        return Product.objects.annotate(likes_count=Count('vote')).order_by('-likes_count')[:30]
 
 class ProductSearch(ListView):
     '''Result of searchs'''
