@@ -25,16 +25,3 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
-
-
-class Rate(models.Model):
-    '''A abstract model for all rating models (vendors, products...)'''
-
-    class Choice(models.TextChoices):
-        like = ("l", "Like")
-        dislike = ("d", "Dislike")
-
-    vote = models.CharField(max_length=1, choices=Choice.choices, default=Choice.like)
-
-    class Meta:
-        abstract = True
