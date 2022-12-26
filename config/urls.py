@@ -31,6 +31,7 @@ urlpatterns = [
     path("forum/", include("apps.forum.urls")),
 
     path("vote/", include("apps.vote.urls")),
+    path("comment/", include("apps.comment.urls")),
 
 ]+ static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
 
