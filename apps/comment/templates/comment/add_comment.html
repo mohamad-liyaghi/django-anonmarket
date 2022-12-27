@@ -1,0 +1,43 @@
+{% if request.user.is_authenticated %}
+    <div class="input-group mb-3">
+        <input type="text" name="body" id="id_comment" class="form-control" placeholder="Add Comment"  aria-describedby="basic-addon2">
+        <div class="input-group-append">
+        <button class="btn btn-outline-success" type="button" id="comment-submit" value="{{ object.id }}">
+            Submit
+        </button>
+        </div>
+    </div>
+
+    
+    <script>
+        window.CSRF_TOKEN = "{{ csrf_token }}";
+
+        $(document).on('click', '#comment-submit', function (e) {
+            var comment_content = document.getElementById("id_comment").value;
+            console.log(comment_content)
+
+            e.preventDefault();
+            $.ajax({
+            type: 'POST',
+            url: "#",
+            data: {
+                object_id: $('#comment-submit').val(),
+                content_type_id: content_type_id,
+                content: comment_content,
+                csrfmiddlewaretoken: window.CSRF_TOKEN,
+                action: 'post'
+            },
+            success: function (json) {
+
+            },
+            error: function (xhr, errmsg, err) {
+        
+            }
+            });
+        });
+
+    </script>
+    
+{% else %}
+    <a href={% url 'account_login' %}>Login to comment this object.</a>
+{% endif %}
