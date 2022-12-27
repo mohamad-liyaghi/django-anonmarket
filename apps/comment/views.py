@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
 from comment.models import Comment
+import datetime
 
 
 def is_ajax(request):
@@ -28,9 +29,14 @@ class AddCommentView(LoginRequiredMixin, View):
                     content_type_model = get_object_or_404(ContentType, id=content_type_id)
                     object = get_object_or_404(content_type_model.model_class(), id=object_id)
 
-                    #TODO create limitation for adding comments
-                    comment = Comment.objects.create(user=request.user, content=content, 
-                                    content_object= object)
+                    time = datetime.datetime.now() - datetime.timedelta(minutes=5)
+
+                    if Comment.objects.filter(user=self.request.user, date__gte=time).count() <= 5:
+                        Comment.objects.create(user=request.user, content=content, 
+                                        content_object= object)
+                        return JsonResponse({'created':'Comment created'})                                                    
+
+                    return JsonResponse({'limit-error':'more than 5 comments in 5 mins is not allowed'})            
 
 
             return JsonResponse({'error':'invalid information'})    

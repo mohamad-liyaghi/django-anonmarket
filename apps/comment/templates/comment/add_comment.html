@@ -13,8 +13,7 @@
         window.CSRF_TOKEN = "{{ csrf_token }}";
 
         $(document).on('click', '#comment-submit', function (e) {
-            var comment_content = document.getElementById("id_comment").value;
-            console.log(comment_content)
+            var comment_content = document.getElementById("id_comment");
 
             e.preventDefault();
             $.ajax({
@@ -23,13 +22,22 @@
             data: {
                 object_id: $('#comment-submit').val(),
                 content_type_id: content_type_id,
-                content: comment_content,
+                content: comment_content.value,
                 csrfmiddlewaretoken: window.CSRF_TOKEN,
                 action: 'post'
             },
+
             success: function (json) {
-                window.alert("Comment added, thanks for your comment.")
+                if (json["limit-error"]){
+                    window.alert("Too many attempt, try again after 5 mins.")    
+                }   
+                else if (json["created"]){
+                    window.alert("Comment created.")    
+                }
+                comment_content.value = "";
+                
             },
+            
             error: function (xhr, errmsg, err) {
         
             }
