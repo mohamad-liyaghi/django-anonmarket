@@ -19,7 +19,7 @@
             e.preventDefault();
             $.ajax({
             type: 'POST',
-            url: "#",
+            url: "{% url 'comment:add-comment' %}",
             data: {
                 object_id: $('#comment-submit').val(),
                 content_type_id: content_type_id,
@@ -28,7 +28,7 @@
                 action: 'post'
             },
             success: function (json) {
-
+                window.alert("Comment added, thanks for your comment.")
             },
             error: function (xhr, errmsg, err) {
         
@@ -37,7 +37,7 @@
         });
 
     </script>
-    
+
 {% else %}
     <a href={% url 'account_login' %}>Login to comment this object.</a>
 {% endif %}
