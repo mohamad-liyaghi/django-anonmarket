@@ -1,1 +1,4 @@
+{% load comment_tags %}
 {% include 'comment/add_comment.html' %}
+
+{{ object|get_object_comments }}
