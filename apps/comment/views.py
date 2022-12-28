@@ -42,3 +42,31 @@ class AddCommentView(LoginRequiredMixin, View):
             return JsonResponse({'error':'invalid information'})    
 
         return redirect("customer:home")
+
+
+
+class CommentDeleteView(LoginRequiredMixin, View):
+    def get(self, request):
+        return redirect("customer:home")
+
+    def post(self, request):
+        if is_ajax(request):
+            # check if object_id and content_type and comment content exists
+            if (object_id:=request.POST.get('object_id')) and \
+                (content_type_id:=request.POST.get('content_type_id')) and \
+                    (comment_id:=request.POST.get('comment_id')): 
+                
+                    content_type_model = get_object_or_404(ContentType, id=content_type_id)
+                    object = get_object_or_404(content_type_model.model_class(), id=object_id)
+                    comment = object.comment.filter(user=self.request.user, id=comment_id)
+
+                    if comment:
+                        comment.first().delete()
+                        return JsonResponse({'deleted':'Comment deleted'})                      
+
+                    return JsonResponse({'not found':'Comment does not found'})
+
+
+            return JsonResponse({'error':'invalid information'})    
+
+        return redirect("customer:home")

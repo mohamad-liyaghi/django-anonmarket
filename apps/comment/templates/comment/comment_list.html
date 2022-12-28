@@ -1,10 +1,11 @@
 {% load comment_tags %}
+{% load base_tags %}
 {% load static %}
 
 
 
 <link rel="stylesheet" href="{% static 'css/comment.css' %}">
-<script src="{% static 'js/comment.js' %}"></script>
+
 <div class="container bootstrap snippets bootdey">
     <div class="row">
 		<div class="col-md-12">
@@ -15,7 +16,10 @@
 				{% for comment in  object|get_object_comments %}
                     <li class="clearfix">
                         <div class="post-comments">
-                            <p class="meta">{{ comment.date }}<a href="{% url 'authentication:profile' comment.user.id comment.user.token %}">{{ comment.user }}</a> says : <i class="pull-right"><a href="#"><small>Reply</small></a></i></p>
+                            <p class="meta">{{ comment.date }}<a href="{% url 'authentication:profile' comment.user.id comment.user.token %}">{{ comment.user }}</a> says :
+								 {% if request.user == comment.user %}
+								 <i class="pull-right"><input type="button" onclick="delete_comment({{ comment.id }}, {{ object|get_model_content_type_id }}, {{ object.id }})" value="delete"></a></i></p>
+								 {% endif %}
                             <p>
                                 {{comment.content}}
                             </p>
@@ -26,7 +30,11 @@
 							<ul class="comments">
 								<li class="clearfix">
 									<div class="post-comments">
-										<p class="meta">{{ child.date }}<a href="{% url 'authentication:profile' child.user.id child.user.token %}">{{ child.user }}</a> says : <i class="pull-right"><a href="#"><small>Reply</small></a></i></p>
+										<p class="meta">{{ child.date }}<a href="{% url 'authentication:profile' child.user.id child.user.token %}">{{ child.user }}</a> says : 
+											{% if request.user == child.user %}
+											<i class="pull-right"><input type="button" onclick="delete_comment({{ child.id }}, {{ object|get_model_content_type_id }}, {{ object.id }})" value="delete"></a></i></p>
+											{% endif %}
+										</p>
 										<p>
 											{{ child.content }}
 										</p>
@@ -42,3 +50,28 @@
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript"> window.CSRF_TOKEN = "{{ csrf_token }}"; </script> 
+<script>
+	function delete_comment(comment_id, content_type_id, object_id) {
+		$.ajax({
+			type: 'POST',
+			url: "{% url 'comment:delete-comment' %}",
+			data: {
+			  comment_id: comment_id,
+			  content_type_id: content_type_id,
+			  object_id: object_id,
+			  csrfmiddlewaretoken: window.CSRF_TOKEN,
+			  action: 'post'
+			},
+			success: function (json) {
+			  if (json["deleted"]){
+				window.alert("Comment deleted, refresh for update.");
+			  }
+			},
+			error: function (xhr, errmsg, err) {
+	  
+			}
+		  });
+	}
+  </script>
