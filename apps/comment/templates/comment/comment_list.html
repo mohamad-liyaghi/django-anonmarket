@@ -1,0 +1,42 @@
+{% load comment_tags %}
+{% load static %}
+
+
+
+<link rel="stylesheet" href="{% static 'css/comment.css' %}">
+<script src="{% static 'js/comment.js' %}"></script>
+<div class="container bootstrap snippets bootdey">
+    <div class="row">
+		<div class="col-md-12">
+		    <div class="blog-comment">
+				<h3>Comments</h3>
+                <hr/>
+				<ul class="comments">
+				{% for comment in  object|get_object_comments %}
+                    <li class="clearfix">
+                        <div class="post-comments">
+                            <p class="meta">{{ comment.date }}<a href="{% url 'authentication:profile' comment.user.id comment.user.token %}">{{ comment.user }}</a> says : <i class="pull-right"><a href="#"><small>Reply</small></a></i></p>
+                            <p>
+                                {{comment.content}}
+                            </p>
+                        </div>
+                    </li>
+                {% endfor %}
+				
+				  <ul class="comments">
+				      <li class="clearfix">
+				          <div class="post-comments">
+				              <p class="meta">Dec 20, 2014 <a href="#">JohnDoe</a> says : <i class="pull-right"><a href="#"><small>Reply</small></a></i></p>
+				              <p>
+				                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+				                  Etiam a sapien odio, sit amet
+				              </p>
+				          </div>
+				      </li>
+				  </ul>
+				</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
