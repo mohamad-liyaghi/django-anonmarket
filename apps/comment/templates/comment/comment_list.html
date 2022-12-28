@@ -21,19 +21,21 @@
                             </p>
                         </div>
                     </li>
+					{% if comment.children %}
+						{% for child in comment.children.all %}
+							<ul class="comments">
+								<li class="clearfix">
+									<div class="post-comments">
+										<p class="meta">{{ child.date }}<a href="{% url 'authentication:profile' child.user.id child.user.token %}">{{ child.user }}</a> says : <i class="pull-right"><a href="#"><small>Reply</small></a></i></p>
+										<p>
+											{{ child.content }}
+										</p>
+									</div>
+								</li>
+							</ul>
+						{% endfor %}
+					{% endif %}
                 {% endfor %}
-				
-				  <ul class="comments">
-				      <li class="clearfix">
-				          <div class="post-comments">
-				              <p class="meta">Dec 20, 2014 <a href="#">JohnDoe</a> says : <i class="pull-right"><a href="#"><small>Reply</small></a></i></p>
-				              <p>
-				                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-				                  Etiam a sapien odio, sit amet
-				              </p>
-				          </div>
-				      </li>
-				  </ul>
 				</li>
 				</ul>
 			</div>
