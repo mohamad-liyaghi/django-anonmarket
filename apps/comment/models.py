@@ -1,7 +1,9 @@
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.db import models
+
+from vote.models import Vote
 
 
 class Comment(models.Model):
@@ -21,6 +23,8 @@ class Comment(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
+
+    vote = GenericRelation(Vote)
 
 
     def __str__(self) -> str:
