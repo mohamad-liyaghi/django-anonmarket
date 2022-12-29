@@ -6,8 +6,8 @@ from django.db.models import Q
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
 
-from .forms import ForumForm, CommentForm
-from forum.models import Forum, ForumComment
+from .forms import ForumForm
+from forum.models import Forum
 
 
 class ForumList(LoginRequiredMixin, ListView):
@@ -105,28 +105,9 @@ class ForumDetail(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
 
-        form = CommentForm()
-        comments = self.object.comments.all()
-
-        context = {"forum" : self.object, "object" : self.object, "form" : form, "comments" : comments}
+        context = {"forum" : self.object, "object" : self.object}
         return render(self.request, self.template_name, context)
 
-    def post(self, request, *args, **kwargs):
-        '''Create comment if request method was post'''
-
-        form = CommentForm(self.request.POST)
-
-        if form.is_valid():
-            data = form.save(commit=False)
-            data.user = self.request.user
-            data.forum = self.object
-            data.save()
-
-            messages.success(self.request, "comment added to this post.", "success")
-            return redirect("forum:forum-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
-
-        messages.success(self.request, "sth went wrong with your information", "danger")
-        return redirect("forum:forum-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
 
 
 class BuyForum(LoginRequiredMixin, View):
@@ -158,20 +139,6 @@ class BuyForum(LoginRequiredMixin, View):
 
         messages.success(self.request, "You have already bought this item", "warning")
         return redirect("forum:forum-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
-
-
-class DeleteComment(LoginRequiredMixin, DeleteView):
-    '''Delete a comment by forum owner or user'''
-
-    template_name = "forum/delete-forum.html"
-
-    def get_object(self):
-        return get_object_or_404(ForumComment, Q(user=self.request.user)| Q(forum__author=self.request.user))
-
-    def get_success_url(self):
-        return reverse_lazy("forum:forum-detail",
-                            kwargs={"id" : self.kwargs["id"], "slug" : self.kwargs["slug"]})
-
 
 class ForumSearch(ListView):
     '''Result of search'''

@@ -29,15 +29,3 @@ class Forum(models.Model):
         return self.title
 
 
-class ForumComment(Comment):
-    """Comment model for Forums"""
-
-    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="forum_comment",
-                             blank=True, null=True)
-
-    forum = models.ForeignKey(Forum, on_delete=models.CASCADE,
-                              related_name="comments", blank=True, null=True)
-
-    def __str__(self):
-        return f"{self.forum} | {self.user}"
-
