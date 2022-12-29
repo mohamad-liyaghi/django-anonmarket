@@ -31,12 +31,3 @@ class Article(models.Model):
     def __str__(self):
         return self.title
 
-
-class Comment(models.Model):
-    '''Base comment model'''
-
-    body = models.TextField()
-    date = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        abstract = True
