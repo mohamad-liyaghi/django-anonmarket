@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.db.models import Q, Count
 from django.urls import reverse_lazy
 
-from blog.forms import ArticleForm, CommentForm
-from blog.models import Article, ArticleComment
+from blog.forms import ArticleForm
+from blog.models import Article
 
 
 
@@ -78,7 +78,7 @@ class ArticleDetail(LoginRequiredMixin, DetailView):
 
     def dispatch(self, request, *args, **kwargs):
         object = self.get_object()
-        
+
         if object.published:
             if object.price != 0:
                 # check if user has permission
@@ -97,12 +97,6 @@ class ArticleDetail(LoginRequiredMixin, DetailView):
 
     def get_object(self):
         return get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"])
-
-    def get_context_data(self, **kwargs):
-        context = super(ArticleDetail, self).get_context_data(**kwargs)
-        context["comments"] = self.get_object().comments.all().order_by('-date')
-
-        return context
 
 
 class PublishArticle(LoginRequiredMixin, View):
@@ -157,21 +151,6 @@ class UserArticleList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Article.objects.filter(author=self.request.user)
-
-
-class DeleteComment(LoginRequiredMixin, DeleteView):
-    '''Delete a comment by article owner or user'''
-
-    template_name = "blog/delete-article.html"
-
-    def get_object(self):
-        return get_object_or_404(ArticleComment, Q(user=self.request.user)
-                                 | Q(article__author=self.request.user))
-
-    def get_success_url(self):
-        obj = self.get_object()
-        return reverse_lazy("blog:article-detail",
-                            kwargs={"id" : obj.article.id, "slug" : obj.article.slug})
 
 
 class TopArticleList(LoginRequiredMixin, ListView):

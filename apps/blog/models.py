@@ -40,13 +40,3 @@ class Comment(models.Model):
 
     class Meta:
         abstract = True
-
-
-class ArticleComment(Comment):
-    """Comment model for articles"""
-
-    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="article_comment", blank=True, null=True)
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="comments", blank=True, null=True)
-
-    def __str__(self):
-        return f"{self.article} | {self.user}"
