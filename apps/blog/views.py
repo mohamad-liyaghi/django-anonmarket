@@ -78,28 +78,7 @@ class ArticleDetail(LoginRequiredMixin, DetailView):
 
     def dispatch(self, request, *args, **kwargs):
         object = self.get_object()
-
-        if request.method == "POST" and object.published :
-            if self.request.user in object.allowed_members.all() or object.price == 0:
-                # get the comment field
-                comment = request.POST.get("body")
-
-                if comment:
-                    # save the comment
-                    form = CommentForm(self.request.POST)
-
-                    if form.is_valid():
-                        form = form.save(commit=False)
-                        form.article = object
-                        form.user = self.request.user
-                        form.save()
-                        messages.success(request, "comment added successfully", "success")
-                        return redirect("blog:article-detail", object.id, object.slug)
-
-                # redirect if comment was empty
-                return redirect("blog:article-detail", object.id, object.slug)
-
-
+        
         if object.published:
             if object.price != 0:
                 # check if user has permission
