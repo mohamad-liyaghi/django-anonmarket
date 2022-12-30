@@ -26,7 +26,7 @@
 									<div class="pr-2">
 										<span class="" id="like_count_{{ comment.id }}">{{comment.vote.likes}}</span>
 										<button class="btn btn-link text-dark p-0 border-0 btn-outline-light" id="like-button" 
-										onclick="reaction({{ object|get_model_content_type_id }}, {{ object.id }}, 'like', 'like_count_{{ comment.id }}', 
+										onclick="reaction({{ comment|get_model_content_type_id }}, {{ comment.id }}, 'like', 'like_count_{{ comment.id }}', 
       									'dislike_count_{{ comment.id }}')">
 										  <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-heart" fill="currentColor"
 											xmlns="http://www.w3.org/2000/svg">
@@ -36,7 +36,7 @@
 										<br>
 										<span class="" id="dislike_count_{{ comment.id }}">{{comment.vote.dislikes}}</span>
 										<button class="btn btn-link text-dark p-0 border-0 btn-outline-light" id="dislike-button" 
-										onclick="reaction({{ object|get_model_content_type_id }}, {{ object.id }}, 'dislike', 'like_count_{{ comment.id }}', 
+										onclick="reaction({{ comment|get_model_content_type_id }}, {{ comment.id }}, 'dislike', 'like_count_{{ comment.id }}', 
       									'dislike_count_{{ comment.id }}')">
 										  <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-heart" fill="currentColor"
 											xmlns="http://www.w3.org/2000/svg">
@@ -62,7 +62,7 @@
 												<div class="pr-2">
 													<span class="" id="like_count_{{ child.id }}">{{child.vote.likes}}</span>
 													<button class="btn btn-link text-dark p-0 border-0 btn-outline-light" id="like-button" 
-													onclick="reaction({{ object|get_model_content_type_id }}, {{ object.id }}, 'like', 'like_count_{{ child.id }}', 
+													onclick="reaction({{ child|get_model_content_type_id }}, {{ child.id }}, 'like', 'like_count_{{ child.id }}', 
 													  'dislike_count_{{ child.id }}')">
 													  <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-heart" fill="currentColor"
 														xmlns="http://www.w3.org/2000/svg">
