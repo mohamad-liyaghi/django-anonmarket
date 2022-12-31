@@ -1,50 +1,22 @@
+{% load base_tags %}
+{% load static %}
+
+<input type="hidden" id="Comment-Url" data-url="{% url 'comment:add-comment' %}" />
+<input type="hidden" id="CSRF" data="{{ csrf_token }}" />
+
+<script src="{% static 'js/add_comment.js' %}" type="text/javascript"></script>
+
 {% if request.user.is_authenticated %}
     <div class="input-group mb-3">
         <input type="text" name="body" id="id_comment" class="form-control" placeholder="Add Comment"  aria-describedby="basic-addon2">
         <div class="input-group-append">
-        <button class="btn btn-outline-success" type="button" id="comment-submit" value="{{ object.id }}">
+        <button class="btn btn-outline-success" type="button" id="comment-submit"
+        onclick="add_comment({{object|get_model_content_type_id}}, {{object.id}})">
             Submit
         </button>
         </div>
     </div>
 
-    
-    <script>
-        window.CSRF_TOKEN = "{{ csrf_token }}";
-
-        $(document).on('click', '#comment-submit', function (e) {
-            var comment_content = document.getElementById("id_comment");
-
-            e.preventDefault();
-            $.ajax({
-            type: 'POST',
-            url: "{% url 'comment:add-comment' %}",
-            data: {
-                object_id: $('#comment-submit').val(),
-                content_type_id: content_type_id,
-                content: comment_content.value,
-                csrfmiddlewaretoken: window.CSRF_TOKEN,
-                action: 'post'
-            },
-
-            success: function (json) {
-                if (json["limit-error"]){
-                    window.alert("Too many attempt, try again after 5 mins.")    
-                }   
-                else if (json["created"]){
-                    window.alert("Comment created.")    
-                }
-                comment_content.value = "";
-                
-            },
-            
-            error: function (xhr, errmsg, err) {
-        
-            }
-            });
-        });
-
-    </script>
 
 {% else %}
     <a href={% url 'account_login' %}>Login to comment this object.</a>
