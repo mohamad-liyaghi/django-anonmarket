@@ -122,7 +122,7 @@ class Home(ListView):
 
     def get_queryset(self):
         # top 30 items
-        return Product.objects.annotate(likes_count=Count('vote')).order_by('-likes_count')[:30]
+        return Product.objects.order_by("-vote")[:30]
 
 class ProductSearch(ListView):
     '''Result of searchs'''

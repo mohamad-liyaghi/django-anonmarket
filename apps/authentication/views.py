@@ -17,7 +17,7 @@ class Profile(DetailView):
     def get_context_data(self, **kwargs):
         context = super(Profile, self).get_context_data(**kwargs)
         
-        context['products'] = self.get_object().products.all().order_by("likes")
+        context['products'] = self.get_object().products.all().order_by("-vote")
         context["articles"] = self.get_object().articles.all().filter(published=True)[:5]
 
         return context
