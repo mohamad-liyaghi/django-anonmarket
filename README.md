@@ -15,7 +15,7 @@ This project contains 6 applications. <br>
   <li>Forum</li>
   <li>Blog</li>
   <li>Messages</li>
-</ol> 
+</ol>
 
 ### Authentication
 <p>
@@ -72,7 +72,7 @@ This project contains 6 applications. <br>
   <li>Rate/Comment System.</li>
   <li>Chat List.</li>
   <li>Buy Article.</li>
-    
+
 </ol>
 <hr>
 
@@ -86,7 +86,7 @@ This project contains 6 applications. <br>
   <li>Answer Forums.</li>
   <li>Close forum.</li>
   <li>Purchase forum</li>
-    
+
 </ol>
 <hr>
 
@@ -95,7 +95,7 @@ This project contains 6 applications. <br>
 ### First you have to clone this project and cd to the source folder.
 
 ```commandline
-$ git clone https://github.com/Ml06py/django-anonmarket.git && cd https://github.com/Ml06py/django-anonmarket.git 
+$ git clone https://github.com/mohamad-liyaghi/django-anonmarket.git && cd django-anonmarket 
 ```
 
 ### If you have docker installed of your pc, you can run the project with one command
