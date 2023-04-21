@@ -22,7 +22,7 @@ INSTALLED_APPS = [
     'allauth.account',
 
     # local apps
-    'apps.authentication.apps.AuthenticationConfig',
+    'apps.accounts.apps.AccountsConfig',
     'apps.vendor.apps.VendorConfig',
     'apps.message.apps.MessageConfig',
     'apps.customer.apps.CustomerConfig',
@@ -108,7 +108,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 SITE_ID = 1
 
 # Authentication
-AUTH_USER_MODEL = "authentication.Account"
+AUTH_USER_MODEL = "accounts.Account"
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
@@ -120,7 +120,7 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 
 
 ACCOUNT_FORMS = {
-    'signup': 'apps.authentication.forms.RegisterForm'
+    'signup': 'apps.accounts.forms.RegisterForm'
 }
 
 LOGIN_REDIRECT_URL = 'customer:home'

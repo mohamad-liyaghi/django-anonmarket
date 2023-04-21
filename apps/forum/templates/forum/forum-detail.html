@@ -8,7 +8,7 @@
 <div>
     <h3>{{ forum.title }}</h3>
     <hr>
-    <small>Created by: <a href="{% url 'authentication:profile' forum.author.id forum.author.token %}">{{ forum.author }}</a>
+    <small>Created by: <a href="{% url 'accounts:profile' forum.author.id forum.author.token %}">{{ forum.author }}</a>
     at: {{ forum.date }}</small>
     <br>
     <hr>

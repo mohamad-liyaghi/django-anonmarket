@@ -1,5 +1,5 @@
 from django import forms
-from authentication.models import Account
+from accounts.models import Account
 import random
 
 class RegisterForm(forms.ModelForm):

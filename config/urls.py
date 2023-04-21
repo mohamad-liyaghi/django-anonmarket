@@ -23,7 +23,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     path('__debug__/', include('debug_toolbar.urls')),
 
-    path("auth/", include("apps.authentication.urls")),
+    path("auth/", include("apps.accounts.urls")),
     path("vendor/", include("apps.vendor.urls")),
     path("message/", include("apps.message.urls")),
     path("", include("apps.customer.urls")),

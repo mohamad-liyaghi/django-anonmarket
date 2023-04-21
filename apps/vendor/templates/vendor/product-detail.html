@@ -18,7 +18,7 @@
                     <h4 class="card-title">{{ product.title }}</h4> <br>
                     <p class="card-text" style="color:red;">Price: ©{{ product.price }}</p>
                     <div class="shadow-none p-3 mb-5 bg-light rounded">
-                        <p>Seller: <a href="{% url 'authentication:profile' product.seller.id product.seller.token %}">{{ product.seller }}</a></p>
+                        <p>Seller: <a href="{% url 'accounts:profile' product.seller.id product.seller.token %}">{{ product.seller }}</a></p>
                         <p>Ship from: {{ product.shipping_from }}</p>
                         <p>Ship to: {{ product.shipping_to }}</p>
                         <p>Category: <a href="{% url 'customer:filter-category' product.category.id product.category.slug %}">{{ product.category.parent }} | {{ product.category }}</a></p>

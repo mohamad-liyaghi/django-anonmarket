@@ -12,7 +12,7 @@
                 {{ order.code }}
             </div>
             <div class="col-sm">
-                {{ order.get_status_display }} | <a href="{% url 'authentication:profile' order.item.seller.id order.item.seller.token %}">
+                {{ order.get_status_display }} | <a href="{% url 'accounts:profile' order.item.seller.id order.item.seller.token %}">
               contact</a>
             </div>
 

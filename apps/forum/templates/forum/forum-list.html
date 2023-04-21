@@ -19,7 +19,7 @@
             <small>{{ forum.body | truncatechars:120 }}</small>
         </div>
         <div class="card-footer text-muted">
-            closed: {{ forum.closed }} | {{ forum.date }} | <a href="{% url 'authentication:profile' forum.author.id forum.author.token %}">{{ forum.author }}</a>
+            closed: {{ forum.closed }} | {{ forum.date }} | <a href="{% url 'accounts:profile' forum.author.id forum.author.token %}">{{ forum.author }}</a>
             {% if forum.author == request.user %}
                 |
                   <a href="{% url 'forum:update-forum' forum.id forum.slug %}">

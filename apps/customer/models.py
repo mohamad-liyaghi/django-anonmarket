@@ -1,6 +1,6 @@
 from django.db import models
 from vendor.models import Product
-from authentication.models import Account
+from accounts.models import Account
 
 
 class Order(models.Model):

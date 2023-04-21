@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
 
-from authentication.models import Account
+from accounts.models import Account
 from comment.models import Comment
 from vote.models import Vote
 

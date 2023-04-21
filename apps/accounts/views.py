@@ -2,13 +2,13 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import View, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from authentication.models import Account
+from accounts.models import Account
 
 
 class Profile(DetailView):
     '''A simple profile page for users'''
 
-    template_name = "authentication/profile.html"
+    template_name = "accounts/profile.html"
     context_object_name = "user"
 
     def get_object(self):
@@ -31,4 +31,4 @@ class Exchange(LoginRequiredMixin, View):
     def get(self, request):
         self.request.user.balance = self.request.user.balance + 20
         self.request.user.save()
-        return render(self.request, "authentication/exchange.html")
+        return render(self.request, "accounts/exchange.html")

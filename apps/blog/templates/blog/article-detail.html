@@ -8,7 +8,7 @@
 <div style="text-align:center;">
     <h3>{{ article.title }}</h3>
     <hr>
-    <small>Author: <a href="{% url 'authentication:profile' article.author.id article.author.token %}">{{ article.author }}</a>
+    <small>Author: <a href="{% url 'accounts:profile' article.author.id article.author.token %}">{{ article.author }}</a>
     at: {{ article.date }}</small>
     <br>
     {% if article.product %}
