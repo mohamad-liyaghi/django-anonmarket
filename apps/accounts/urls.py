@@ -1,9 +1,9 @@
 from django.urls import path
-from . import views
+from .views import ProfileView, ExchangeView
 
 app_name = "accounts"
 
 urlpatterns = [
-    path("profile/<int:id>/<str:token>/", views.Profile.as_view(), name="profile"),
-    path("exchange/", views.Exchange.as_view(), name="exchange"),
+    path("profile/<int:id>/<str:token>/", ProfileView.as_view(), name="profile"),
+    path("exchange/", ExchangeView.as_view(), name="exchange"),
 ]
