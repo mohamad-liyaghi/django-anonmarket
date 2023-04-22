@@ -1,17 +1,20 @@
 from django.contrib.auth.models import BaseUserManager
-import random
 
 class AccountManager(BaseUserManager):
+    '''This manager allows Account model to use create_user() and create_superuser() methods'''
 
     def create_user(self, username, password, **kwargs):
-        '''Create a new user'''
-        token = random.randint(0, 9999999999999999999)
-        user = self.model(username= username, token=token, **kwargs)
+        user = self.model(username=username, **kwargs)
         user.set_password(password)
         user.save()
 
         return user
 
     def create_superuser(self, username, password):
-        '''Create a new superuser'''
-        return self.create_user(username, password, is_staff=True, is_superuser=True, is_active=True)
+        return self.create_user(
+            username,
+            password,
+            is_staff=True,
+            is_superuser=True,
+            is_active=True
+        )

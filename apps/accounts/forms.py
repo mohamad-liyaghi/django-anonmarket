@@ -1,22 +1,23 @@
 from django import forms
 from accounts.models import Account
-import random
 
 class RegisterForm(forms.ModelForm):
     '''A form for creating user'''
 
     class Meta:
         model = Account
-        fields = ("username", "password")
+        fields = ["username", "password"]
 
-    def __init__(self, *args, **kwargs):
-        super(RegisterForm, self).__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs['placeholder'] = "Select a unique username, not using your real name is recommended"
-        self.fields['password'].widget.attrs['placeholder'] = "Select a strong password"
+        widgets = {
+        'username': forms.TextInput(attrs={'placeholder': 'Select a unique username.'}),
+        'password': forms.PasswordInput(attrs={'placeholder': 'Enter your password.'})
+    }
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.is_active = True
-        user.token = random.randint(0, 9999999999999999999)
-        user.save()
-        return user
+
+    def save(self, commit):
+        '''Call create_user when creating a user with forms'''
+
+        return Account.objects.create_user(
+            self.cleaned_data['username'],
+            self.cleaned_data['password']
+        )
