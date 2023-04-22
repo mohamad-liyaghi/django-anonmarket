@@ -1,7 +1,5 @@
-from django.views.generic import CreateView, UpdateView, DeleteView, DetailView, View, ListView
+from django.views.generic import CreateView, UpdateView, DeleteView, DetailView, View, ListView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import transaction
-from django.template.defaultfilters import slugify
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Q
@@ -9,52 +7,26 @@ from django.db.models import Q
 
 from products.models import  Category, Product
 from customer.models import Order
-from .forms import ProductForm
+from ..forms import ProductForm
 
 
-class AddProduct(LoginRequiredMixin, CreateView):
-    '''Simply add a product'''
+class ProductCreateView(LoginRequiredMixin, FormView):
+    '''A view for creating products'''
 
     form_class = ProductForm
-    template_name = 'products/add-product.html'
+    template_name = 'products/create-product.html'
 
-    @transaction.atomic
     def form_valid(self, form):
-        # TODO add this page later
-        pass
-        # form = self.form_class(self.request.POST, self.request.FILES)
-        # data = form.save(commit=False)
-        # cd = form.cleaned_data
+        form = self.form_class(self.request.POST, self.request.FILES)
+        data = form.save(commit=False)
+        data.provider = self.request.user
+        data.save()
+        messages.success(self.request, "Product added successfully.", "success")
+        return redirect("products:list-product")
 
-        # data.seller = self.request.user
-        # data.slug = slugify(data.title)
-
-        # ship_from = cd["shipping_from_country"]
-        # ship_to = cd["shipping_to_country"]
-
-        # data.shipping_from, i = Country.objects.get_or_create(name=ship_from, slug=slugify(ship_from))
-        # data.shipping_to, i = Country.objects.get_or_create(name=ship_to, slug=slugify(ship_to))
-
-        # # Check if a user selected an existing category
-        # if (cat := cd["child_category"]):
-        #     data.category= cat
-
-        # # if not create a category
-        # elif (category := cd["child_category_create"]):
-        #         if (parent:= cd["parent_category"]):
-        #             data.category, i = Category.objects.get_or_create(parent=parent, title= category,
-        #                                                               slug= slugify(category))
-        #         elif (parent:= cd["parent_category_create"]):
-        #             parent_cat, i = Category.objects.get_or_create(title=parent, slug=slugify(parent))
-        #             data.category, i = Category.objects.get_or_create(parent=parent_cat, title=category,
-        #                                                               slug=slugify(category))
-
-        # form.save()
-        # messages.success(self.request, "Item added successfully.", "success")
-        # return redirect("products:list-product")
 
     def form_invalid(self, form):
-        messages.success(self.request, "There was an error while saving your information", "success")
+        messages.success(self.request, "Invalid information were given.", "danger")
         return redirect("products:list-product")
 
 

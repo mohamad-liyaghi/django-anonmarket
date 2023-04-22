@@ -1,0 +1,25 @@
+{% extends 'base/_base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %} Create Product {% endblock title %}
+
+
+{% block body %}
+    <h3>Fill out this form</h3> <br>
+
+    <form method="post" enctype="multipart/form-data"> {% csrf_token %}
+        {{ form.title | as_crispy_field }} <br>
+        {{ form.description | as_crispy_field }} <br>
+        {{ form.picture | as_crispy_field }} <br>
+        {{ form.price | as_crispy_field }} <br>
+        {{ form.is_available | as_crispy_field }} <br>
+        {{ form.shipping_origin | as_crispy_field }} <br>
+        {{ form.shipping_destinations | as_crispy_field }} <br>
+
+
+        <button class="btn btn-success">Save</button>
+    </form>
+
+
+{% endblock body %}

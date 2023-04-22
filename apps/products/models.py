@@ -25,7 +25,7 @@ class Product(models.Model):
     price = models.PositiveIntegerField(default=0)
     is_available = models.BooleanField(default=False)
 
-    votes = GenericRelation(Vote, related_query_name="product_vote")
+    vote = GenericRelation(Vote, related_query_name="product_vote")
 
     def __str__(self):
         return self.title
@@ -33,7 +33,7 @@ class Product(models.Model):
     def save(self, *args, **kwargs):
         
         # When user changes the title, slug will be updated too.
-        if slugify(self.title) not in self.slug:
+        if not self.slug or slugify(self.title) not in self.slug:
             self.slug = unique_slug_generator(title=self.title, cls=self.__class__)
 
         return super().save(*args, **kwargs)
@@ -50,3 +50,7 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        self.title = self.title.lower()
+        return super().save(*args, **kwargs)
