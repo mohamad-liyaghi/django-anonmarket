@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('vendor', '0004_alter_category_slug_alter_country_slug'),
+        ('products', '0004_alter_category_slug_alter_country_slug'),
     ]
 
     operations = [

@@ -21,7 +21,7 @@
             <img class="card-img-top" src="{{ product.picture.url }}" alt="Card image cap" width="70px;" height="250px;">
           {% endif %}
           <div class="card-body">
-              <a href="{% url 'vendor:product-detail' product.id product.slug %}"> <p class="card-text">{{ product.title }}</p> </a>
+              <a href="{% url 'products:product-detail' product.id product.slug %}"> <p class="card-text">{{ product.title }}</p> </a>
               <hr>
               <p class="card-text">©{{ product.price }}</p>
           </div>
@@ -37,7 +37,7 @@
           <a href="{% url 'blog:article-detail' article.id article.slug %}"><h5 class="card-title">{{ article.title | truncatechars:90 }}  {% if article.price != 0%} | <h5 style="color:red;">Premium</h5> {% endif %}</h5></a>
         </div>
         <div class="card-footer text-muted">
-            Published: {{ article.published }} | {{ article.date }} | <a href="{% url 'accounts:profile' article.author.id article.author.token %}">{{ article.author }}</a> {% if article.product %}| <a href="{% url 'vendor:product-detail' article.product.id article.product.slug %}">{{ article.product }}</a>{% endif %}
+            Published: {{ article.published }} | {{ article.date }} | <a href="{% url 'accounts:profile' article.author.id article.author.token %}">{{ article.author }}</a> {% if article.product %}| <a href="{% url 'products:product-detail' article.product.id article.product.slug %}">{{ article.product }}</a>{% endif %}
             {% if article.author == request.user %}
                 |
                   <a href="{% url 'blog:update-article' article.id article.slug %}">

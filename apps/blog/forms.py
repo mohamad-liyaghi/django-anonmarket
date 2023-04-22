@@ -1,5 +1,5 @@
 from django import forms
-from vendor.models import Product
+from products.models import Product
 from blog.models import Article
 
 

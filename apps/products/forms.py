@@ -1,5 +1,5 @@
 from django import forms
-from vendor.models import Product, Category
+from products.models import Product, Category
 
 class ProductForm(forms.ModelForm):
     # users can select the category from this list

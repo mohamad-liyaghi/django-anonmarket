@@ -13,7 +13,7 @@
     <br>
     {% if article.product %}
         <small>
-            For product(s) <a href="{% url 'vendor:product-detail' article.product.id article.product.slug %}">{{ article.product }}</a>
+            For product(s) <a href="{% url 'products:product-detail' article.product.id article.product.slug %}">{{ article.product }}</a>
         </small>
     {% endif %}
     <br><br>

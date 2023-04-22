@@ -1,5 +1,5 @@
 from django.contrib import admin
-from vendor.models import Category, Country, Product
+from products.models import Category, Country, Product
 
 
 admin.site.register(Category)

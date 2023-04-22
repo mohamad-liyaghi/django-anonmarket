@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('vendor', '0003_productrate'),
+        ('products', '0003_productrate'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 ('status', models.CharField(choices=[('o', 'Ordered '), ('a', 'Accepted'), ('r', 'Rejected'), ('p', 'Paid'), ('s', 'Sent')], default='o', max_length=1)),
                 ('description', models.TextField()),
                 ('customer', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='orders', to=settings.AUTH_USER_MODEL)),
-                ('item', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='orders', to='vendor.product')),
+                ('item', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='orders', to='products.product')),
             ],
         ),
     ]

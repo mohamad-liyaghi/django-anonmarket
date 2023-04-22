@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Q
 
 
-from vendor.models import Country, Category, Product
+from products.models import Country, Category, Product
 from customer.models import Order
 from .forms import ProductForm
 
@@ -16,7 +16,7 @@ class AddProduct(LoginRequiredMixin, CreateView):
     '''Simply add a product'''
 
     form_class = ProductForm
-    template_name = 'vendor/add-product.html'
+    template_name = 'products/add-product.html'
 
     @transaction.atomic
     def form_valid(self, form):
@@ -49,17 +49,17 @@ class AddProduct(LoginRequiredMixin, CreateView):
 
         form.save()
         messages.success(self.request, "Item added successfully.", "success")
-        return redirect("vendor:list-product")
+        return redirect("products:list-product")
 
     def form_invalid(self, form):
         messages.success(self.request, "There was an error while saving your information", "success")
-        return redirect("vendor:list-product")
+        return redirect("products:list-product")
 
 
 class UpdateProduct(LoginRequiredMixin, UpdateView):
     '''Update a products status or price'''
 
-    template_name = "vendor/update-product.html"
+    template_name = "products/update-product.html"
     fields = ["price", "is_available"]
     context_object_name = "product"
 
@@ -70,7 +70,7 @@ class UpdateProduct(LoginRequiredMixin, UpdateView):
 class DeleteProduct(LoginRequiredMixin, DeleteView):
     '''Delete a Product'''
 
-    template_name = "vendor/delete-product.html"
+    template_name = "products/delete-product.html"
     context_object_name = "product"
 
     def get_object(self):
@@ -80,7 +80,7 @@ class DeleteProduct(LoginRequiredMixin, DeleteView):
 class ProductDetail(DetailView):
     '''Return detail of a product'''
 
-    template_name = "vendor/product-detail.html"
+    template_name = "products/product-detail.html"
     context_object_name = "product"
 
     def get_object(self):
@@ -97,7 +97,7 @@ class AcceptOrder(LoginRequiredMixin, View):
         object.save()
 
         messages.success(self.request, "Order accepted, wait for payment.", "success")
-        return redirect("vendor:order-list")
+        return redirect("products:order-list")
 
 
 class RejectOrder(LoginRequiredMixin, View):
@@ -110,13 +110,13 @@ class RejectOrder(LoginRequiredMixin, View):
         object.save()
 
         messages.success(self.request, "Order rejected.", "danger")
-        return redirect("vendor:order-list")
+        return redirect("products:order-list")
 
 
 class OrderList(LoginRequiredMixin, ListView):
     '''List of all orders'''
 
-    template_name = "vendor/order-list.html"
+    template_name = "products/order-list.html"
     context_object_name = "orders"
 
     def get_queryset(self):
@@ -133,13 +133,13 @@ class SendOrder(LoginRequiredMixin, View):
         object.save()
 
         messages.success(self.request, "Order Sent.", "success")
-        return redirect("vendor:order-list")
+        return redirect("products:order-list")
 
 
 class UserProduct(LoginRequiredMixin, ListView):
     '''Show all registered products of a user'''
 
-    template_name = "vendor/user-products.html"
+    template_name = "products/user-products.html"
     context_object_name = "products"
 
     def get_queryset(self):
