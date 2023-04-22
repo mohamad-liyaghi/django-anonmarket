@@ -1,12 +1,11 @@
 from django.contrib import admin
-from products.models import Category, Country, Product
+from products.models import Category, Product
 
 
 admin.site.register(Category)
-admin.site.register(Country)
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
-    list_display = ("title", "seller", "price")
+    list_display = ("title", "provider", "price")
