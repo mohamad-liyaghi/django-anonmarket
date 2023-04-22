@@ -6,7 +6,7 @@ from django.db.models import Q
 
 import random
 
-from authentication.models import Account
+from accounts.models import Account
 from message.models import Chat, Message
 from .forms import MessageForm
 

@@ -18,7 +18,7 @@
 				{% for comment in  object|get_object_comments %}
                     <li class="clearfix">
                         <div class="post-comments">
-                            <p class="meta">{{ comment.date }}<a href="{% url 'authentication:profile' comment.user.id comment.user.token %}">{{ comment.user }}</a> says :
+                            <p class="meta">{{ comment.date }}<a href="{% url 'accounts:profile' comment.user.id comment.user.token %}">{{ comment.user }}</a> says :
 								 {% if request.user == comment.user %}
 								 <i class="pull-right"><input type="button" onclick="delete_comment({{ comment.id }}, {{ object.id }})" value="delete"></a></i></p>
 								 {% endif %}
@@ -54,7 +54,7 @@
 							<ul class="comments">
 								<li class="clearfix">
 									<div class="post-comments">
-										<p class="meta">{{ child.date }}<a href="{% url 'authentication:profile' child.user.id child.user.token %}">{{ child.user }}</a> says : 
+										<p class="meta">{{ child.date }}<a href="{% url 'accounts:profile' child.user.id child.user.token %}">{{ child.user }}</a> says : 
 											{% if request.user == child.user %}
 											<i class="pull-right"><input type="button" onclick="delete_comment({{ child.id }}, {{ object.id }})" value="delete"></a></i></p>
 											{% endif %}

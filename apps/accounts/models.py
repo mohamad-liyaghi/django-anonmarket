@@ -3,10 +3,12 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.contenttypes.fields import GenericRelation
 
 from .managers import AccountManager
+from accounts.utils import unique_token_generator
 from vote.models import Vote
 
+
 class Account(AbstractBaseUser, PermissionsMixin):
-    '''Custom user model that allows user to log in with nick_name'''
+    '''Main account model of project'''
 
     username = models.CharField(max_length=120, unique=True)
     balance = models.IntegerField(default=0)
@@ -25,3 +27,17 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
+
+    def save(self, *args, **kwargs):
+
+        if not self.pk:
+            # lower the username
+            self.username = self.username.lower()
+            # set a unique token for user
+            self.token = unique_token_generator(self.__class__)
+            # set user as active user
+            self.is_active = True
+            
+            return super().save(*args, **kwargs)
+
+        return super().save(*args, **kwargs)

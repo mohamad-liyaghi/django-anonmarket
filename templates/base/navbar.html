@@ -64,7 +64,7 @@
             {{ request.user.username }} (©{{request.user.balance}})
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'authentication:profile' request.user.id request.user.token %}">Profile</a>
+            <a class="dropdown-item" href="{% url 'accounts:profile' request.user.id request.user.token %}">Profile</a>
             <a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a>
           </div>
         </li>
