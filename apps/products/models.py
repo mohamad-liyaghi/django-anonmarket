@@ -1,8 +1,11 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
+from django.utils.text import slugify
+from django_countries.fields import CountryField
+
 from accounts.models import Account
 from vote.models import Vote
-from django_countries.fields import CountryField
+from products.utils import unique_slug_generator
 
 
 class Product(models.Model):
@@ -19,20 +22,29 @@ class Product(models.Model):
     
     provider = models.ForeignKey(Account, on_delete=models.CASCADE, blank=True, null=True, related_name="products")
 
-    price = models.IntegerField(default=0)
+    price = models.PositiveIntegerField(default=0)
     is_available = models.BooleanField(default=False)
 
     votes = GenericRelation(Vote, related_query_name="product_vote")
 
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        
+        # When user changes the title, slug will be updated too.
+        if slugify(self.title) not in self.slug:
+            self.slug = unique_slug_generator(title=self.title, cls=self.__class__)
+
+        return super().save(*args, **kwargs)
 
 
 class Category(models.Model):
 
-    parent = models.ForeignKey('self', default=None, null=True, blank=True, on_delete=models.SET_NULL,
-                               related_name='children')
-
+    parent = models.ForeignKey(
+        'self', default=None, null=True, blank=True, on_delete=models.SET_NULL, related_name='children'
+    )
+    
     title = models.CharField(max_length=120)
     slug = models.SlugField(max_length=120)
 
