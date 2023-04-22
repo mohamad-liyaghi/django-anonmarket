@@ -10,6 +10,20 @@ from customer.models import Order
 from ..forms import ProductForm
 
 
+class ProductListView(LoginRequiredMixin, ListView):
+    '''Show all products, if there is any param given, give the users products'''
+
+    template_name = "products/list-product.html"
+    context_object_name = "products"
+
+    def get_queryset(self):
+        # If user is given, return users products, othervise return all products
+        if (username:=self.request.GET.get('username')):
+            return Product.objects.filter(provider__username=username).order_by('-is_available')
+        
+        return Product.objects.all()
+
+
 class ProductCreateView(LoginRequiredMixin, FormView):
     '''A view for creating products'''
 
@@ -110,11 +124,3 @@ class SendOrder(LoginRequiredMixin, View):
         return redirect("products:order-list")
 
 
-class UserProduct(LoginRequiredMixin, ListView):
-    '''Show all registered products of a user'''
-
-    template_name = "products/user-products.html"
-    context_object_name = "products"
-
-    def get_queryset(self):
-        return Product.objects.filter(seller=self.request.user)
