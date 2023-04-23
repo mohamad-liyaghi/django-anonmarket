@@ -1,5 +1,5 @@
 from django import template
-from vendor.models import Category
+from products.models import Category
 
 register = template.Library()
 

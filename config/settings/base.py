@@ -23,7 +23,7 @@ INSTALLED_APPS = [
 
     # local apps
     'apps.accounts.apps.AccountsConfig',
-    'apps.vendor.apps.VendorConfig',
+    'apps.products.apps.ProductsConfig',
     'apps.message.apps.MessageConfig',
     'apps.customer.apps.CustomerConfig',
     'apps.blog.apps.BlogConfig',
@@ -56,7 +56,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'apps.vendor.context_processor.cart_items_counter',
+                'apps.products.context_processor.cart_items_counter',
             ],
         },
     },

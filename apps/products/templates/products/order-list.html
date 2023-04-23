@@ -22,10 +22,10 @@
               
             <div class="col-sm">
                 {% if order.status == "o" %}
-                    <a href="{% url 'vendor:accept-order' order.id order.code %}" class="btn btn-success">Accept</a>
-                    <a href="{% url 'vendor:reject-order' order.id order.code %}" class="btn btn-danger">Decline</a>
+                    <a href="{% url 'products:accept-order' order.id order.code %}" class="btn btn-success">Accept</a>
+                    <a href="{% url 'products:reject-order' order.id order.code %}" class="btn btn-danger">Decline</a>
                 {% elif order.status == "p" %}
-                    <a href="{% url 'vendor:send-order' order.id order.code %}" class="btn btn-success">Send product</a>
+                    <a href="{% url 'products:send-order' order.id order.code %}" class="btn btn-success">Send product</a>
                 {% elif order.status == "a" %}
                     wait for payment
                 {% endif %}

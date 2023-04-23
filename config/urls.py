@@ -10,7 +10,7 @@ THIRD_PARTY_URLS = [
 
 LOCAL_URLS = [
     path("accounts/", include("apps.accounts.urls")),
-    path("vendor/", include("apps.vendor.urls")),
+    path("products/", include("apps.products.urls")),
     path("message/", include("apps.message.urls")),
     path("", include("apps.customer.urls")),
     path("blog/", include("apps.blog.urls")),

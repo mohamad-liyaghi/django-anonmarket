@@ -7,4 +7,3 @@ venv/
 *.env
 db.sqlite3
 media/
-products/

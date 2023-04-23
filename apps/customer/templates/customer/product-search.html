@@ -12,7 +12,7 @@
                   {% endif %}
 
                   <div class="card-body">
-                      <a href="{% url 'vendor:product-detail' product.id product.slug %}"> <p class="card-text">{{ product.title }}</p> </a>
+                      <a href="{% url 'products:product-detail' product.id product.slug %}"> <p class="card-text">{{ product.title }}</p> </a>
                       <hr>
                       <p class="card-text">©{{ product.price }}</p>
                   </div>

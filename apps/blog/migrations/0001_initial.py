@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('vendor', '0004_alter_category_slug_alter_country_slug'),
+        ('products', '0004_alter_category_slug_alter_country_slug'),
     ]
 
     operations = [
@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('date', models.DateTimeField(auto_now_add=True)),
                 ('allowed_members', models.ManyToManyField(blank=True, related_name='allowed_members', to=settings.AUTH_USER_MODEL)),
                 ('author', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='articles', to=settings.AUTH_USER_MODEL)),
-                ('product', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='articles', to='vendor.product')),
+                ('product', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='articles', to='products.product')),
             ],
         ),
     ]

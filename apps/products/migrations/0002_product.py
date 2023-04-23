@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('vendor', '0001_initial'),
+        ('products', '0001_initial'),
     ]
 
     operations = [
@@ -23,10 +23,10 @@ class Migration(migrations.Migration):
                 ('picture', models.ImageField(blank=True, null=True, upload_to='products/%Y-%m-%d')),
                 ('price', models.IntegerField(default=0)),
                 ('is_available', models.BooleanField(default=False)),
-                ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='products', to='vendor.category')),
+                ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='products', to='products.category')),
                 ('seller', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='products', to=settings.AUTH_USER_MODEL)),
-                ('shipping_from', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='shipping_from', to='vendor.country')),
-                ('shipping_to', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='shipping_to', to='vendor.country')),
+                ('shipping_from', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='shipping_from', to='products.country')),
+                ('shipping_to', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='shipping_to', to='products.country')),
             ],
         ),
     ]

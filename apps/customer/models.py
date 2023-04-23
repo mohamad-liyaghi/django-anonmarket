@@ -1,5 +1,5 @@
 from django.db import models
-from vendor.models import Product
+from products.models import Product
 from accounts.models import Account
 
 

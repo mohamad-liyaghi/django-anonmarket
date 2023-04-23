@@ -1,0 +1,17 @@
+{% extends 'base/_base.html' %}
+
+{% block title %} Delete {{ object.title }} {% endblock title %}
+
+
+{% block body %}
+    <h3>Delete {{ object.title }}</h3>
+    <br>
+
+    <form method="post">
+    {% csrf_token %}
+        <h6>Dear {{ object.provider }}, are you sure you want to <strong>delete</strong> this product?</h6>
+        <p>This action cannot be undone.</p>
+        <br>
+        <button class="btn btn-danger">Confirm Deletion</button>
+    </form>
+{% endblock body %}

@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 import random
 
 from customer.forms import OrderForm
-from vendor.models import Product, Category
+from products.models import Product, Category
 from customer.models import Order
 
 
@@ -29,12 +29,12 @@ class AddOrder(LoginRequiredMixin, FormView):
         # check if customer is not the items vendor
         if self.object.seller == self.request.user:
             messages.success(self.request, "You cant order your own products.", "danger")
-            return redirect("vendor:product-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+            return redirect("products:product-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
 
         # check if customer hasnt ordered this before
         if Order.objects.filter(Q(item=self.object) & Q(customer=self.request.user) & Q(status="o")):
             messages.success(self.request, "You have already ordered this item, please wait for result.", "danger")
-            return redirect("vendor:product-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+            return redirect("products:product-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -49,11 +49,11 @@ class AddOrder(LoginRequiredMixin, FormView):
         form.save()
 
         messages.success(self.request, "Item ordered, wait for results.", "success")
-        return redirect("vendor:product-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+        return redirect("products:product-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
 
     def form_invalid(self, form):
         messages.success(self.request, "Sth  went wrong with your information...", "danger")
-        return redirect("vendor:product-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+        return redirect("products:product-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
 
 
 class DeleteOrder(LoginRequiredMixin, DeleteView):
@@ -67,7 +67,7 @@ class DeleteOrder(LoginRequiredMixin, DeleteView):
                                         & Q(status="o") & Q(customer=self.request.user))
 
     def get_success_url(self):
-        return reverse_lazy("vendor:product-detail", args = (self.get_object().item.pk, self.get_object().item.slug))
+        return reverse_lazy("products:product-detail", args = (self.get_object().item.pk, self.get_object().item.slug))
 
 
 class OrderDetail(LoginRequiredMixin, DetailView):
