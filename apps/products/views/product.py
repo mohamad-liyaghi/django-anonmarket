@@ -1,11 +1,11 @@
-from django.views.generic import CreateView, UpdateView, DeleteView, DetailView, View, ListView, FormView
+from django.views.generic import UpdateView, DeleteView, DetailView, View, ListView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Q
+from django.urls import reverse_lazy
 
-
-from products.models import  Category, Product
+from products.models import  Product
 from customer.models import Order
 from ..forms import ProductForm
 
@@ -36,34 +36,46 @@ class ProductCreateView(LoginRequiredMixin, FormView):
         data.provider = self.request.user
         data.save()
         messages.success(self.request, "Product added successfully.", "success")
-        return redirect("products:list-product")
+        return redirect("products:product-list")
 
 
     def form_invalid(self, form):
         messages.success(self.request, "Invalid information were given.", "danger")
-        return redirect("products:list-product")
+        return redirect("products:product-list")
 
 
-class UpdateProduct(LoginRequiredMixin, UpdateView):
-    '''Update a products status or price'''
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
+    '''Update page of a product'''
 
     template_name = "products/update-product.html"
-    fields = ["price", "is_available"]
+    fields = ["title", "description", "picture", "shipping_origin",
+              "shipping_destinations", "price", "is_available"]
     context_object_name = "product"
 
     def get_object(self):
-        return get_object_or_404(Product, id= self.kwargs["id"], slug= self.kwargs["slug"], seller=self.request.user)
+        return get_object_or_404(Product, id=self.kwargs["id"],
+                                 slug=self.kwargs["slug"],
+                                 provider=self.request.user)
+    
+    def get_success_url(self):
+        return reverse_lazy("products:product-detail",
+                             kwargs={"id": self.kwargs["id"],
+                                     "slug": self.kwargs["slug"]})
+    
 
-
-class DeleteProduct(LoginRequiredMixin, DeleteView):
-    '''Delete a Product'''
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
+    '''Delete a product by its provider'''
 
     template_name = "products/delete-product.html"
     context_object_name = "product"
+    success_url = reverse_lazy("products:product-list")
 
     def get_object(self):
-        return get_object_or_404(Product, id= self.kwargs["id"], slug= self.kwargs["slug"], seller=self.request.user)
+        return get_object_or_404(Product, id=self.kwargs["id"],
+                                 slug=self.kwargs["slug"],
+                                 provider=self.request.user)
 
+    
 
 class ProductDetail(DetailView):
     '''Return detail of a product'''

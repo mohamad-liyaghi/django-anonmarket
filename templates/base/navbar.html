@@ -32,7 +32,7 @@
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
             <a class="dropdown-item" href="{% url 'products:create-product' %}">Add Product</a>
-            <a class="dropdown-item" href="{% url 'products:list-product' %}?username={{request.user.username}}">My Product</a>
+            <a class="dropdown-item" href="{% url 'products:product-list' %}?username={{request.user.username}}">My Product</a>
             <a class="dropdown-item" href="{% url 'products:order-list' %}">Customer Orders</a>
           </div>
         </li>
