@@ -18,7 +18,7 @@
     <br>
     <span class="" id="dislike_count">{{object.vote.dislikes}}</span>
     <button class="btn btn-link text-dark p-0 border-0 btn-outline-light" id="dislike-button" 
-    onclick="reaction({{ object|get_model_content_type_id }}, {{ object.id }}, 'dislike', 'like_count', 'dislike_count')"
+    onclick="reaction({{ object|get_model_content_type_id }}, {{ object.id }}, 'dislike', 'like_count', 'dislike_count')">
       <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-heart" fill="currentColor"
         xmlns="http://www.w3.org/2000/svg">
         <i class="fa fa-thumbs-down"></i>

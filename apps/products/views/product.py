@@ -77,7 +77,7 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
 
     
 
-class ProductDetail(DetailView):
+class ProductDetailView(DetailView):
     '''Return detail of a product'''
 
     template_name = "products/product-detail.html"

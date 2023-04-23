@@ -4,7 +4,7 @@ from .views.product import (
     ProductCreateView,
     ProductUpdateView,
     ProductDeleteView,
-    ProductDetail,
+    ProductDetailView,
     AcceptOrder,
     RejectOrder,
     SendOrder,
@@ -20,7 +20,7 @@ urlpatterns = [
     path("<int:id>/<str:slug>/update/", ProductUpdateView.as_view(), name="update-product"),
     path("<int:id>/<str:slug>/delete/", ProductDeleteView.as_view(), name="delete-product"),
 
-    path("product-detail/<int:id>/<str:slug>/", ProductDetail.as_view(), name="product-detail"),
+    path("<int:id>/<str:slug>/", ProductDetailView.as_view(), name="product-detail"),
 
     path("accept-order/<int:id>/<int:code>/", AcceptOrder.as_view(), name="accept-order"),
     path("reject-order/<int:id>/<int:code>/", RejectOrder.as_view(), name="reject-order"),
