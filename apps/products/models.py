@@ -16,7 +16,7 @@ class Product(models.Model):
 
     picture = models.ImageField(upload_to="products/%Y-%m-%d", blank=True, null=True)
 
-    category = models.ForeignKey("Category", on_delete=models.CASCADE, related_name="products", blank=True, null=True)
+    category = models.ForeignKey("Category", on_delete=models.SET_NULL, related_name="products", blank=True, null=True)
     shipping_origin = CountryField()
     shipping_destinations = CountryField(blank=True, null=True)
     
@@ -53,4 +53,5 @@ class Category(models.Model):
     
     def save(self, *args, **kwargs):
         self.title = self.title.lower()
+        self.slug = unique_slug_generator(self.title, self.__class__)
         return super().save(*args, **kwargs)

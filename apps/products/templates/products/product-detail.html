@@ -41,14 +41,20 @@
 
                         {% if  product.category %}
                             <p>Category: <a href="{% url 'customer:filter-category' product.category.id product.category.slug %}">{{ product.category.parent }} | {{ product.category }}</a></p>
-                        {% endif %}
+                        {% endif %} 
+                        {% if request.user == product.provider %}
+                        <a href="{% url 'products:product-category' product.id product.slug %}" class="btn btn-secondary">
+                            Category Setting
+                        </a>{% endif %}
                         
-                        {% if product.is_available %}
-                            <a href="{% url 'customer:add-order' product.id product.slug %}" class="btn btn-success">
-                                Add Order
-                            </a>
-                        {% else %}
-                            <p style="color:red;">This item is unavailable.</p>
+                        {% if  request.user != product.provider %}
+                            {% if product.is_available %}
+                                <a href="{% url 'customer:add-order' product.id product.slug %}" class="btn btn-success">
+                                    Add Order
+                                </a>
+                            {% else %}
+                                <p style="color:red;">This item is unavailable.</p>
+                            {% endif %}
                         {% endif %}
                         <hr>
                         {% include "vote/vote.html" %}

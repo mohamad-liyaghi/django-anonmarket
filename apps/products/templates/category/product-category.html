@@ -1,0 +1,24 @@
+{% extends 'base/_base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %} Add Product Category {% endblock title %}
+
+
+{% block body %}
+    <h3>Registered category for object</h3> <br>
+
+    {% if object_category %}
+        <p> The objects category is `{{ object_category }} `</p>
+    {% else %}  
+        <p> This object has no category</p>
+    {% endif %}
+
+    <form method="post"> {% csrf_token %}
+        {{ form.parent | as_crispy_field }} <br>
+        {{ form.title | as_crispy_field }} <br>
+        <button class="btn btn-success">Add category</button>
+    </form>
+
+
+{% endblock body %}
