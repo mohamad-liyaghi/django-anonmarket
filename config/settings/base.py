@@ -123,4 +123,4 @@ ACCOUNT_FORMS = {
     'signup': 'apps.accounts.forms.RegisterForm'
 }
 
-LOGIN_REDIRECT_URL = 'order:home'
+LOGIN_REDIRECT_URL = 'orders:home'

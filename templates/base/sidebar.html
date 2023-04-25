@@ -7,7 +7,7 @@
 
               <div class="dropdown-container">
                   {% for child in parent.children.all %}
-                    <a href="{% url 'order:filter-category' child.id child.slug %}">{{ child }}</a>
+                    <a href="{% url 'orders:filter-category' child.id child.slug %}">{{ child }}</a>
                   {% endfor %}
               </div>
 

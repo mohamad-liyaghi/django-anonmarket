@@ -10,7 +10,7 @@
         <div class="container">
           <div class="row">
             <div class="col-sm">
-                <a href="{% url 'order:order-detail' order.id order.code %}">{{ order.code }}</a>
+                <a href="{% url 'orders:order-detail' order.id order.code %}">{{ order.code }}</a>
             </div>
             <div class="col-sm">
                 {{ order.get_status_display }}

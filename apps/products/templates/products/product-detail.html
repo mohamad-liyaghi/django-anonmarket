@@ -40,7 +40,7 @@
                         {% endif %}
 
                         {% if  product.category %}
-                            <p>Category: <a href="{% url 'order:filter-category' product.category.id product.category.slug %}">{{ product.category.parent }} | {{ product.category }}</a></p>
+                            <p>Category: <a href="{% url 'orders:filter-category' product.category.id product.category.slug %}">{{ product.category.parent }} | {{ product.category }}</a></p>
                         {% endif %} 
                         {% if request.user == product.provider %}
                         <a href="{% url 'products:product-category' product.id product.slug %}" class="btn btn-secondary">
@@ -49,7 +49,7 @@
                         
                         {% if  request.user != product.provider %}
                             {% if product.is_available %}
-                                <a href="{% url 'order:add-order' product.id product.slug %}" class="btn btn-success">
+                                <a href="{% url 'orders:add-order' product.id product.slug %}" class="btn btn-success">
                                     Add Order
                                 </a>
                             {% else %}

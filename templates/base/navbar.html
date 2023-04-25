@@ -8,7 +8,7 @@
 </style>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="{% url 'order:home' %}">D-A-M</a>
+  <a class="navbar-brand" href="{% url 'orders:home' %}">D-A-M</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -22,7 +22,7 @@
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'order:cart' %}">Cart ({{ cart_count }})</a>
+          <a class="nav-link" href="{% url 'orders:cart' %}">Cart ({{ cart_count }})</a>
         </li>
 
         <li class="nav-item dropdown">
