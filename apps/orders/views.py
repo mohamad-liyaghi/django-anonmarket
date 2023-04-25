@@ -8,15 +8,15 @@ from django.urls import reverse_lazy
 
 import random
 
-from customer.forms import OrderForm
+from orders.forms import OrderForm
 from products.models import Product, Category
-from customer.models import Order
+from orders.models import Order
 
 
 class AddOrder(LoginRequiredMixin, FormView):
     '''Add an order'''
 
-    template_name = "customer/add-order.html"
+    template_name = "ordersadd-order.html"
     form_class = OrderForm
 
     def dispatch(self, request, *args, **kwargs):
@@ -59,7 +59,7 @@ class AddOrder(LoginRequiredMixin, FormView):
 class DeleteOrder(LoginRequiredMixin, DeleteView):
     '''Delete orders that vendor have not seen them'''
 
-    template_name = "customer/delete-order.html"
+    template_name = "ordersdelete-order.html"
     context_object_name = "order"
 
     def get_object(self):
@@ -73,7 +73,7 @@ class DeleteOrder(LoginRequiredMixin, DeleteView):
 class OrderDetail(LoginRequiredMixin, DetailView):
     '''Show orders description (address) for vendor'''
 
-    template_name = "customer/order-detail.html"
+    template_name = "ordersorder-detail.html"
     context_object_name = "order"
 
     def get_object(self):
@@ -97,16 +97,16 @@ class PayOrder(LoginRequiredMixin, View):
             self.request.user.save()
             order.save()
             messages.success(self.request, "order is paid now, wait for vendor to send the product.", "success")
-            return redirect("customer:cart")
+            return redirect("order:cart")
 
         messages.success(self.request, "You dont have money to pay for this order", "danger")
-        return redirect("customer:cart")
+        return redirect("order:cart")
 
 
 class Cart(LoginRequiredMixin, ListView):
     '''Show a users orders'''
 
-    template_name = "customer/cart.html"
+    template_name = "orderscart.html"
     context_object_name = "orders"
 
     def get_queryset(self):
@@ -116,7 +116,7 @@ class Cart(LoginRequiredMixin, ListView):
 class Home(ListView):
     '''The main page that shows 20 most popular products'''
 
-    template_name = "customer/home.html"
+    template_name = "ordershome.html"
     context_object_name = "products"
 
 
@@ -127,7 +127,7 @@ class Home(ListView):
 class ProductSearch(ListView):
     '''Result of searchs'''
 
-    template_name = "customer/product-search.html"
+    template_name = "ordersproduct-search.html"
     context_object_name = "products"
 
     def get_queryset(self):
@@ -144,7 +144,7 @@ class ProductSearch(ListView):
 class FilterCategory(ListView):
     '''Show all products with the filtered category'''
 
-    template_name = "customer/product-search.html"
+    template_name = "ordersproduct-search.html"
     context_object_name = "products"
 
     def get_queryset(self):

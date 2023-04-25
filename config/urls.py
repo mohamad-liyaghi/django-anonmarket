@@ -12,7 +12,7 @@ LOCAL_URLS = [
     path("accounts/", include("apps.accounts.urls")),
     path("products/", include("apps.products.urls")),
     path("message/", include("apps.message.urls")),
-    path("", include("apps.customer.urls")),
+    path("", include("apps.orders.urls")),
     path("blog/", include("apps.blog.urls")),
     path("forum/", include("apps.forum.urls")),
 
@@ -29,5 +29,5 @@ urlpatterns = [
 
 ]+ static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
 
-handler404 = 'apps.customer.views.handler404'
-handler500 = 'apps.customer.views.handler500'
+handler404 = 'apps.orders.views.handler404'
+handler500 = 'apps.orders.views.handler500'

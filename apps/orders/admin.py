@@ -1,7 +1,7 @@
 from django.contrib import admin
-from customer.models import Order
+from orders.models import Order
 
 
 @admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
+class OrdersAdmin(admin.ModelAdmin):
     list_display = ("code", "customer", "status")

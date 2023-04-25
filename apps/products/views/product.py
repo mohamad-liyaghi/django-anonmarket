@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.urls import reverse_lazy
 
 from products.models import  Product
-from customer.models import Order
+from orders.models import Order
 from ..forms import ProductForm
 
 

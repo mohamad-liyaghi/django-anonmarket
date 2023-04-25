@@ -16,7 +16,7 @@ class AddCommentView(LoginRequiredMixin, View):
     '''Add a comment for an object'''
 
     def get(self, request):
-        return redirect("customer:home")
+        return redirect("order:home")
 
     def post(self, request):
         if is_ajax(request):
@@ -41,13 +41,13 @@ class AddCommentView(LoginRequiredMixin, View):
 
             return JsonResponse({'error':'invalid information'})    
 
-        return redirect("customer:home")
+        return redirect("order:home")
 
 
 
 class CommentDeleteView(LoginRequiredMixin, View):
     def get(self, request):
-        return redirect("customer:home")
+        return redirect("order:home")
 
     def post(self, request):
         if is_ajax(request):
@@ -69,4 +69,4 @@ class CommentDeleteView(LoginRequiredMixin, View):
 
             return JsonResponse({'error':'invalid information'})    
 
-        return redirect("customer:home")
+        return redirect("order:home")

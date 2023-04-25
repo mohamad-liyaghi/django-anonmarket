@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     'apps.accounts.apps.AccountsConfig',
     'apps.products.apps.ProductsConfig',
     'apps.message.apps.MessageConfig',
-    'apps.customer.apps.CustomerConfig',
+    'apps.orders.apps.OrdersConfig',
     'apps.blog.apps.BlogConfig',
     'apps.forum.apps.ForumConfig',
     'apps.vote.apps.VoteConfig',
@@ -123,4 +123,4 @@ ACCOUNT_FORMS = {
     'signup': 'apps.accounts.forms.RegisterForm'
 }
 
-LOGIN_REDIRECT_URL = 'customer:home'
+LOGIN_REDIRECT_URL = 'order:home'
