@@ -4,4 +4,4 @@ from orders.models import Order
 
 @admin.register(Order)
 class OrdersAdmin(admin.ModelAdmin):
-    list_display = ("code", "customer", "status")
+    list_display = ("token", "account", "status")

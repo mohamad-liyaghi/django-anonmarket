@@ -4,26 +4,27 @@ from accounts.models import Account
 
 
 class Order(models.Model):
-    '''Order model that users can order things'''
 
-    class Status(models.TextChoices):
-        ordered  = ("o", "Ordered ")
-        accepted = ("a", "Accepted")
-        rejected = ("r", "Rejected")
-        paid = ("p", "Paid")
-        sent = ("s", "Sent")
+    class STATUS(models.TextChoices):
+        ORDERED = 'o', 'Ordered'
+        ACCEPTED = 'a', 'Accepted'
+        DECLINED = 'd', 'Declined'
+        PREPARING = 'p', 'Preparing'
+        SHIPPED = 's', 'Shipped'
 
-    code = models.CharField(max_length=20, unique=True, blank=True, null=True)
-    item = models.ForeignKey(Product, on_delete=models.SET_NULL, related_name="orders", blank=True, null=True)
+    description = models.TextField(max_length=50, blank=True, null=True)
+    token = models.CharField(max_length=20, unique=True, blank=True, null=True)
 
-    price = models.IntegerField()
-    date = models.DateTimeField(auto_now_add=True)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="orders", blank=True, null=True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, related_name="orders", blank=True, null=True)
 
-    status = models.CharField(max_length=1, choices=Status.choices, default=Status.ordered)
-    customer = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="orders",blank=True, null=True)
+    price = models.PositiveIntegerField()
+    status = models.CharField(max_length=1, choices=STATUS.choices, default=STATUS.ORDERED)
 
-    description = models.TextField()
+    is_paid = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return str(self.code)
-
+        return str(self.token)
