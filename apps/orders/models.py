@@ -1,7 +1,7 @@
 from django.db import models
 from products.models import Product
 from accounts.models import Account
-
+from orders.utils import unique_order_token_generator
 
 class Order(models.Model):
 
@@ -28,3 +28,9 @@ class Order(models.Model):
 
     def __str__(self):
         return str(self.token)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.token = unique_order_token_generator(self.__class__)
+        
+        return super().save(*args, **kwargs)
