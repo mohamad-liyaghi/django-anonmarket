@@ -17,10 +17,20 @@ function create_order(object_id, object_slug){
         },
         success: function (json) {
             if (json["error"]){
-                window.alert(json['error'])    
+
+                var errorAlert = '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                     json['error'] +
+                     '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                  '</div>';
+                  $('#message').append(errorAlert);
+                
             }   
             else if (json["success"]){
-                window.alert(json['success'])    
+                var errorAlert = '<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                     json['success'] +
+                     '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                  '</div>';
+                  $('#message').append(errorAlert);
             }
         },
     })}

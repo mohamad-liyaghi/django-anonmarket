@@ -7,6 +7,8 @@
 
 {% block body %}
 <div class="row no-gutters">
+            <div id="message"></div>
+    
             <input type="hidden" id="CREATE_ORDER_URL" data-url="{% url 'orders:create-order' object.id object.slug%}" />
             <input type="hidden" id="CSRF" data="{{ csrf_token }}" />
             <div class="col-auto">
@@ -71,11 +73,10 @@
                                         <label for="product-quantity" class="col-form-label">Description:</label>
                                         <input type="text" class="form-control" id="id_description">
 
-                                        
                                     </div>
                                     <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-success" onclick="create_order({{object.id}}, '{{object.slug}}')">
+                                    <button type="button" class="btn btn-success"  data-dismiss="modal" onclick="create_order({{object.id}}, '{{object.slug}}')">
                                         Confirm
                                     </button>
                                     </div>
