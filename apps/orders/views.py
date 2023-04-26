@@ -59,18 +59,17 @@ class OrderCreateView(LoginRequiredMixin, View):
         return JsonResponse({"success": "Order has been created."})
         
 
-class DeleteOrder(LoginRequiredMixin, DeleteView):
+class OrderDeleteView(LoginRequiredMixin, DeleteView):
     '''Delete orders that vendor have not seen them'''
 
     template_name = "orders/delete-order.html"
     context_object_name = "order"
+    success_url = '/'
 
     def get_object(self):
-        return get_object_or_404(Order, Q(id=self.kwargs["id"]) & Q(code=self.kwargs["code"])
-                                        & Q(status="o") & Q(customer=self.request.user))
+        return get_object_or_404(Order, id=self.kwargs['id'], token=self.kwargs['token'],
+                                account=self.request.user, status='o')
 
-    def get_success_url(self):
-        return reverse_lazy("products:product-detail", args = (self.get_object().item.pk, self.get_object().item.slug))
 
 
 class OrderDetail(LoginRequiredMixin, DetailView):

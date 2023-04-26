@@ -6,8 +6,8 @@ app_name = "orders"
 urlpatterns = [
     path("", views.Home.as_view(), name="home"),
     path("search-result/", views.ProductSearch.as_view(), name="search-product"),
-    path("<int:id>/<str:slug>/", views.OrderCreateView.as_view(), name="create-order"),
-    path("delete-order/<int:id>/<str:code>/", views.DeleteOrder.as_view(), name="delete-order"),
+    path("<int:id>/<str:token>/", views.OrderCreateView.as_view(), name="create-order"),
+    path("<int:id>/<str:token>/delete/", views.OrderDeleteView.as_view(), name="delete-order"),
 
     path("order-detail/<int:id>/<str:code>/", views.OrderDetail.as_view(), name="order-detail"),
 
