@@ -1,60 +1,63 @@
 from django.views.generic import FormView, DeleteView, DetailView, View, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.template import RequestContext
 from django.shortcuts import get_object_or_404, redirect, render
-from django.db.models import Q, Count
+from django.db.models import Q
 from django.contrib import messages
 from django.urls import reverse_lazy
+from django.http import JsonResponse
 
 import random
 
 from orders.forms import OrderForm
-from products.models import Product, Category
+from products.models import Product
 from orders.models import Order
 
-
-class AddOrder(LoginRequiredMixin, FormView):
-    '''Add an order'''
-
-    template_name = "orders/add-order.html"
-    form_class = OrderForm
-
-    def dispatch(self, request, *args, **kwargs):
-        """Check if object exist and has an appropriate customer"""
-
-        # Get the available item
-        self.object = get_object_or_404(Product, Q(id=kwargs["id"]) & Q(slug=kwargs["slug"])
-                                        & Q(is_available=True))
-
-        # check if customer is not the items vendor
-        if self.object.seller == self.request.user:
-            messages.success(self.request, "You cant order your own products.", "danger")
-            return redirect("products:product-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
-
-        # check if customer hasnt ordered this before
-        if Order.objects.filter(Q(item=self.object) & Q(customer=self.request.user) & Q(status="o")):
-            messages.success(self.request, "You have already ordered this item, please wait for result.", "danger")
-            return redirect("products:product-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
-
-        return super().dispatch(request, *args, **kwargs)
+def is_ajax(request):
+    '''Check if a request is ajax or not'''
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
 
-    def form_valid(self, form):
-        form = form.save(commit=False)
+class OrderCreateView(LoginRequiredMixin, View):
+    """Create a new order with ajax"""
 
-        form.code = random.randint(0, 99999999999999999999)
-        form.item = self.object
-        form.price = self.object.price
-        form.customer = self.request.user
-        form.save()
+    def post(self, request, *args, **kwargs):
+        if not is_ajax(request):
+            return JsonResponse({"error": "This is not an ajax request."})
 
-        messages.success(self.request, "Item ordered, wait for results.", "success")
-        return redirect("products:product-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+        object_id = request.POST.get("object_id")
+        object_slug = request.POST.get("object_slug")
+        quantity = request.POST.get("quantity")
 
-    def form_invalid(self, form):
-        messages.success(self.request, "Sth  went wrong with your information...", "danger")
-        return redirect("products:product-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+        if not all([object_id, object_slug, quantity]):
+            return JsonResponse({"error": "Information is incomplete."})
 
+        description = request.POST.get("description", None)
+
+        # Get the product that user wants to order
+        product = get_object_or_404(Product, id=object_id, slug=object_slug)
+
+        if not product.is_available:
+            return JsonResponse({"error": "Product is not available."})
+
+        # Update older order if there is one created
+        order = Order.objects.filter(account=request.user, product=product, status="o").first()
+        if order:
+            order.description = description
+            order.quantity = quantity
+            order.save()
+            return JsonResponse({"success": "An older order has been updated."})
+
+        # Create a new order
+        order = Order.objects.create(
+            account=request.user,
+            product=product,
+            quantity=quantity,
+            description=description,
+            price=product.price,
+        )
+
+        return JsonResponse({"success": "Order has been created."})
+        
 
 class DeleteOrder(LoginRequiredMixin, DeleteView):
     '''Delete orders that vendor have not seen them'''
