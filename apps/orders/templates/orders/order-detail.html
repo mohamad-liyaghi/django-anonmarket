@@ -21,11 +21,18 @@
                     <p>{{ order.description }}</p>
                 <hr>
 
-                {% if order.status == "o" %}
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    {% comment %} <a href="{% url 'products:accept-order' order.id order.token %}" class="btn btn-success me-md-2" role="button">Accept</a>
-                    <a href="{% url 'products:reject-order' order.id order.token %}" class="btn btn-danger" role="button">Decline</a> {% endcomment %}
-                    </div>
+                {% if request.user == order.product.provider %}
+                    {% if order.status == "o"  %}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'orders:order-status' order.id order.token 'a' %}" class="btn btn-success me-md-2" role="button">Accept</a>
+                            <a href="{% url 'orders:order-status' order.id order.token 'r' %}" class="btn btn-danger" role="button">Decline</a>
+                        </div>
+                    {% endif %}
+                    {% if order.status == "p" %}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'orders:order-status' order.id order.token 's' %}" class="btn btn-secondary me-md-2" role="button">Shipped</a>
+                        </div>
+                    {% endif %}
                 {% endif %}
 
                 {% if request.user == order.account %}

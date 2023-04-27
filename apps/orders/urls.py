@@ -12,6 +12,8 @@ urlpatterns = [
     path("<int:id>/<str:token>/create/", views.OrderCreateView.as_view(), name="create-order"),
     path("<int:id>/<str:token>/delete/", views.OrderDeleteView.as_view(), name="delete-order"),
 
+    path("<int:id>/<str:token>/status/<str:status>/", views.OrderStatusView.as_view(), name="order-status"),
+
     path("pay-order/<int:id>/<str:code>/", views.PayOrder.as_view(), name="pay-order"),
     path("filter-category/<int:id>/<str:slug>/", views.FilterCategory.as_view(), name="filter-category"),
 

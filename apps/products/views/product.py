@@ -86,33 +86,6 @@ class ProductDetailView(DetailView):
     def get_object(self):
         return get_object_or_404(Product, id=self.kwargs["id"], slug=self.kwargs["slug"])
 
-
-class AcceptOrder(LoginRequiredMixin, View):
-    '''Accept a User Order'''
-
-    def get(self, request, id, code):
-        object = get_object_or_404(Order, id=id, code=code,
-                                    item__seller=self.request.user, status="o")
-        object.status = "a"
-        object.save()
-
-        messages.success(self.request, "Order accepted, wait for payment.", "success")
-        return redirect("products:order-list")
-
-
-class RejectOrder(LoginRequiredMixin, View):
-    '''Reject a User Order'''
-
-    def get(self, request, id, code):
-        object = get_object_or_404(Order, id=id, code=code,
-                                    item__seller=self.request.user, status="o")
-        object.status = "r"
-        object.save()
-
-        messages.success(self.request, "Order rejected.", "danger")
-        return redirect("products:order-list")
-
-
 class OrderList(LoginRequiredMixin, ListView):
     '''List of all orders'''
 

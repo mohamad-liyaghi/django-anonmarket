@@ -1,14 +1,10 @@
-from django.views.generic import FormView, DeleteView, DetailView, View, ListView
+from django.views.generic import View, DeleteView, DetailView, ListView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models import Q
 from django.contrib import messages
-from django.urls import reverse_lazy
 from django.http import JsonResponse
 
-import random
-
-from orders.forms import OrderForm
 from products.models import Product
 from orders.models import Order
 
@@ -59,16 +55,34 @@ class OrderCreateView(LoginRequiredMixin, View):
         return JsonResponse({"success": "Order has been created."})
         
 
-class OrderDeleteView(LoginRequiredMixin, DeleteView):
-    '''Delete orders that vendor have not seen them'''
+class OrderStatusView(View):
+    '''
+    Accept/Reject an order
+    Also change objects status to Shipped
+    '''
 
-    template_name = "orders/delete-order.html"
-    context_object_name = "order"
-    success_url = '/'
+    def get_object(self, id, token):
+        return get_object_or_404(Order, id=id, token=token, product__provider=self.request.user)
 
-    def get_object(self):
-        return get_object_or_404(Order, id=self.kwargs['id'], token=self.kwargs['token'],
-                                account=self.request.user, status='o')
+    def get(self, request, id, token, status, *args, **kwargs):
+        
+        obj = self.get_object(id, token)
+
+        if obj.status == 'o' and status in ['a', 'r']:
+            obj.status = status
+            obj.save()
+            messages.success(request, f'Order request changed to {obj.get_status_display()}', 'success')
+
+        elif obj.status == 'p' and status == 's':
+            obj.status = status
+            obj.save()
+            messages.success(request, f'Order request changed to {obj.get_status_display()}', 'success')
+            
+        else:
+            messages.error(request, 'Invalid status for this object.', 'danger')
+
+        return redirect('products:order-list')
+
 
 
 
@@ -82,6 +96,17 @@ class OrderDetail(LoginRequiredMixin, DetailView):
         return get_object_or_404(Order, Q(id=self.kwargs["id"]) & Q(token=self.kwargs["token"]),
                                 Q(account=self.request.user) | Q(product__provider=self.request.user))
 
+
+class OrderDeleteView(LoginRequiredMixin, DeleteView):
+    '''Delete orders that vendor have not seen them'''
+
+    template_name = "orders/delete-order.html"
+    context_object_name = "order"
+    success_url = '/'
+
+    def get_object(self):
+        return get_object_or_404(Order, id=self.kwargs['id'], token=self.kwargs['token'],
+                                account=self.request.user, status='o')
 
 
 class PayOrder(LoginRequiredMixin, View):
