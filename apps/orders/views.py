@@ -73,14 +73,15 @@ class OrderDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class OrderDetail(LoginRequiredMixin, DetailView):
-    '''Show orders description (address) for vendor'''
+    '''Detail page of an order.'''
 
     template_name = "orders/order-detail.html"
     context_object_name = "order"
 
     def get_object(self):
-        return  get_object_or_404(Order, Q(id=self.kwargs["id"]) & Q(code=self.kwargs["code"])
-                          & Q(item__seller=self.request.user))
+        return get_object_or_404(Order, Q(id=self.kwargs["id"]) & Q(token=self.kwargs["token"]),
+                                Q(account=self.request.user) | Q(product__provider=self.request.user))
+
 
 
 class PayOrder(LoginRequiredMixin, View):
