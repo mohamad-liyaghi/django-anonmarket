@@ -1,7 +1,8 @@
-from django.views.generic import View, DeleteView, DetailView, ListView, FormView
+from django.views.generic import View, DeleteView, DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models import Q
+from django.db import transaction
 from django.contrib import messages
 from django.http import JsonResponse
 
@@ -77,13 +78,11 @@ class OrderStatusView(View):
             obj.status = status
             obj.save()
             messages.success(request, f'Order request changed to {obj.get_status_display()}', 'success')
-            
+
         else:
             messages.error(request, 'Invalid status for this object.', 'danger')
 
         return redirect('products:order-list')
-
-
 
 
 class OrderDetail(LoginRequiredMixin, DetailView):
@@ -109,26 +108,62 @@ class OrderDeleteView(LoginRequiredMixin, DeleteView):
                                 account=self.request.user, status='o')
 
 
-class PayOrder(LoginRequiredMixin, View):
-    '''Pay for an order'''
+class OrderPayView(LoginRequiredMixin, View):
+    """Pay for an order"""
 
-    def get(self, request, id, code):
-        order = get_object_or_404(Order, id=id, code=code, customer=self.request.user, status="a")
+    template_name = "orders/pay-order.html"
 
-        # check if user has enough money
-        if self.request.user.balance >= order.price:
-            self.request.user.balance = self.request.user.balance - order.price
-            order.item.seller.balance = order.item.seller.balance + order.price
-            order.status = "p"
+    def get_object(self, id, token):
+        return get_object_or_404(
+            Order,
+            id=id,
+            token=token,
+            account=self.request.user,
+            status="a",
+            product__is_available=True,
+        )
 
-            order.item.seller.save()
-            self.request.user.save()
-            order.save()
-            messages.success(self.request, "order is paid now, wait for vendor to send the product.", "success")
-            return redirect("orders:cart")
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object(
+            self.kwargs["id"], self.kwargs["token"]
+        )
+        # redirect user to exchange page if user doesnt have enough money
+        if request.user.balance < self.object.price:
+            messages.success(
+                self.request,
+                "You dont have enough money, first charge your wallet.",
+                "danger",
+            )
+            return redirect("accounts:exchange")
+        return super().dispatch(request, *args, **kwargs)
 
-        messages.success(self.request, "You dont have money to pay for this order", "danger")
-        return redirect("orders:cart")
+    def get(self, request, *args, **kwargs):
+        return render(
+            request,
+            self.template_name,
+            {"order": self.get_object(self.kwargs["id"], self.kwargs["token"])},
+        )
+
+    @transaction.atomic
+    def post(self, request, id, token):
+        order = self.get_object(id, token)
+
+        self.request.user.balance -= order.price
+        order.product.provider.balance += order.price
+        order.status = "p"
+        order.is_paid = True
+
+        order.product.provider.save()
+        self.request.user.save()
+        order.save()
+
+        messages.success(
+            self.request,
+            "Order successfully got paid, want for provider to prepare it.",
+            "success",
+        )
+        return redirect("orders:order-detail", id=order.id, token=order.token)
+
 
 
 class Cart(LoginRequiredMixin, ListView):

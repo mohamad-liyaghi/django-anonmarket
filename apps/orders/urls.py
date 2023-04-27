@@ -14,7 +14,7 @@ urlpatterns = [
 
     path("<int:id>/<str:token>/status/<str:status>/", views.OrderStatusView.as_view(), name="order-status"),
 
-    path("pay-order/<int:id>/<str:code>/", views.PayOrder.as_view(), name="pay-order"),
+    path("<int:id>/<str:token>/pay/", views.OrderPayView.as_view(), name="pay-order"),
     path("filter-category/<int:id>/<str:slug>/", views.FilterCategory.as_view(), name="filter-category"),
 
     path("cart/", views.Cart.as_view(), name="cart"),

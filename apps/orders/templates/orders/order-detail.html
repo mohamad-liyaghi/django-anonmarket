@@ -42,9 +42,11 @@
                         </div>
                     {% endif %}
 
-                    {% if order.status == 'a'  %}
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            {% comment %} #TODO add pay order url{% endcomment %}
+                    {% if order.status == 'a' and order.product.is_available %}
+
+                        <div class="d-grid ">
+                            <p>Order is accepted, pay for prepreation.</p><br>
+                            <a href="{% url 'orders:pay-order' order.id order.token %}" class="btn btn-secondary" role="button">Pay</a>
                         </div>
                     {% endif %}
                 {% endif %}
