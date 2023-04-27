@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from apps.products.views.product import ProductListView
 
 THIRD_PARTY_URLS = [
     path("accounts/", include("allauth.urls")),
@@ -21,6 +22,7 @@ LOCAL_URLS = [
 ]
 
 urlpatterns = [
+    path('', ProductListView.as_view(), name='product-list'),
     path('admin/', admin.site.urls),
 
     *THIRD_PARTY_URLS,

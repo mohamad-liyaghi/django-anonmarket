@@ -1,6 +1,5 @@
 from django.urls import  path
 from .views.product import (
-    ProductListView,
     ProductCreateView,
     ProductUpdateView,
     ProductDeleteView,
@@ -8,12 +7,13 @@ from .views.product import (
     SendOrder,
     OrderList
 )
+from django.views.generic import RedirectView
 from .views.category import ProductCategoryView
 
 app_name = "products"
 
 urlpatterns = [
-    path("list/", ProductListView.as_view(), name="product-list"),
+    path("", RedirectView.as_view(url='/'), name="product-list"),
 
     path("<int:id>/<str:slug>/", ProductDetailView.as_view(), name="product-detail"),
     path("create/", ProductCreateView.as_view(), name="create-product"),
