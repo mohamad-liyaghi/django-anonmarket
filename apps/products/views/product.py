@@ -1,7 +1,9 @@
+
 from django.views.generic import UpdateView, DeleteView, DetailView, ListView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
+from django.db.models import Q
 from django.urls import reverse_lazy
 
 from products.models import Product, Category
@@ -87,7 +89,21 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
     context_object_name = "product"
     success_url = reverse_lazy("products:product-list")
 
+    def dispatch(self, request, *args, **kwargs):
+
+        if (obj:=self.get_object()).orders.filter(~Q(status='s')):
+
+            messages.success(
+                request, 
+                'Sorry, you cannot delete this product as it has associated orders that need to be shipped.', 
+                'danger'
+                )
+            return redirect('products:product-detail', id=obj.id, slug=obj.slug)
+        
+        return super().dispatch(request, *args, **kwargs)
+
     def get_object(self):
         return get_object_or_404(Product, id=self.kwargs["id"],
                                  slug=self.kwargs["slug"],
                                  provider=self.request.user)
+    
