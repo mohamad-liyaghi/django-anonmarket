@@ -1,0 +1,48 @@
+{% extends 'base/_base.html' %}
+
+{% block title %} Customer Order List {% endblock title %}
+
+{% block body %}
+
+    <h2>Customer Order List</h2><br>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order</th>
+                <th>Product</th>
+                <th>Status</th>
+                <th>Account</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td><a href="{% url 'orders:order-detail' order.id order.token %}">{{ order.token }}</a></td>
+                    <td><a href="{% url 'products:product-detail' order.product.id order.product.slug %}">{{ order.product }}</a></td>
+                    <td>{{ order.get_status_display }}</td>
+                    <td><a href="{% url 'accounts:profile' order.account.id order.account.token %}">{{ order.account }}</a></td>
+                    <div class="col-sm">
+                        {% if order.status == "o" %}
+                        <td>
+                            <a href="{% url 'orders:order-status' order.id order.token 'a' %}" class="btn btn-success">Accept</a>
+                            <a href="{% url 'orders:order-status' order.id order.token 'r' %}" class="btn btn-danger">Decline</a>
+                        </td>
+                        
+                        {% elif order.status == "p" %}
+                        <td><a href="{% url 'orders:order-status' order.id order.token 's' %}" class="btn btn-secondary">Shipped</a></td>
+                        {% elif order.status == "a" %}
+                            <td>Wait for user payment</td>
+                        {% endif %}
+                    </div>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">No order available</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock body %}

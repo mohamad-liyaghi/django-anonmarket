@@ -1,0 +1,58 @@
+{% extends 'base/_base.html' %}
+
+{% block title %}Order Detail{% endblock title %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <h5 class="card-header">Order Token: {{ order.token }}</h5>
+                <div class="card-body">
+                    <h6>Item: <a href="{% url 'products:product-detail' order.product.id order.product.slug %}">{{ order.product }}</a></h6>
+                <hr>
+                    <h6>Status: {{ order.get_status_display }}</h6>
+                <hr>
+                    <h6>Price: {{ order.price }}</h6>
+                <hr>
+                    <h6>Account: <a href="{% url 'accounts:profile' order.account.id order.account.token %}">{{ order.account }}</a></h6>
+                <hr>
+                    <h6>Description:</h6>
+                    <p>{{ order.description }}</p>
+                <hr>
+
+                {% if request.user == order.product.provider %}
+                    {% if order.status == "o"  %}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'orders:order-status' order.id order.token 'a' %}" class="btn btn-success me-md-2" role="button">Accept</a>
+                            <a href="{% url 'orders:order-status' order.id order.token 'r' %}" class="btn btn-danger" role="button">Decline</a>
+                        </div>
+                    {% endif %}
+                    {% if order.status == "p" %}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'orders:order-status' order.id order.token 's' %}" class="btn btn-secondary me-md-2" role="button">Shipped</a>
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                {% if request.user == order.account %}
+                    {% if order.status == 'o'  %}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'orders:delete-order' order.id order.token %}" class="btn btn-danger" role="button">Delete Order</a>
+                        </div>
+                    {% endif %}
+
+                    {% if order.status == 'a' and order.product.is_available %}
+
+                        <div class="d-grid ">
+                            <p>Order is accepted, pay for prepreation.</p><br>
+                            <a href="{% url 'orders:pay-order' order.id order.token %}" class="btn btn-secondary" role="button">Pay</a>
+                        </div>
+                    {% endif %}
+                {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

@@ -1,4 +1,5 @@
 {% extends 'base/_base.html' %}
+{% load static %}
 
 
 {% block title %} {{product.title}} {% endblock title %}
@@ -6,7 +7,10 @@
 
 {% block body %}
 <div class="row no-gutters">
-
+            <div id="message"></div>
+    
+            <input type="hidden" id="CREATE_ORDER_URL" data-url="{% url 'orders:create-order' object.id object.slug%}" />
+            <input type="hidden" id="CSRF" data="{{ csrf_token }}" />
             <div class="col-auto">
                 {% if product.picture %}
                         <img src="{{ product.picture.url }}" width="470px;" height="470px" class="rounded float-left">
@@ -40,18 +44,53 @@
                         {% endif %}
 
                         {% if  product.category %}
-                            <p>Category: <a href="{% url 'customer:filter-category' product.category.id product.category.slug %}">{{ product.category.parent }} | {{ product.category }}</a></p>
+                            <p>Category: <a href="{% url 'products:product-list' %}?category={{product.category}}">{{ product.category.parent }} | {{ product.category }}</a></p>
                         {% endif %} 
                         {% if request.user == product.provider %}
                         <a href="{% url 'products:product-category' product.id product.slug %}" class="btn btn-secondary">
                             Category Setting
-                        </a>{% endif %}
+                        </a>
+                        <a href="{% url 'products:update-product' product.id product.slug %}" class="btn btn-secondary">
+                            Update Product
+                        </a>
+                        <a href="{% url 'products:delete-product' product.id product.slug %}" class="btn btn-danger">
+                            Delete Product
+                        </a>
+
+                        {% endif %}
                         
                         {% if  request.user != product.provider %}
                             {% if product.is_available %}
-                                <a href="{% url 'customer:add-order' product.id product.slug %}" class="btn btn-success">
-                                    Add Order
-                                </a>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#orderInformationModal">
+                                Add Order
+                            </button>
+                            
+                            <div class="modal fade" id="orderInformationModal" tabindex="-1" role="dialog" aria-labelledby="orderInformationModalTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Order Information</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <label for="product-quantity" class="col-form-label">Quantity:</label>
+                                        <input type="text" class="form-control" id="id_quantity" required>
+                                        <label for="product-quantity" class="col-form-label">Description:</label>
+                                        <input type="text" class="form-control" id="id_description">
+
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-success"  data-dismiss="modal" onclick="create_order({{object.id}}, '{{object.slug}}')">
+                                        Confirm
+                                    </button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
                             {% else %}
                                 <p style="color:red;">This item is unavailable.</p>
                             {% endif %}
@@ -67,6 +106,6 @@
             <h3>Description</h3>
             <p>{{ product.description }}</p>
         </div>
-
+        <script src="{% static 'js/create_order.js' %}" type="text/javascript"></script>
 
 {% endblock body %}

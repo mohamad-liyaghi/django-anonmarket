@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from apps.products.views.product import ProductListView
 
 THIRD_PARTY_URLS = [
     path("accounts/", include("allauth.urls")),
@@ -12,7 +13,7 @@ LOCAL_URLS = [
     path("accounts/", include("apps.accounts.urls")),
     path("products/", include("apps.products.urls")),
     path("message/", include("apps.message.urls")),
-    path("", include("apps.customer.urls")),
+    path("orders/", include("apps.orders.urls")),
     path("blog/", include("apps.blog.urls")),
     path("forum/", include("apps.forum.urls")),
 
@@ -21,6 +22,7 @@ LOCAL_URLS = [
 ]
 
 urlpatterns = [
+    path('', ProductListView.as_view(), name='product-list'),
     path('admin/', admin.site.urls),
 
     *THIRD_PARTY_URLS,
@@ -29,5 +31,5 @@ urlpatterns = [
 
 ]+ static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
 
-handler404 = 'apps.customer.views.handler404'
-handler500 = 'apps.customer.views.handler500'
+handler404 = 'apps.orders.views.handler404'
+handler500 = 'apps.orders.views.handler500'

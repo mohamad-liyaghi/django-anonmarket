@@ -1,27 +1,37 @@
-from django.views.generic import UpdateView, DeleteView, DetailView, View, ListView, FormView
+
+from django.views.generic import UpdateView, DeleteView, DetailView, ListView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Q
 from django.urls import reverse_lazy
 
-from products.models import  Product
-from customer.models import Order
+from products.models import Product, Category
 from ..forms import ProductForm
 
 
 class ProductListView(LoginRequiredMixin, ListView):
     '''Show all products, if there is any param given, give the users products'''
 
-    template_name = "products/list-product.html"
+    template_name = "products/product-list.html"
     context_object_name = "products"
 
     def get_queryset(self):
-        # If user is given, return users products, othervise return all products
-        if (username:=self.request.GET.get('username')):
-            return Product.objects.filter(provider__username=username).order_by('-is_available')
-        
-        return Product.objects.all()
+        queryset = Product.objects.all().order_by('-is_available')
+
+        username = self.request.GET.get('username')
+        title = self.request.GET.get('title')
+        category_title = self.request.GET.get('category')
+
+        if username:
+            queryset = queryset.filter(provider__username=username)
+        elif title:
+            queryset = queryset.filter(title=title)
+        elif category_title:
+            category = get_object_or_404(Category, title=category_title)
+            queryset = category.products.all()
+
+        return queryset.order_by('-is_available')        
 
 
 class ProductCreateView(LoginRequiredMixin, FormView):
@@ -42,6 +52,15 @@ class ProductCreateView(LoginRequiredMixin, FormView):
     def form_invalid(self, form):
         messages.success(self.request, "Invalid information were given.", "danger")
         return redirect("products:product-list")
+
+class ProductDetailView(DetailView):
+    '''Return detail of a product'''
+
+    template_name = "products/product-detail.html"
+    context_object_name = "product"
+
+    def get_object(self):
+        return get_object_or_404(Product, id=self.kwargs["id"], slug=self.kwargs["slug"])
 
 
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
@@ -70,69 +89,21 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
     context_object_name = "product"
     success_url = reverse_lazy("products:product-list")
 
+    def dispatch(self, request, *args, **kwargs):
+
+        if (obj:=self.get_object()).orders.filter(~Q(status='s')):
+
+            messages.success(
+                request, 
+                'Sorry, you cannot delete this product as it has associated orders that need to be shipped.', 
+                'danger'
+                )
+            return redirect('products:product-detail', id=obj.id, slug=obj.slug)
+        
+        return super().dispatch(request, *args, **kwargs)
+
     def get_object(self):
         return get_object_or_404(Product, id=self.kwargs["id"],
                                  slug=self.kwargs["slug"],
                                  provider=self.request.user)
-
     
-
-class ProductDetailView(DetailView):
-    '''Return detail of a product'''
-
-    template_name = "products/product-detail.html"
-    context_object_name = "product"
-
-    def get_object(self):
-        return get_object_or_404(Product, id=self.kwargs["id"], slug=self.kwargs["slug"])
-
-
-class AcceptOrder(LoginRequiredMixin, View):
-    '''Accept a User Order'''
-
-    def get(self, request, id, code):
-        object = get_object_or_404(Order, id=id, code=code,
-                                    item__seller=self.request.user, status="o")
-        object.status = "a"
-        object.save()
-
-        messages.success(self.request, "Order accepted, wait for payment.", "success")
-        return redirect("products:order-list")
-
-
-class RejectOrder(LoginRequiredMixin, View):
-    '''Reject a User Order'''
-
-    def get(self, request, id, code):
-        object = get_object_or_404(Order, id=id, code=code,
-                                    item__seller=self.request.user, status="o")
-        object.status = "r"
-        object.save()
-
-        messages.success(self.request, "Order rejected.", "danger")
-        return redirect("products:order-list")
-
-
-class OrderList(LoginRequiredMixin, ListView):
-    '''List of all orders'''
-
-    template_name = "products/order-list.html"
-    context_object_name = "orders"
-
-    def get_queryset(self):
-        return Order.objects.filter(Q(item__seller=self.request.user) & ~Q(status="r"))
-
-
-class SendOrder(LoginRequiredMixin, View):
-    '''Change Order status to "send" '''
-
-    def get(self, request, id, code):
-        object = get_object_or_404(Order, id=id, code=code,
-                                    item__seller=self.request.user, status="p")
-        object.status = "s"
-        object.save()
-
-        messages.success(self.request, "Order Sent.", "success")
-        return redirect("products:order-list")
-
-
