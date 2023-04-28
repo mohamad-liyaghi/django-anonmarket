@@ -182,55 +182,6 @@ class OrderPayView(LoginRequiredMixin, View):
         return redirect("orders:order-detail", id=order.id, token=order.token)
 
 
-
-class Cart(LoginRequiredMixin, ListView):
-    '''Show a users orders'''
-
-    template_name = "orders/cart.html"
-    context_object_name = "orders"
-
-    def get_queryset(self):
-        return self.request.user.orders.all()
-
-
-class Home(ListView):
-    '''The main page that shows 20 most popular products'''
-
-    template_name = "orders/home.html"
-    context_object_name = "products"
-
-
-    def get_queryset(self):
-        # top 30 items
-        return Product.objects.order_by("-vote")[:30]
-
-class ProductSearch(ListView):
-    '''Result of searchs'''
-
-    template_name = "orders/product-search.html"
-    context_object_name = "products"
-
-    def get_queryset(self):
-        q = self.request.GET.get('q')
-
-        if q:
-            return Product.objects.filter(
-                Q(title__icontains=q) | Q(category__title=q)
-            ).order_by("-is_available")
-
-        return None
-
-
-class FilterCategory(ListView):
-    '''Show all products with the filtered category'''
-
-    template_name = "orders/product-search.html"
-    context_object_name = "products"
-
-    def get_queryset(self):
-        return Product.objects.filter(category__id=self.kwargs["id"],
-                                      category__slug=self.kwargs["slug"])
-
 # error handling functions
 def handler404(request, exception):
     return render(request, "base/error/404.html")

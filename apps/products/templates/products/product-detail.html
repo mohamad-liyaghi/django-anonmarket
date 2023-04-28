@@ -44,12 +44,20 @@
                         {% endif %}
 
                         {% if  product.category %}
-                            <p>Category: <a href="{% url 'orders:filter-category' product.category.id product.category.slug %}">{{ product.category.parent }} | {{ product.category }}</a></p>
+                            <p>Category: <a href="{% url 'products:product-list' %}?category={{product.category}}">{{ product.category.parent }} | {{ product.category }}</a></p>
                         {% endif %} 
                         {% if request.user == product.provider %}
                         <a href="{% url 'products:product-category' product.id product.slug %}" class="btn btn-secondary">
                             Category Setting
-                        </a>{% endif %}
+                        </a>
+                        <a href="{% url 'products:update-product' product.id product.slug %}" class="btn btn-secondary">
+                            Update Product
+                        </a>
+                        <a href="{% url 'products:delete-product' product.id product.slug %}" class="btn btn-danger">
+                            Delete Product
+                        </a>
+
+                        {% endif %}
                         
                         {% if  request.user != product.provider %}
                             {% if product.is_available %}

@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 
-from products.models import  Product
+from products.models import Product, Category
 from ..forms import ProductForm
 
 
@@ -15,11 +15,21 @@ class ProductListView(LoginRequiredMixin, ListView):
     context_object_name = "products"
 
     def get_queryset(self):
-        # If user is given, return users products, othervise return all products
-        if (username:=self.request.GET.get('username')):
-            return Product.objects.filter(provider__username=username).order_by('-is_available')
-        
-        return Product.objects.all()
+        queryset = Product.objects.all().order_by('-is_available')
+
+        username = self.request.GET.get('username')
+        title = self.request.GET.get('title')
+        category_title = self.request.GET.get('category')
+
+        if username:
+            queryset = queryset.filter(provider__username=username)
+        elif title:
+            queryset = queryset.filter(title=title)
+        elif category_title:
+            category = get_object_or_404(Category, title=category_title)
+            queryset = category.products.all()
+
+        return queryset.order_by('-is_available')        
 
 
 class ProductCreateView(LoginRequiredMixin, FormView):
