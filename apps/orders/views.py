@@ -27,8 +27,8 @@ class OrderListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         if self.request.GET.get('user') == 'me':
             return Order.objects.filter(account=self.request.user)    
-        # TODO add provider field and stuff
-        return Order.objects.all()
+        
+        return Order.objects.filter(provider=self.request.user).order_by('status')
 
 
 class OrderCreateView(LoginRequiredMixin, View):
