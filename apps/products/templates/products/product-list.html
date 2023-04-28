@@ -5,7 +5,11 @@
 
 
 {% block body %}
-
+    <div class="form-outline">
+        <form action="{{ request.get_full_path }}" method="GET">
+            <input type="search" name="title" class="form-control" placeholder="Search For Product" aria-label="Search" />
+        </form>
+    </div><br>
     {% for product in products %}
 
             <div class="card" style="width: 15rem; display:inline-block;">

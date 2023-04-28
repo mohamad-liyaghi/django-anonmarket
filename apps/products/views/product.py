@@ -13,7 +13,7 @@ from ..forms import ProductForm
 class ProductListView(LoginRequiredMixin, ListView):
     '''Show all products, if there is any param given, give the users products'''
 
-    template_name = "products/list-product.html"
+    template_name = "products/product-list.html"
     context_object_name = "products"
 
     def get_queryset(self):
