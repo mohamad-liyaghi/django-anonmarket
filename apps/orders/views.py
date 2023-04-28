@@ -14,6 +14,23 @@ def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
 
+class OrderListView(LoginRequiredMixin, ListView):
+    context_object_name = 'orders'
+
+    def get_template_names(self):
+        if self.request.GET.get('user', None) == 'me':
+            return ['orders/order-list.html']
+        else:
+            return ['orders/customer-order-list.html']
+
+
+    def get_queryset(self):
+        if self.request.GET.get('user') == 'me':
+            return Order.objects.filter(account=self.request.user)    
+        # TODO add provider field and stuff
+        return Order.objects.all()
+
+
 class OrderCreateView(LoginRequiredMixin, View):
     """Create a new order with ajax"""
 
@@ -82,7 +99,7 @@ class OrderStatusView(View):
         else:
             messages.error(request, 'Invalid status for this object.', 'danger')
 
-        return redirect('products:order-list')
+        return redirect('orders:order-list')
 
 
 class OrderDetail(LoginRequiredMixin, DetailView):
