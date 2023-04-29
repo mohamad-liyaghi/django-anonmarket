@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 
-app_name = "message"
+app_name = "chats"
 
 urlpatterns = [
     path("", views.ChatList.as_view(), name="chat-list"),

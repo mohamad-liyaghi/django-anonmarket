@@ -12,7 +12,7 @@
 <hr>
 <p>You can also rate this user via links below</p>
 {% include "vote/vote.html" %}
-<br><a href="{% url 'message:get-chat' user.id user.token %}">Contact This User</a>
+<br><a href="{% url 'chats:get-chat' user.id user.token %}">Contact This User</a>
 <hr>
 <h6>Products:</h6>
 {% for product in products %}

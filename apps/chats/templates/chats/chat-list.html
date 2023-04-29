@@ -9,7 +9,7 @@
     <br>
     <div class="card">
       <div class="card-body">
-        <a href="{% url 'message:chat-detail' chat.id chat.code %}">{{ chat }}
+        <a href="{% url 'chats:chat-detail' chat.id chat.code %}">{{ chat }}
           {% if chat.chats.last.sender != request.user and not chat.chats.last.is_seen %}
              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                 New Message

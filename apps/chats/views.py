@@ -7,7 +7,7 @@ from django.db.models import Q
 import random
 
 from accounts.models import Account
-from message.models import Chat, Message
+from chats.models import Chat, Message
 from .forms import MessageForm
 
 
@@ -42,7 +42,7 @@ class GetChat(LoginRequiredMixin, View):
             existing_chat = existing_chat.first()
 
         # then we redirect to the chat detail page
-        return redirect("message:chat-detail", existing_chat.pk, existing_chat.code)
+        return redirect("chats:chat-detail", existing_chat.pk, existing_chat.code)
 
 
 
@@ -83,7 +83,7 @@ class ChatDetail(LoginRequiredMixin, View):
             form.sender = self.request.user
             form.save()
 
-        return redirect("message:chat-detail", self.chat.pk, self.chat.code)
+        return redirect("chats:chat-detail", self.chat.pk, self.chat.code)
 
 
 class UpdateMessage(LoginRequiredMixin, UpdateView):
@@ -101,7 +101,7 @@ class UpdateMessage(LoginRequiredMixin, UpdateView):
         instance = form.save(commit=False)
         instance.is_edited = True
         instance.save()
-        return redirect("message:chat-detail", self.get_object().chat.id, self.get_object().chat.code)
+        return redirect("chats:chat-detail", self.get_object().chat.id, self.get_object().chat.code)
 
 
 class DeleteMessage(DeleteView):
@@ -114,6 +114,6 @@ class DeleteMessage(DeleteView):
                                  & Q(sender=self.request.user) & ~Q(is_seen=True))
 
     def get_success_url(self):
-        return reverse_lazy("message:chat-detail",
+        return reverse_lazy("chats:chat-detail",
                             args=(self.get_object().chat.id, self.get_object().chat.code))
 
