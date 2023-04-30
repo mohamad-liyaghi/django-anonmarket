@@ -4,7 +4,7 @@ from chats.models import Chat, Message
 
 @admin.register(Chat)
 class ChatAdmin(admin.ModelAdmin):
-    list_display = ("creator", "member", "code")
+    list_display = ("code",)
 
 
 @admin.register(Message)
