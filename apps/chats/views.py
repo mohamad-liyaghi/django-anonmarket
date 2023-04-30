@@ -1,8 +1,8 @@
-from django.views.generic import TemplateView, View, UpdateView, DeleteView
+from django.views.generic import ListView, View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
-from django.db.models import Q
+from django.db.models import Q 
 
 import random
 
@@ -11,16 +11,14 @@ from chats.models import Chat, Message
 from .forms import MessageForm
 
 
-class ChatList(LoginRequiredMixin, TemplateView):
-    '''Show All Available chats of a user'''
-    template_name = "message/chat-list.html"\
+class ChatListView(LoginRequiredMixin, ListView):
+    '''List of a users chats'''
 
-    def get_context_data(self, **kwargs):
-        context = super(ChatList, self).get_context_data(**kwargs)
-        context["chats"] = Chat.objects.filter(Q(creator=self.request.user)
-                                               | Q(member=self.request.user))
-
-        return context
+    template_name = "chats/chat-list.html"
+    context_object_name = 'chats'
+    
+    def get_queryset(self):
+        return self.request.user.chats.all()
 
 
 class GetChat(LoginRequiredMixin, View):

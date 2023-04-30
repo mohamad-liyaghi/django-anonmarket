@@ -1,29 +1,19 @@
 {% extends 'base/_base.html' %}
 
-{% block title %} Messages List{% endblock title %}
+{% block title %} Chat List{% endblock title %}
 
 {% block body %}
 
+  <h2>Chat Inbox</h2><hr>
 
   {% for chat in chats  %}
-    <br>
-    <div class="card">
-      <div class="card-body">
-        <a href="{% url 'chats:chat-detail' chat.id chat.code %}">{{ chat }}
-          {% if chat.chats.last.sender != request.user and not chat.chats.last.is_seen %}
-             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                New Message
-                <span class="visually-hidden">unread messages</span>
-              </span>
-          {% endif %}
-        </a>
+    <div class="card my-3">
+      <div class="card-body d-flex align-items-center">
+        <a href="{% url 'chats:chat-detail' chat.id chat.code %}" class="text-decoration-none">{{ chat }}</a>
       </div>
     </div>
-
   {% empty %}
-
-    <h3>Your chat list is empty...</h3>
-
+    <h4>No chats yet</h4>
   {% endfor %}
 
 {% endblock body %}

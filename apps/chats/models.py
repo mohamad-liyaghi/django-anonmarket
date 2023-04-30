@@ -7,7 +7,7 @@ class Chat(models.Model):
     '''chat model for users in order to send messages'''
 
     code = models.CharField(max_length=20)
-    participants = models.ManyToManyField(Account, related_name='rooms')
+    participants = models.ManyToManyField(Account, related_name='chats')
 
     def __str__(self):
         return str(self.code)
@@ -35,7 +35,7 @@ class Message(models.Model):
         return f"{self.pk} | {self.sender.username}"
     
     def save(self, *args, **kwargs):
-        if self.pk:
+        if not self.pk:
             self.is_edited = True
             self.code = unique_code_generator(self.__class__)
 
