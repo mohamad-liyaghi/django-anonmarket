@@ -1,15 +1,21 @@
 from django.db import models
 from accounts.models import Account
+from chats.utils import unique_code_generator
 
 
 class Chat(models.Model):
     '''chat model for users in order to send messages'''
 
-    code = models.IntegerField()
+    code = models.CharField(max_length=20)
     participants = models.ManyToManyField(Account, related_name='rooms')
 
     def __str__(self):
         return str(self.code)
+    
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.code = unique_code_generator(self.__class__)
+        return super().save(*args, **kwargs)
 
 
 class Message(models.Model):
@@ -22,6 +28,8 @@ class Message(models.Model):
     is_edited = models.BooleanField(default=False)
     is_seen = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True)
+    
+    code = models.CharField(max_length=20)
 
     def __str__(self):
         return f"{self.pk} | {self.sender.username}"
@@ -29,5 +37,6 @@ class Message(models.Model):
     def save(self, *args, **kwargs):
         if self.pk:
             self.is_edited = True
+            self.code = unique_code_generator(self.__class__)
 
         return super().save(*args, **kwargs)
