@@ -1,14 +1,12 @@
 from django.views.generic import ListView, View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, get_object_or_404, render
+from django.shortcuts import redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.db.models import Q 
 
-from accounts.models import Account
 from chats.models import Chat, Message
-from .forms import MessageForm
-from .mixins import ChatExistsMixin
+from .mixins import ChatExistsMixin, SeenMessageView
 
 
 class ChatListView(LoginRequiredMixin, ListView):
@@ -29,39 +27,21 @@ class ChatCreateView(LoginRequiredMixin, ChatExistsMixin, View):
         return redirect('chats:chat-detail', id=chat.id, code=chat.code)
 
 
-
-
-class ChatDetail(LoginRequiredMixin, View):
+class ChatDetail(LoginRequiredMixin, SeenMessageView, ListView):
     '''Page of a chat that user can send, read a message'''
 
+    template_name = 'chats/chat-detail.html'
+    context_object_name = 'messages'
 
-    def get(self, request, id, code):
-        """Return the messages of a chat"""
+    def get_queryset(self):
+        _from = self.request.GET.get('from')
+        to = self.request.GET.get('to')
+        if _from and to:
+            return self.chat.messages.all().order_by("-date")[int(_from):int(to)][:20]
 
-        messages = self.chat.chats.all().order_by("-date")
+        return self.chat.messages.all().order_by("-date")[:20]
 
-        # seen messages
-        messages.filter(~Q(sender=self.request.user)
-                                        & Q(is_seen=False)).update(is_seen=True)
-
-        form = MessageForm
-
-        return render(self.request, "message/chat-detail.html",
-                      {"all_messages" : messages[:50], "chat" : self.chat, "form" : form})
-
-
-    def post(self, request, *args, **kwargs):
-        '''Create a message in chat'''
-
-        form = MessageForm(self.request.POST)
-
-        if form.is_valid():
-            form = form.save(commit=False)
-            form.chat = self.chat
-            form.sender = self.request.user
-            form.save()
-
-        return redirect("chats:chat-detail", self.chat.pk, self.chat.code)
+# TODO add message with Channels
 
 
 class UpdateMessage(LoginRequiredMixin, UpdateView):
