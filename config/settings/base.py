@@ -24,7 +24,7 @@ INSTALLED_APPS = [
     # local apps
     'apps.accounts.apps.AccountsConfig',
     'apps.products.apps.ProductsConfig',
-    'apps.message.apps.MessageConfig',
+    'apps.chats.apps.ChatsConfig',
     'apps.orders.apps.OrdersConfig',
     'apps.blog.apps.BlogConfig',
     'apps.forum.apps.ForumConfig',
