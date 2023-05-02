@@ -8,6 +8,8 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 SECRET_KEY = config("SECRET_KEY")
 
 INSTALLED_APPS = [
+    'daphne',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -124,3 +126,4 @@ ACCOUNT_FORMS = {
 }
 
 LOGIN_REDIRECT_URL = 'orders:home'
+ASGI_APPLICATION = "config.asgi.application"
