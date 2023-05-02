@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from django.views.generic import ListView, View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, get_object_or_404
@@ -40,8 +41,13 @@ class ChatDetail(LoginRequiredMixin, SeenMessageView, ListView):
             return self.chat.messages.all().order_by("-date")[int(_from):int(to)][:20]
 
         return self.chat.messages.all().order_by("-date")[:20]
+    
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context['chat_id'] = self.chat.id
+        context['chat_code'] = self.chat.code
+        return context
 
-# TODO add message with Channels
 
 
 class UpdateMessage(LoginRequiredMixin, UpdateView):

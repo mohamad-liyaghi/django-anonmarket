@@ -1,4 +1,5 @@
 {% extends 'base/_base.html' %}
+{% load static %}
 
 {% block title %} Chat Detail {% endblock title %}
 
@@ -7,7 +8,7 @@
 <hr>
 
     <div class="shadow-none p-3 mb-5 bg-light rounded">
-        <div style="height:350px; overflow-y: scroll;">
+        <div id='message-log' style="height:350px; overflow-y: scroll;">
             {% for message in messages %}
                 <div class="card">
                   <div class="card-header">
@@ -50,31 +51,17 @@
           
         </div>
         <br>
-        <form action="" method="post">{% csrf_token %}
-            <div class="input-group mb-3">
-              <input type="text" name="text" id="id_text" class="form-control" placeholder="New Message" aria-label="Recipient's username" aria-describedby="basic-addon2">
-              <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button">Send</button>
-              </div>
-            </div>
-        </form>
+        <div class="input-group mb-3">
+          <input type="text" name="text" id="message-input" class="form-control" placeholder="New Message" aria-describedby="basic-addon2">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" id='message-submit' type="button">Send</button>
+          </div>
+            
+        {{ chat_id|json_script:"chat_id" }}
+       {{ chat_code|json_script:"chat_code" }}
+        <script type="text/javascript" src="{% static 'js/add_message.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/load_messages.js' %}"></script>
     </div>
 
-    <script>
-      function loadMore() {
-        // Get current 'to' and 'from' values from query parameters, or set them to default values
-        let searchParams = new URLSearchParams(window.location.search);
-        let from = parseInt(searchParams.get('from')) || 0;
-        let to = parseInt(searchParams.get('to')) || 20;
-      
-        // Increase both 'to' and 'from' values by 20
-        from += 20;
-        to += 20;
-      
-        // Update query parameters in URL
-        searchParams.set('from', from.toString());
-        searchParams.set('to', to.toString());
-        window.location.search = searchParams.toString();
-      }
-      </script>
+    
 {% endblock body %}
