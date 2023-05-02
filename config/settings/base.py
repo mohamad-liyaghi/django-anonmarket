@@ -125,5 +125,5 @@ ACCOUNT_FORMS = {
     'signup': 'apps.accounts.forms.RegisterForm'
 }
 
-LOGIN_REDIRECT_URL = 'orders:home'
+LOGIN_REDIRECT_URL = 'product-list'
 ASGI_APPLICATION = "config.asgi.application"

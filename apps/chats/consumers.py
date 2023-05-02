@@ -1,24 +1,36 @@
 import json
-from django.shortcuts import get_object_or_404
-from channels.generic.websocket import WebsocketConsumer
-from chats.models import Chat, Message
+from channels.generic.websocket import AsyncWebsocketConsumer
+from chats.models import Message
+from channels.db import database_sync_to_async
 
+class ChatConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
 
-class ChatConsumer(WebsocketConsumer):
-    def connect(self):
         chat_id = self.scope["url_route"]["kwargs"]["id"]
         chat_code = self.scope["url_route"]["kwargs"]["code"]
-        user = self.scope['user']
+        self.user = self.scope['user']
 
-        self.room = get_object_or_404(user.chats.all(), id=chat_id, code=chat_code)
-        
+        self.chat = await self.get_chat(chat_id, chat_code)
+
         self.chat_group_name = f'chat_{chat_id}_{chat_code}'
 
-        self.accept()
+        # TODO add group
 
-    def disconnect(self, close_code):
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        # TODO remove group
         pass
 
-    def receive(self, text_data):
-        # TODO add message to db
-        pass
+    async def receive(self, text_data):
+        data = json.loads(text_data)
+        if (text:=data['message']):
+            await self.create_message(text)
+
+    @database_sync_to_async
+    def get_chat(self, chat_id, chat_code):
+        return self.user.chats.filter(id=chat_id, code=chat_code).first()
+
+    @database_sync_to_async
+    def create_message(self, text):
+        return Message.objects.create(chat=self.chat, sender=self.user, text=text)

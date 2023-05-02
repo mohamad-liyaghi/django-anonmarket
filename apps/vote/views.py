@@ -55,4 +55,4 @@ class VoteView(LoginRequiredMixin, View):
 
             return JsonResponse({'error':'invalid information'})
 
-        return redirect("orders:home")
+        return redirect("orders:product-list")
