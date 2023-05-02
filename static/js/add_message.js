@@ -14,7 +14,22 @@ const chatSocket = new WebSocket(
 
 chatSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
-    document.querySelector('#message-log').value += (data.message + '\n');
+    const messageLog = document.querySelector('#message-log');
+    
+    const messageCard = document.createElement('div');
+    messageCard.className = 'card';
+    messageCard.innerHTML = `
+        <div class="card-header">
+            ${data.sender} | ${data.date} | Seen: ${data.is_seen} | Edited: ${data.is_edited}
+        </div>
+        <div class="card-body">
+            <blockquote class="blockquote mb-0">
+                <p>${data.text}</p>
+                <hr>
+            </blockquote>
+        </div>
+    `;
+    messageLog.insertBefore(messageCard, messageLog.firstChild);
 };
 
 chatSocket.onclose = function(e) {
