@@ -30,6 +30,7 @@ chatSocket.onmessage = function(e) {
         </div>
     `;
     messageLog.insertBefore(messageCard, messageLog.firstChild);
+    document.getElementById('no-message-found').innerText = '';
 };
 
 chatSocket.onclose = function(e) {
