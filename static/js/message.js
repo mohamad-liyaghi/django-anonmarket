@@ -89,7 +89,9 @@ chatSocket.onmessage = function(e) {
     }
 
     if (data['type'] == 'message_updated'){
-        console.log("are")
+        const messageDiv = document.getElementById(data.code + '_text');
+        messageDiv.innerHTML = data['text']
+
     }
     
     var noMsgFoundEl = document.getElementById('no-message-found');
