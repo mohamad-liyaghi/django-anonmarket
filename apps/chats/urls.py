@@ -8,7 +8,4 @@ urlpatterns = [
 
     path("<int:id>/<str:code>/", views.ChatDetailView.as_view(), name="chat-detail"),
     path("<int:participant_id>/<str:participant_token>/create/", views.ChatCreateView.as_view(), name="create-chat"),
-
-    path("update-message/<int:id>/", views.UpdateMessage.as_view(), name="update-message"),
-
 ]

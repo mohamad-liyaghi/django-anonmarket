@@ -47,23 +47,3 @@ class ChatDetailView(LoginRequiredMixin, SeenMessageView, ListView):
         context['chat_id'] = self.chat.id
         context['chat_code'] = self.chat.code
         return context
-
-
-
-class UpdateMessage(LoginRequiredMixin, UpdateView):
-    '''Update a message by its sender'''
-
-    template_name = "message/update-message.html"
-    context_object_name = "message"
-    fields = ["text"]
-
-    def get_object(self):
-        return get_object_or_404(Message, Q(id=self.kwargs["id"])
-                                 & Q(sender=self.request.user) & ~Q(is_seen=True))
-
-    def form_valid(self, form):
-        instance = form.save(commit=False)
-        instance.is_edited = True
-        instance.save()
-        return redirect("chats:chat-detail", self.get_object().chat.id, self.get_object().chat.code)
-
