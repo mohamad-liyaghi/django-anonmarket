@@ -28,11 +28,11 @@ class ChatCreateView(LoginRequiredMixin, ChatExistsMixin, View):
         return redirect('chats:chat-detail', id=chat.id, code=chat.code)
 
 
-class ChatDetail(LoginRequiredMixin, SeenMessageView, ListView):
+class ChatDetailView(LoginRequiredMixin, SeenMessageView, ListView):
     '''Page of a chat that user can send, read a message'''
 
     template_name = 'chats/chat-detail.html'
-    context_object_name = 'messages'
+    context_object_name = 'all_messages'
 
     def get_queryset(self):
         _from = self.request.GET.get('from')
@@ -66,18 +66,4 @@ class UpdateMessage(LoginRequiredMixin, UpdateView):
         instance.is_edited = True
         instance.save()
         return redirect("chats:chat-detail", self.get_object().chat.id, self.get_object().chat.code)
-
-
-class DeleteMessage(DeleteView):
-    '''Delete a Message'''
-
-    template_name = "message/delete-message.html"
-
-    def get_object(self):
-        return get_object_or_404(Message, Q(id=self.kwargs["id"])
-                                 & Q(sender=self.request.user) & ~Q(is_seen=True))
-
-    def get_success_url(self):
-        return reverse_lazy("chats:chat-detail",
-                            args=(self.get_object().chat.id, self.get_object().chat.code))
 
