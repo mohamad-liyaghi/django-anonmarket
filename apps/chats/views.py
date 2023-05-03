@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from django.views.generic import ListView, View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, get_object_or_404
@@ -27,11 +28,11 @@ class ChatCreateView(LoginRequiredMixin, ChatExistsMixin, View):
         return redirect('chats:chat-detail', id=chat.id, code=chat.code)
 
 
-class ChatDetail(LoginRequiredMixin, SeenMessageView, ListView):
+class ChatDetailView(LoginRequiredMixin, SeenMessageView, ListView):
     '''Page of a chat that user can send, read a message'''
 
     template_name = 'chats/chat-detail.html'
-    context_object_name = 'messages'
+    context_object_name = 'all_messages'
 
     def get_queryset(self):
         _from = self.request.GET.get('from')
@@ -40,38 +41,9 @@ class ChatDetail(LoginRequiredMixin, SeenMessageView, ListView):
             return self.chat.messages.all().order_by("-date")[int(_from):int(to)][:20]
 
         return self.chat.messages.all().order_by("-date")[:20]
-
-# TODO add message with Channels
-
-
-class UpdateMessage(LoginRequiredMixin, UpdateView):
-    '''Update a message by its sender'''
-
-    template_name = "message/update-message.html"
-    context_object_name = "message"
-    fields = ["text"]
-
-    def get_object(self):
-        return get_object_or_404(Message, Q(id=self.kwargs["id"])
-                                 & Q(sender=self.request.user) & ~Q(is_seen=True))
-
-    def form_valid(self, form):
-        instance = form.save(commit=False)
-        instance.is_edited = True
-        instance.save()
-        return redirect("chats:chat-detail", self.get_object().chat.id, self.get_object().chat.code)
-
-
-class DeleteMessage(DeleteView):
-    '''Delete a Message'''
-
-    template_name = "message/delete-message.html"
-
-    def get_object(self):
-        return get_object_or_404(Message, Q(id=self.kwargs["id"])
-                                 & Q(sender=self.request.user) & ~Q(is_seen=True))
-
-    def get_success_url(self):
-        return reverse_lazy("chats:chat-detail",
-                            args=(self.get_object().chat.id, self.get_object().chat.code))
-
+    
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context['chat_id'] = self.chat.id
+        context['chat_code'] = self.chat.code
+        return context
