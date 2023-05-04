@@ -24,7 +24,6 @@
                     <div class="col-sm">
                         {% if order.status == "o" %}
                         <td>
-                            <a href="{% url 'orders:update-order' order.id order.token %}" class="btn btn-danger">Update</a>
                             <a href="{% url 'orders:delete-order' order.id order.token %}" class="btn btn-danger">Delete</a>
                         </td>
                         

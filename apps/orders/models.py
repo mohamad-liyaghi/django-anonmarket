@@ -34,5 +34,7 @@ class Order(models.Model):
         if not self.pk:
             self.token = unique_order_token_generator(self.__class__)
             self.provider = self.product.provider
+            self.price = self.product.price
+            
         
         return super().save(*args, **kwargs)

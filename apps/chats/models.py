@@ -36,7 +36,8 @@ class Message(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.is_edited = True
             self.code = unique_code_generator(self.__class__)
+            return super().save(*args, **kwargs)
 
+        self.is_edited = True
         return super().save(*args, **kwargs)
