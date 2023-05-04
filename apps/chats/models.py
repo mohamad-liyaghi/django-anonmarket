@@ -41,3 +41,12 @@ class Message(models.Model):
 
         self.is_edited = True
         return super().save(*args, **kwargs)
+    
+
+class Notification(models.Model):
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="notifications", blank=True, null=True)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="notofications", blank=True, null=True)
+    is_active = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return str(self.chat)
