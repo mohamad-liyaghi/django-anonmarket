@@ -1,29 +1,27 @@
-from typing import Any, Dict
-from django.views.generic import ListView, View, UpdateView, DeleteView
+from django.views.generic import ListView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect
 from django.contrib import messages
-from django.urls import reverse_lazy
-from django.db.models import Q 
 
-from chats.models import Chat, Message
+from chats.models import Chat, ChatParticipant, Notification
 from .mixins import ChatExistsMixin, SeenMessageView
+from .utils import set_chat_participant
 
 
 class ChatListView(LoginRequiredMixin, ListView):
     '''List of a users chats'''
 
     template_name = "chats/chat-list.html"
-    context_object_name = 'chats'
+    context_object_name = 'notifications'
     
     def get_queryset(self):
-        return self.request.user.chats.all()
+        return Notification.objects.select_related('chat').filter(account=self.request.user).order_by('-is_active')
 
 class ChatCreateView(LoginRequiredMixin, ChatExistsMixin, View):
 
     def get(self, request, *args, **kwargs):
         chat = Chat.objects.create()
-        chat.participants.set([self.request.user, self.kwargs['participant_id']])
+        set_chat_participant(participant_model=ChatParticipant,chat=chat, participants=[self.request.user, self.participant])
         messages.success(request, 'Chat created successfully', 'success')
         return redirect('chats:chat-detail', id=chat.id, code=chat.code)
 

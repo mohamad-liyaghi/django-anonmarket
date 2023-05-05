@@ -7,7 +7,7 @@ class Chat(models.Model):
     '''chat model for users in order to send messages'''
 
     code = models.CharField(max_length=20)
-    participants = models.ManyToManyField(Account, related_name='chats')
+    participants = models.ManyToManyField(Account, through='ChatParticipant', related_name='chats')
 
     def __str__(self):
         return str(self.code)
@@ -16,6 +16,10 @@ class Chat(models.Model):
         if not self.pk:
             self.code = unique_code_generator(self.__class__)
         return super().save(*args, **kwargs)
+
+class ChatParticipant(models.Model):
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
 
 
 class Message(models.Model):
@@ -41,3 +45,12 @@ class Message(models.Model):
 
         self.is_edited = True
         return super().save(*args, **kwargs)
+    
+
+class Notification(models.Model):
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="notifications", blank=True, null=True)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="notofications", blank=True, null=True)
+    is_active = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return str(self.chat)
