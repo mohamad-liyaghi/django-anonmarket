@@ -1,10 +1,9 @@
-from typing import Any, Dict
 from django.views.generic import ListView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.contrib import messages
 
-from chats.models import Chat, ChatParticipant
+from chats.models import Chat, ChatParticipant, Notification
 from .mixins import ChatExistsMixin, SeenMessageView
 from .utils import set_chat_participant
 
@@ -13,10 +12,10 @@ class ChatListView(LoginRequiredMixin, ListView):
     '''List of a users chats'''
 
     template_name = "chats/chat-list.html"
-    context_object_name = 'chats'
+    context_object_name = 'notifications'
     
     def get_queryset(self):
-        return self.request.user.chats.all()
+        return Notification.objects.select_related('chat').filter(account=self.request.user).order_by('-is_active')
 
 class ChatCreateView(LoginRequiredMixin, ChatExistsMixin, View):
 
