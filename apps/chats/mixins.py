@@ -1,13 +1,14 @@
 from django.db.models import Q
 from django.shortcuts import redirect, get_object_or_404
+from accounts.models import Account
 
 
 class ChatExistsMixin():
     '''Check if a chat exists and user is a participant of that'''
 
     def dispatch(self, request, *args, **kwargs):
-
-        participant_ids = [request.user.id, self.kwargs['participant_id']]
+        self.participant = get_object_or_404(Account, id=self.kwargs['participant_id'])
+        participant_ids = [request.user.id, self.participant.id]
 
         self.chat = self.request.user.chats.filter(participants__id__in=participant_ids).first()
 
@@ -24,4 +25,5 @@ class SeenMessageView:
         self.chat.messages.filter(~Q(sender=self.request.user)
                                         & Q(is_seen=False)).update(is_seen=True)
 
+        self.chat.notifications.filter(account=request.user, is_active=True).update(is_active=False)
         return super().dispatch(request, *args, **kwargs)

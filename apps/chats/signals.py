@@ -2,7 +2,14 @@ from django.dispatch import receiver
 from django.db.models import Q
 from django.db.models.signals import post_save
 
-from chats.models import Message, Notification
+from chats.models import Message, ChatParticipant, Notification
+
+
+@receiver(post_save, sender=ChatParticipant)
+def create_notification_for_participant(sender, instance, created, **kwargs):
+    if created:
+        Notification.objects.create(account=instance.user, chat=instance.chat)
+
 
 @receiver(post_save, sender=Message)
 def create_notification_for_message(sender, **kwargs):

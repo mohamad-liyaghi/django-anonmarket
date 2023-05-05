@@ -11,3 +11,7 @@ def unique_code_generator(cls):
         unique_code_generator(cls)
     
     return code
+
+def set_chat_participant(participant_model, chat, participants:list):
+    for participant in participants:
+        participant_model.objects.create(user=participant, chat=chat)

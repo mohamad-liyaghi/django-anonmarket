@@ -1,11 +1,14 @@
 from django.contrib import admin
-from chats.models import Chat, Message, Notification
+from chats.models import Chat, Message, Notification, ChatParticipant
 
 
 @admin.register(Chat)
 class ChatAdmin(admin.ModelAdmin):
     list_display = ("code",)
 
+@admin.register(ChatParticipant)
+class ChatParticipantAdmin(admin.ModelAdmin):
+    list_display = ("user", 'chat')
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
