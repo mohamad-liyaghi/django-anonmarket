@@ -1,7 +1,7 @@
 {% load comment_tags %}
 {% load base_tags %}
 {% load static %}
-<input type="hidden" id="Comment-Url" data-url="{% url 'vote:vote' %}" />
+<input type="hidden" id="Comment-Url" data-url="{% url 'votes:vote' %}" />
 <input type="hidden" id="CSRF" data="{{ csrf_token }}" />
 
 <p style="display:none;" id="comment_content_type_id">{{ object|get_model_content_type_id }}</p>

@@ -3,7 +3,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 
 from products.models import Product
 from accounts.models import Account
-from vote.models import Vote
+from votes.models import Vote
 from comment.models import Comment
 
 class Article(models.Model):

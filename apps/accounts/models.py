@@ -4,7 +4,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 
 from .managers import AccountManager
 from accounts.utils import unique_token_generator
-from vote.models import Vote
+from votes.models import Vote
 
 
 class Account(AbstractBaseUser, PermissionsMixin):

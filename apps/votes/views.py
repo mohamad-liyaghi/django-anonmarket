@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 
 from django.contrib.contenttypes.models import ContentType
-from vote.models import Vote 
+from votes.models import Vote 
 
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
@@ -24,11 +24,11 @@ class VoteView(LoginRequiredMixin, View):
                 object = get_object_or_404(content_type_model.model_class(), id=object_id)
                 
                 if action == "like":
-                    if (vote:=Vote.objects.filter(user=self.request.user, vote="l", \
+                    if (votes:=Vote.objects.filter(user=self.request.user, vote="l", \
                                     content_type=content_type_model, object_id=object_id).first()):
                         vote.delete()
 
-                    elif (vote:=Vote.objects.filter(user=self.request.user, vote="d", \
+                    elif (votes:=Vote.objects.filter(user=self.request.user, vote="d", \
                                     content_type=content_type_model, object_id=object_id).first()):
                         vote.vote = "l"
                         vote.save()
@@ -38,11 +38,11 @@ class VoteView(LoginRequiredMixin, View):
                                         content_type=content_type_model, object_id=object_id)
                 
                 if action == "dislike":
-                    if (vote:=Vote.objects.filter(user=self.request.user, vote="d", \
+                    if (votes:=Vote.objects.filter(user=self.request.user, vote="d", \
                                     content_type=content_type_model, object_id=object_id).first()):
                         vote.delete()
                     
-                    elif (vote:=Vote.objects.filter(user=self.request.user, vote="l", \
+                    elif (votes:=Vote.objects.filter(user=self.request.user, vote="l", \
                                     content_type=content_type_model, object_id=object_id).first()):
                         vote.vote = "d"
                         vote.save()

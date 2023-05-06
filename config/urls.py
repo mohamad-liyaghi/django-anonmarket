@@ -17,7 +17,7 @@ LOCAL_URLS = [
     path("blog/", include("apps.blog.urls")),
     path("forum/", include("apps.forum.urls")),
 
-    path("vote/", include("apps.vote.urls")),
+    path("vote/", include("apps.votes.urls")),
     path("comment/", include("apps.comment.urls")),
 ]
 

@@ -4,7 +4,7 @@ from django.utils.text import slugify
 from django_countries.fields import CountryField
 
 from accounts.models import Account
-from vote.models import Vote
+from votes.models import Vote
 from products.utils import unique_slug_generator
 
 

@@ -1,7 +1,7 @@
 {% load base_tags %}
 {% if request.user.is_authenticated %}
 {% load static %}
-<input type="hidden" id="Url" data-url="{% url 'vote:vote' %}" />
+<input type="hidden" id="Url" data-url="{% url 'votes:vote' %}" />
 <input type="hidden" id="CSRF" data="{{ csrf_token }}" />
 
 <script src="https://code.jquery.com/jquery-3.6.2.js" integrity="sha256-pkn2CUZmheSeyssYw3vMp1+xyub4m+e+QK4sQskvuo4=" crossorigin="anonymous"></script>

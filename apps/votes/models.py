@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
-from vote.managers import VoteManager
+from votes.managers import VoteManager
 
 class Vote(models.Model):
     '''A vote model that can be used for products, users, etc.'''
