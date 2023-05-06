@@ -24,7 +24,7 @@ class VoteView(LoginRequiredMixin, View):
                 object = get_object_or_404(content_type_model.model_class(), id=object_id)
                 
                 if action == "like":
-                    if (votes:=Vote.objects.filter(user=self.request.user, vote="l", \
+                    if (vote:=Vote.objects.filter(user=self.request.user, vote="l", \
                                     content_type=content_type_model, object_id=object_id).first()):
                         vote.delete()
 
@@ -51,7 +51,7 @@ class VoteView(LoginRequiredMixin, View):
                         Vote.objects.create(user=self.request.user, vote="d", 
                                         content_type=content_type_model, object_id=object_id)
 
-                return JsonResponse({'likes': object.vote.likes(), "dislikes" : object.vote.dislikes()})
+                return JsonResponse({'upvotes': object.votes.upvotes_count(), "downvotes" : object.votes.downvotes_count()})
 
             return JsonResponse({'error':'invalid information'})
 

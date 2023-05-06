@@ -24,7 +24,7 @@ class Comment(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
-    vote = GenericRelation(Vote)
+    votes = GenericRelation(Vote)
 
 
     def __str__(self) -> str:

@@ -24,7 +24,7 @@ class Article(models.Model):
     published = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True)
 
-    vote = GenericRelation(Vote, related_query_name="account_vote")
+    votes = GenericRelation(Vote, related_query_name="account_vote")
     comment = GenericRelation(Comment)
 
 

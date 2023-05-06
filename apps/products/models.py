@@ -25,7 +25,7 @@ class Product(models.Model):
     price = models.PositiveIntegerField(default=0)
     is_available = models.BooleanField(default=False)
 
-    vote = GenericRelation(Vote, related_query_name="product_vote")
+    votes = GenericRelation(Vote, related_query_name="product_vote")
 
     def __str__(self):
         return self.title

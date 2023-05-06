@@ -19,7 +19,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
 
-    vote = GenericRelation(Vote, related_query_name="account_vote")
+    votes = GenericRelation(Vote, related_query_name="account_vote")
     objects = AccountManager()
 
     USERNAME_FIELD = "username"

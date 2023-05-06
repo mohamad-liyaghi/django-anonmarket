@@ -11,8 +11,8 @@ function reaction(content_type_id, object_id, vote_action, like_count, dislike_c
             action: 'post'
         },
         success: function (json) {
-            document.getElementById(like_count).innerHTML = json['likes']
-            document.getElementById(dislike_count).innerHTML = json['dislikes']
+            document.getElementById(like_count).innerHTML = json['upvotes']
+            document.getElementById(dislike_count).innerHTML = json['downvotes']
         },
         error: function (xhr, errmsg, err) {
     

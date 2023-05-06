@@ -2,10 +2,10 @@ from django.db import models
 
 
 class VoteManager(models.Manager):
-    '''Count the likes of an object'''
+    '''Count the Upvotes and downvotes'''
     
-    def likes(self):
-        return self.filter(vote="l").count()
+    def upvotes_count(self):
+        return self.filter(choice="u").count()
     
-    def dislikes(self):
-        return self.filter(vote="d").count()
+    def downvotes_count(self):
+        return self.filter(choice="d").count()
