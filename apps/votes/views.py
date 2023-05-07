@@ -11,48 +11,43 @@ def is_ajax(request):
 
 
 class VoteView(LoginRequiredMixin, View):
-    '''Like and dislike an object'''
+    '''Upvote and downvote an object'''
+
     def post(self, request, *args, **kwargs):
-        if is_ajax(request):
+        # Only ajax requests are allowed
+        if not is_ajax(request):
+            return redirect("orders:product-list")
 
-            if (object_id:=request.POST.get('object_id')) and \
-                (content_type_id:=request.POST.get('content_type_id')) and \
-                    (action:=request.POST.get('vote_action')):
+        object_id = request.POST.get('object_id')
+        content_type_id = request.POST.get('content_type_id')
+        choice = request.POST.get('choice')
 
+        if not all([object_id, content_type_id, choice]):
+            return JsonResponse({'error': 'invalid information'})
 
-                content_type_model = get_object_or_404(ContentType, id=content_type_id)
-                object = get_object_or_404(content_type_model.model_class(), id=object_id)
-                
-                if action == "like":
-                    if (vote:=Vote.objects.filter(user=self.request.user, votes="l", \
-                                    content_type=content_type_model, object_id=object_id).first()):
-                        vote.delete()
+        # Get the content type and object for the given IDs
+        content_type = get_object_or_404(ContentType, id=content_type_id)
+        obj = get_object_or_404(content_type.model_class(), id=object_id)
 
-                    elif (votes:=Vote.objects.filter(user=self.request.user, votes="d", \
-                                    content_type=content_type_model, object_id=object_id).first()):
-                        vote.vote = "l"
-                        vote.save()
+        # Create a new vote object
+        if choice == "upvote":
+            vote_choice = "u"
 
-                    else:
-                        Vote.objects.create(user=self.request.user, votes="l", 
-                                        content_type=content_type_model, object_id=object_id)
-                
-                if action == "dislike":
-                    if (votes:=Vote.objects.filter(user=self.request.user, votes="d", \
-                                    content_type=content_type_model, object_id=object_id).first()):
-                        vote.delete()
-                    
-                    elif (votes:=Vote.objects.filter(user=self.request.user, votes="l", \
-                                    content_type=content_type_model, object_id=object_id).first()):
-                        vote.vote = "d"
-                        vote.save()
-                        
-                    else:
-                        Vote.objects.create(user=self.request.user, votes="d", 
-                                        content_type=content_type_model, object_id=object_id)
+        elif choice == "downvote":
+            vote_choice = "d"
 
-                return JsonResponse({'upvotes': object.votes.upvotes_count(), "downvotes" : object.votes.downvotes_count()})
+        else:
+            return JsonResponse({'error': 'invalid choice'})
 
-            return JsonResponse({'error':'invalid information'})
+        Vote.objects.create(
+            user=request.user,
+            choice=vote_choice,
+            content_type=content_type,
+            object_id=object_id
+        )
 
-        return redirect("orders:product-list")
+        # Return the upvote and downvote counts for the object
+        return JsonResponse({
+            'upvotes': obj.votes.upvotes_count(),
+            'downvotes': obj.votes.downvotes_count()
+        })
