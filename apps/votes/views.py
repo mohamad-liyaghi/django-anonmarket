@@ -24,31 +24,31 @@ class VoteView(LoginRequiredMixin, View):
                 object = get_object_or_404(content_type_model.model_class(), id=object_id)
                 
                 if action == "like":
-                    if (vote:=Vote.objects.filter(user=self.request.user, vote="l", \
+                    if (vote:=Vote.objects.filter(user=self.request.user, votes="l", \
                                     content_type=content_type_model, object_id=object_id).first()):
                         vote.delete()
 
-                    elif (votes:=Vote.objects.filter(user=self.request.user, vote="d", \
+                    elif (votes:=Vote.objects.filter(user=self.request.user, votes="d", \
                                     content_type=content_type_model, object_id=object_id).first()):
                         vote.vote = "l"
                         vote.save()
 
                     else:
-                        Vote.objects.create(user=self.request.user, vote="l", 
+                        Vote.objects.create(user=self.request.user, votes="l", 
                                         content_type=content_type_model, object_id=object_id)
                 
                 if action == "dislike":
-                    if (votes:=Vote.objects.filter(user=self.request.user, vote="d", \
+                    if (votes:=Vote.objects.filter(user=self.request.user, votes="d", \
                                     content_type=content_type_model, object_id=object_id).first()):
                         vote.delete()
                     
-                    elif (votes:=Vote.objects.filter(user=self.request.user, vote="l", \
+                    elif (votes:=Vote.objects.filter(user=self.request.user, votes="l", \
                                     content_type=content_type_model, object_id=object_id).first()):
                         vote.vote = "d"
                         vote.save()
                         
                     else:
-                        Vote.objects.create(user=self.request.user, vote="d", 
+                        Vote.objects.create(user=self.request.user, votes="d", 
                                         content_type=content_type_model, object_id=object_id)
 
                 return JsonResponse({'upvotes': object.votes.upvotes_count(), "downvotes" : object.votes.downvotes_count()})
