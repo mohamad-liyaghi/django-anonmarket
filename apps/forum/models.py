@@ -3,7 +3,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 
 from accounts.models import Account
 from comment.models import Comment
-from vote.models import Vote
+from votes.models import Vote
 
 
 class Forum(models.Model):
@@ -23,7 +23,7 @@ class Forum(models.Model):
     closed = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True)
 
-    vote = GenericRelation(Vote, related_query_name="forum_vote")
+    votes = GenericRelation(Vote, related_query_name="forum_vote")
     comment = GenericRelation(Comment)
 
     def __str__(self):

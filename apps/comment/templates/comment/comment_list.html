@@ -1,7 +1,7 @@
 {% load comment_tags %}
 {% load base_tags %}
 {% load static %}
-<input type="hidden" id="Comment-Url" data-url="{% url 'vote:vote' %}" />
+<input type="hidden" id="Comment-Url" data-url="{% url 'votes:vote' %}" />
 <input type="hidden" id="CSRF" data="{{ csrf_token }}" />
 
 <p style="display:none;" id="comment_content_type_id">{{ object|get_model_content_type_id }}</p>
@@ -24,7 +24,7 @@
 								 {% endif %}
 								 <i class="pull-right">
 									<div class="pr-2">
-										<span class="" id="like_count_{{ comment.id }}">{{comment.vote.likes}}</span>
+										<span class="" id="like_count_{{ comment.id }}">{{comment.votes.upvotes_count}}</span>
 										<button class="btn btn-link text-dark p-0 border-0 btn-outline-light" id="like-button" 
 										onclick="reaction({{ comment|get_model_content_type_id }}, {{ comment.id }}, 'like', 'like_count_{{ comment.id }}', 
       									'dislike_count_{{ comment.id }}')">
@@ -34,7 +34,7 @@
 										</button>
 									
 										<br>
-										<span class="" id="dislike_count_{{ comment.id }}">{{comment.vote.dislikes}}</span>
+										<span class="" id="dislike_count_{{ comment.id }}">{{comment.votes.downvotes_count}}</span>
 										<button class="btn btn-link text-dark p-0 border-0 btn-outline-light" id="dislike-button" 
 										onclick="reaction({{ comment|get_model_content_type_id }}, {{ comment.id }}, 'dislike', 'like_count_{{ comment.id }}', 
       									'dislike_count_{{ comment.id }}')">
@@ -60,7 +60,7 @@
 											{% endif %}
 											<i class="pull-right">
 												<div class="pr-2">
-													<span class="" id="like_count_{{ child.id }}">{{child.vote.likes}}</span>
+													<span class="" id="like_count_{{ child.id }}">{{child.votes.upvotes_count}}</span>
 													<button class="btn btn-link text-dark p-0 border-0 btn-outline-light" id="like-button" 
 													onclick="reaction({{ child|get_model_content_type_id }}, {{ child.id }}, 'like', 'like_count_{{ child.id }}', 
 													  'dislike_count_{{ child.id }}')">
@@ -70,7 +70,7 @@
 													</button>
 												
 													<br>
-													<span class="" id="dislike_count_{{ child.id }}">{{child.vote.dislikes}}</span>
+													<span class="" id="dislike_count_{{ child.id }}">{{child.votes.downvotes_count}}</span>
 													<button class="btn btn-link text-dark p-0 border-0 btn-outline-light" id="dislike-button" 
 													onclick="reaction({{ object|get_model_content_type_id }}, {{ object.id }}, 'dislike', 'like_count_{{ child.id }}', 
 													  'dislike_count_{{ child.id }}')">

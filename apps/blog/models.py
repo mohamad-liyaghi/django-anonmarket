@@ -3,7 +3,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 
 from products.models import Product
 from accounts.models import Account
-from vote.models import Vote
+from votes.models import Vote
 from comment.models import Comment
 
 class Article(models.Model):
@@ -24,7 +24,7 @@ class Article(models.Model):
     published = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True)
 
-    vote = GenericRelation(Vote, related_query_name="account_vote")
+    votes = GenericRelation(Vote, related_query_name="account_vote")
     comment = GenericRelation(Comment)
 
 

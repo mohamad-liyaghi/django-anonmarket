@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     'apps.orders.apps.OrdersConfig',
     'apps.blog.apps.BlogConfig',
     'apps.forum.apps.ForumConfig',
-    'apps.vote.apps.VoteConfig',
+    'apps.votes.apps.VotesConfig',
     'apps.comment.apps.CommentConfig',
 ]
 

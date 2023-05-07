@@ -4,7 +4,7 @@ from django.utils.text import slugify
 from django_countries.fields import CountryField
 
 from accounts.models import Account
-from vote.models import Vote
+from votes.models import Vote
 from products.utils import unique_slug_generator
 
 
@@ -25,7 +25,7 @@ class Product(models.Model):
     price = models.PositiveIntegerField(default=0)
     is_available = models.BooleanField(default=False)
 
-    vote = GenericRelation(Vote, related_query_name="product_vote")
+    votes = GenericRelation(Vote, related_query_name="product_vote")
 
     def __str__(self):
         return self.title

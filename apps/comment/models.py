@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.db import models
 
-from vote.models import Vote
+from votes.models import Vote
 
 
 class Comment(models.Model):
@@ -24,7 +24,7 @@ class Comment(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
-    vote = GenericRelation(Vote)
+    votes = GenericRelation(Vote)
 
 
     def __str__(self) -> str:
