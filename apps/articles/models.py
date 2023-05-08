@@ -5,6 +5,7 @@ from products.models import Product
 from accounts.models import Account
 from votes.models import Vote
 from comment.models import Comment
+from articles.utils import unique_slug_generator
 
 class Article(models.Model):
     '''The article model'''
@@ -31,3 +32,8 @@ class Article(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.slug = unique_slug_generator(self.title, self.__class__)
+            
+        return super().save(*args, **kwargs)
