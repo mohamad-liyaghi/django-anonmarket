@@ -1,6 +1,6 @@
 from django import forms
 from products.models import Product
-from blog.models import Article
+from articles.models import Article
 
 
 class ArticleForm(forms.ModelForm):

@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.db.models import Q, Count
 from django.urls import reverse_lazy
 
-from blog.forms import ArticleForm
-from blog.models import Article
+from articles.forms import ArticleForm
+from articles.models import Article
 
 
 
@@ -38,10 +38,10 @@ class CreateArticle(LoginRequiredMixin, View):
             data.allowed_members.add(self.request.user.id)
 
             messages.success(self.request, "Article created", "success")
-            return redirect("blog:user-articles")
+            return redirect("article:user-articles")
 
         messages.success(self.request, "Sth went wrong with your information", "success")
-        return redirect("blog:user-articles")
+        return redirect("article:user-articles")
 
 
 class UpdateArticle(LoginRequiredMixin, UpdateView):
@@ -56,14 +56,14 @@ class UpdateArticle(LoginRequiredMixin, UpdateView):
                                  author= self.request.user)
 
     def get_success_url(self):
-        return reverse_lazy("blog:article-detail", kwargs={"id" : self.kwargs["id"], "slug" : self.kwargs["slug"]})
+        return reverse_lazy("article:article-detail", kwargs={"id" : self.kwargs["id"], "slug" : self.kwargs["slug"]})
 
 
 class DeleteArticle(LoginRequiredMixin, DeleteView):
     """Delete an article"""
 
     template_name = "blog/delete-article.html"
-    success_url = reverse_lazy("blog:user-articles")
+    success_url = reverse_lazy("article:user-articles")
 
     def get_object(self):
         return get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"],
@@ -84,7 +84,7 @@ class ArticleDetail(LoginRequiredMixin, DetailView):
                 # check if user has permission
                 if self.request.user in object.allowed_members.all():
                     return super().dispatch(request, *args, **kwargs)
-                return redirect("blog:buy-article", object.id, object.slug)
+                return redirect("article:buy-article", object.id, object.slug)
 
             # if blog is free
             return super().dispatch(request, *args, **kwargs)
@@ -93,7 +93,7 @@ class ArticleDetail(LoginRequiredMixin, DetailView):
         if object.author == self.request.user:
             return super().dispatch(request, *args, **kwargs)
 
-        return redirect("blog:article-list", object.id, object.slug)
+        return redirect("article:article-list", object.id, object.slug)
 
     def get_object(self):
         return get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"])
@@ -110,7 +110,7 @@ class PublishArticle(LoginRequiredMixin, View):
         object.published = True
         object.save()
         messages.success(self.request, "Article published", "success")
-        return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+        return redirect("article:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
 
 
 class BuyArticle(LoginRequiredMixin, View):
@@ -135,12 +135,12 @@ class BuyArticle(LoginRequiredMixin, View):
                 object.save()
                 object.author.save()
                 messages.success(self.request, "Article Purchased")
-                return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+                return redirect("article:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
 
             messages.success(self.request, "You dont have enough money :(", "success")
 
         messages.success(self.request, "You have already bought this item", "success")
-        return redirect("blog:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+        return redirect("article:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
 
 
 class UserArticleList(LoginRequiredMixin, ListView):
