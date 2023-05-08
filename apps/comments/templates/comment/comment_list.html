@@ -104,7 +104,7 @@
 		console.log(comment_content_type_id)
 		$.ajax({
 			type: 'POST',
-			url: "{% url 'comment:delete-comment' %}",
+			url: "{% url 'comments:delete-comment' %}",
 			data: {
 			  comment_id: comment_id,
 			  content_type_id: comment_content_type_id,

@@ -20,6 +20,10 @@ class ChatListView(LoginRequiredMixin, ListView):
 class ChatCreateView(LoginRequiredMixin, ChatExistsMixin, View):
 
     def get(self, request, *args, **kwargs):
+        if self.kwargs['participant_token'] == request.user.token:
+            messages.success(request, 'You cannot create a chat for yourself.', 'danger')
+            return redirect('chats:chat-list')
+        
         chat = Chat.objects.create()
         set_chat_participant(participant_model=ChatParticipant,chat=chat, participants=[self.request.user, self.participant])
         messages.success(request, 'Chat created successfully', 'success')
