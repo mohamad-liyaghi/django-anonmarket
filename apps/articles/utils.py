@@ -15,3 +15,11 @@ def unique_slug_generator(title:str, cls):
         unique_slug_generator(cls)
     
     return slug
+
+def unique_token_generator(cls):
+    '''Create unique token for each article purchase'''
+    token = secrets.token_hex(randint(1, 20))
+    if cls.objects.filter(token=token).exists():
+        unique_token_generator(cls)
+    
+    return token
