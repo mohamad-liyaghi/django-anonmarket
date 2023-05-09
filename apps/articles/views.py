@@ -8,8 +8,53 @@ from django.urls import reverse_lazy
 
 from articles.forms import ArticleForm
 from articles.models import Article
+from accounts.models import Account
+from products.models import Product
 
 
+class ArticleListView(LoginRequiredMixin, ListView):
+
+    template_name = "articles/article-list.html"
+    context_object_name = "articles"
+
+    def get_queryset(self):
+        articles = None
+
+        user_token = self.request.GET.get('user')
+        product_slug = self.request.GET.get('product')
+        latest = self.request.GET.get('latest')
+        title = self.request.GET.get('title')
+
+        if user_token:
+            user = get_object_or_404(Account, token=user_token)
+
+            if user == self.request.user:
+                articles = user.articles.all()
+            else:
+                articles = user.articles.filter(published=True)
+
+            return articles
+        
+        # Filter a products articles
+        if product_slug:
+            product = get_object_or_404(Product, slug=product_slug)
+            articles = product.articles.all()
+
+        # Show latest articles
+        if latest:
+            articles = Article.objects.filter(published=True).order_by('-date')
+
+        # Filter article by its title
+        if title:
+            articles = Article.objects.filter(published=True, title__icontains=title)
+
+        else:
+            # Show hot articles
+            articles = Article.objects.filter(published=True).annotate(
+                vote_count=Count('votes')
+            ).order_by('-vote_count')
+
+        return articles.order_by('-date')[:20]
 
 class CreateArticle(LoginRequiredMixin, View):
     '''Create an article'''
@@ -151,33 +196,3 @@ class UserArticleList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Article.objects.filter(author=self.request.user)
-
-
-class TopArticleList(LoginRequiredMixin, ListView):
-    '''List of 20 top Articles'''
-
-    template_name = "blog/article-list.html"
-    context_object_name = "articles"
-
-
-    def get_queryset(self):
-        return Article.objects.annotate(
-                    rate_count= Count('vote')
-                             ).filter(Q(published=True)).order_by('-rate_count') [:20]
-
-
-class ArticleSearch(ListView):
-    '''Result of search'''
-
-    template_name = "blog/article-list.html"
-    context_object_name = "articles"
-
-    def get_queryset(self):
-        q = self.request.GET.get('q')
-
-        if q:
-            return Article.objects.filter(
-                Q(published=True) & Q(title__icontains=q) | Q(author__username=q) & Q(published=True)
-            )
-
-        return None

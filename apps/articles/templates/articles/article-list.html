@@ -3,9 +3,9 @@
 {% block title %} Article List {% endblock title %}
 
 {% block body %}
-<form method="get" action="{% url 'article:article-search' %}">{% csrf_token %}
+<form method="get" action=''>
             <div class="input-group mb-3">
-                    <input type="text" name="q" class="form-control" placeholder="Global search for articles" aria-describedby="basic-addon2">
+                    <input type="text" name="title" class="form-control" placeholder="Global search for articles" aria-describedby="basic-addon2">
                       <div class="input-group-append">
                         <button class="btn btn-outline-secondary" type="button">GO</button>
                       </div>

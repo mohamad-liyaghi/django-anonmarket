@@ -50,8 +50,9 @@
               Blog
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url 'article:article-list' %}">Top Articles</a>
-              <a class="dropdown-item" href="{% url 'article:user-articles' %}">My Articles</a>
+              <a class="dropdown-item" href="{% url 'article:article-list' %}">Hot Articles</a>
+              <a class="dropdown-item" href="{% url 'article:article-list' %}?latest=true">Latest Articles</a>
+              <a class="dropdown-item" href="{% url 'article:article-list' %}?user={{request.user.token}}">My Articles</a>
               <a class="dropdown-item" href="{% url 'article:add-article' %}">Add Article</a>
             </div>
           </li>
