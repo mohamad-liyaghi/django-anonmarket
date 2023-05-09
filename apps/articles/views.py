@@ -1,8 +1,6 @@
-from django.http import HttpResponse
 from django.views.generic import View, FormView, UpdateView, DeleteView, DetailView, ListView
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.template.defaultfilters import slugify
 from django.contrib import messages
 from django.db.models import Q, Count
 from django.urls import reverse_lazy
@@ -72,18 +70,22 @@ class ArticleCreateView(LoginRequiredMixin, FormView):
     def form_invalid(self, form):
         messages.success(self.request, 'Invalid data...', 'danger')
         return redirect('article:article-list')
-
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 class UpdateArticle(LoginRequiredMixin, UpdateView):
     '''Update an article'''
 
-    template_name = "blog/update-article.html"
+    template_name = "articles/update-article.html"
     fields = ["title", "body", "price", "published"]
 
 
     def get_object(self):
         return get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"],
-                                 author= self.request.user)
+                                 author=self.request.user)
 
     def get_success_url(self):
         return reverse_lazy("article:article-detail", kwargs={"id" : self.kwargs["id"], "slug" : self.kwargs["slug"]})
@@ -92,12 +94,16 @@ class UpdateArticle(LoginRequiredMixin, UpdateView):
 class DeleteArticle(LoginRequiredMixin, DeleteView):
     """Delete an article"""
 
-    template_name = "blog/delete-article.html"
-    success_url = reverse_lazy("article:user-articles")
+    template_name = "articles/delete-article.html"
+    success_url = reverse_lazy("article:article-list")
 
     def get_object(self):
         return get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"],
                                  author= self.request.user)
+    
+    def post(self, request, *args, **kwargs):
+        messages.success(request, 'Article deleted.', 'success')
+        return super().post(request, *args, **kwargs)
 
 
 class ArticleDetail(LoginRequiredMixin, DetailView):
