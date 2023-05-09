@@ -1,4 +1,5 @@
-from django.views.generic import View, UpdateView, DeleteView, DetailView, ListView
+from django.http import HttpResponse
+from django.views.generic import View, FormView, UpdateView, DeleteView, DetailView, ListView
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.defaultfilters import slugify
@@ -56,37 +57,21 @@ class ArticleListView(LoginRequiredMixin, ListView):
 
         return articles.order_by('-date')[:20]
 
-class CreateArticle(LoginRequiredMixin, View):
+
+class ArticleCreateView(LoginRequiredMixin, FormView):
     '''Create an article'''
 
-    template_name = "blog/create-article.html"
+    template_name = "articles/create-article.html"
     form_class = ArticleForm
 
+    def form_valid(self, form):
+        article = form.save(commit=True, author=self.request.user)
+        messages.success(self.request, 'Article Created!', 'suceess')
+        return redirect('article:article-detail', id=article.id, slug=article.slug)
 
-    def get(self, request):
-        # Here we send request to the form for product filters
-        form = self.form_class(request=request)
-        return render(self.request, self.template_name, {"form" : form})
-
-
-    def post(self, request):
-        form = self.form_class(self.request.POST, request=self.request)
-
-        if form.is_valid():
-            data = form.save(commit=False)
-
-            data.slug = slugify(data.title)
-            data.author = self.request.user
-            form.save()
-
-            form.save_m2m()
-            data.allowed_members.add(self.request.user.id)
-
-            messages.success(self.request, "Article created", "success")
-            return redirect("article:user-articles")
-
-        messages.success(self.request, "Sth went wrong with your information", "success")
-        return redirect("article:user-articles")
+    def form_invalid(self, form):
+        messages.success(self.request, 'Invalid data...', 'danger')
+        return redirect('article:article-list')
 
 
 class UpdateArticle(LoginRequiredMixin, UpdateView):
