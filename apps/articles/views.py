@@ -107,33 +107,14 @@ class DeleteArticle(LoginRequiredMixin, DeleteView):
         return super().post(request, *args, **kwargs)
 
 
-class ArticleDetail(LoginRequiredMixin, ArticleAccessMixin, DetailView):
+class ArticleDetailView(LoginRequiredMixin, ArticleAccessMixin, DetailView):
     """Detail page of an article"""
 
-    template_name = "blog/article-detail.html"
+    template_name = "articles/article-detail.html"
     context_object_name = "article"
 
-    def dispatch(self, request, *args, **kwargs):
-        object = self.get_object()
-
-        if object.published:
-            if object.price != 0:
-                # check if user has permission
-                if self.request.user in object.allowed_members.all():
-                    return super().dispatch(request, *args, **kwargs)
-                return redirect("article:buy-article", object.id, object.slug)
-
-            # if blog is free
-            return super().dispatch(request, *args, **kwargs)
-
-
-        if object.author == self.request.user:
-            return super().dispatch(request, *args, **kwargs)
-
-        return redirect("article:article-list", object.id, object.slug)
-
     def get_object(self):
-        return get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"])
+        return get_object_or_404(Article.objects.select_related('author'), id=self.kwargs["id"], slug=self.kwargs["slug"])
 
 
 class ArticlePurchaseView(LoginRequiredMixin, CreateView):
@@ -146,7 +127,7 @@ class ArticlePurchaseView(LoginRequiredMixin, CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         article = self.get_object()
-        
+
         if article.price == 0 or request.user.article_purchases.filter(article=article).exists():
             messages.warning(request, 'You have already purchased this item.')
             return redirect('article:article-detail', id=article.id, slug=article.slug)

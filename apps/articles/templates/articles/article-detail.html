@@ -5,30 +5,50 @@
 
 {% block body %}
 
-<div style="text-align:center;">
-    <h3>{{ article.title }}</h3>
-    <hr>
-    <small>Author: <a href="{% url 'accounts:profile' article.author.id article.author.token %}">{{ article.author }}</a>
-    at: {{ article.date }}</small>
-    <br>
-    {% if article.product %}
-        <small>
-            For product(s) <a href="{% url 'products:product-detail' article.product.id article.product.slug %}">{{ article.product }}</a>
-        </small>
-    {% endif %}
-    <br><br>
-    {% if not article.published %}
-        <a  class="btn btn-success" href="{% url 'article:article-publish' article.id article.slug %}">Publish</a>
-    {% endif %}
-    <br>
-    <hr>
-    <p>{{ article.body }}</p>
-    <hr>
-    {% include "vote/vote.html" %}
-    <hr>
-    {% include "comment/comment.html" %}
-  
-    <hr>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">{{ article.title }}</h3>
+          <hr>
+          <small class="text-muted">Author:
+            <a href="{% url 'accounts:profile' article.author.id article.author.token %}">
+              {{ article.author }}
+            </a> at: {{ article.date }}
+          </small>
+          <br>
+          {% if article.product %}
+            <small class="text-muted">
+              For product(s) <a href="{% url 'products:product-detail' article.product.id article.product.slug %}">
+                {{ article.product }}
+              </a>
+            </small>
+          {% endif %}
+          <br><br>
+
+          {% if user.is_authenticated and user == article.author %}
+            <a href="{% url 'article:update-article' article.id article.slug %}" class="btn btn-primary mb-2">
+              Update
+            </a>
+            <form action="{% url 'article:delete-article' article.id article.slug %}" method="post" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger mb-2" onclick="return confirm('Are you sure you want to delete this article?')">
+                Delete
+              </button>
+            </form>
+          {% endif %}
+          <hr>
+          <p class="card-text">{{ article.body }}</p>
+          <hr>
+          Rate this Article
+          {% include "vote/vote.html" %}
+          <hr>
+          {% comment %} {% include "comment/comment.html" %} {% endcomment %}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endblock body %}

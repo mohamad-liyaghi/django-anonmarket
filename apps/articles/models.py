@@ -44,5 +44,11 @@ class ArticlePurchase(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.token = unique_token_generator(self.__class__)
+            # Exchange money
+            self.user.balance -= self.article.price
+            self.article.author.balance += self.article.price
+
+            self.article.author.save()
+            self.user.save()
 
         return super().save(*args, **kwargs)
