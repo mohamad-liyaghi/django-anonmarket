@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'apps.products.apps.ProductsConfig',
     'apps.chats.apps.ChatsConfig',
     'apps.orders.apps.OrdersConfig',
-    'apps.blog.apps.BlogConfig',
+    'apps.articles.apps.ArticleConfig',
     'apps.forum.apps.ForumConfig',
     'apps.votes.apps.VotesConfig',
     'apps.comment.apps.CommentConfig',
