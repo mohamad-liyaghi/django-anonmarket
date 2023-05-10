@@ -9,6 +9,7 @@ from articles.forms import ArticleForm
 from articles.models import Article
 from accounts.models import Account
 from products.models import Product
+from articles.mixins import ArticleAccessMixin
 
 
 class ArticleListView(LoginRequiredMixin, ListView):
@@ -106,7 +107,7 @@ class DeleteArticle(LoginRequiredMixin, DeleteView):
         return super().post(request, *args, **kwargs)
 
 
-class ArticleDetail(LoginRequiredMixin, DetailView):
+class ArticleDetail(LoginRequiredMixin, ArticleAccessMixin, DetailView):
     """Detail page of an article"""
 
     template_name = "blog/article-detail.html"
@@ -177,13 +178,3 @@ class BuyArticle(LoginRequiredMixin, View):
 
         messages.success(self.request, "You have already bought this item", "success")
         return redirect("article:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
-
-
-class UserArticleList(LoginRequiredMixin, ListView):
-    '''Show all users articles'''
-
-    template_name = "blog/article-list.html"
-    context_object_name = "articles"
-
-    def get_queryset(self):
-        return Article.objects.filter(author=self.request.user)
