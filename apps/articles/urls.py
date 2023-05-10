@@ -12,7 +12,7 @@ urlpatterns = [
     path("<int:id>/<str:slug>/delete/", views.DeleteArticle.as_view(), name="delete-article"),
 
     path("article-detail/<int:id>/<str:slug>/", views.ArticleDetail.as_view(), name="article-detail"),
-    path("<int:id>/<str:slug>/purchase/", views.BuyArticle.as_view(), name="purchase-article"),
-    path("article-publish/<int:id>/<str:slug>/", views.PublishArticle.as_view(), name="article-publish"),
+    path("<int:id>/<str:slug>/purchase/", views.ArticlePurchaseView.as_view(), name="purchase-article"),
+
 
 ]

@@ -1,0 +1,27 @@
+{% extends 'base/_base.html' %}
+
+{% block title %} Buy Article {% endblock title %}
+
+{% block body %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-primary text-white">Buy Article</div>
+        <div class="card-body">
+          <h4 class="card-title mb-4">This article is not free.</h4>
+          <p class="card-text">To read this article, you must purchase it for {{ article.price }} credits.</p>
+          
+          {% if user.balance < article.price %}
+            <p class="card-text text-danger">You do not have enough credits to purchase this article. Please <a href="{% url 'accounts:exchange' %}">exchange</a> your credits first.</p>
+          {% else %}
+            <form method="post"> {% csrf_token %}
+              <button class="btn btn-success">Buy Article</button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock body %}

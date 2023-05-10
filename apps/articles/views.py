@@ -1,12 +1,12 @@
-from django.views.generic import View, FormView, UpdateView, DeleteView, DetailView, ListView
-from django.shortcuts import redirect, render, get_object_or_404
+from django.views.generic import FormView, UpdateView, DeleteView, DetailView, ListView, CreateView
+from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.db.models import Q, Count
-from django.urls import reverse_lazy
+from django.db.models import Count
+from django.urls import reverse_lazy, reverse
 
 from articles.forms import ArticleForm
-from articles.models import Article
+from articles.models import Article, ArticlePurchase
 from accounts.models import Account
 from products.models import Product
 from articles.mixins import ArticleAccessMixin
@@ -136,45 +136,32 @@ class ArticleDetail(LoginRequiredMixin, ArticleAccessMixin, DetailView):
         return get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"])
 
 
-class PublishArticle(LoginRequiredMixin, View):
-    '''Publish an article'''
+class ArticlePurchaseView(LoginRequiredMixin, CreateView):
+    '''Purchase an article'''
 
-    def get(self, request, *args,  **kwargs):
+    model = ArticlePurchase
+    template_name = 'articles/purchase-article.html'
+    context_object_name = 'article'
+    fields = []
 
-        object = get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"],
-                                   author= self.request.user, published=False)
+    def dispatch(self, request, *args, **kwargs):
+        article = self.get_object()
+        
+        if article.price == 0 or request.user.article_purchases.filter(article=article).exists():
+            messages.warning(request, 'You have already purchased this item.')
+            return redirect('article:article-detail', id=article.id, slug=article.slug)
+        
+        return super().dispatch(request, *args, **kwargs)
 
-        object.published = True
-        object.save()
-        messages.success(self.request, "Article published", "success")
-        return redirect("article:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+    def get_object(self):
+        return get_object_or_404(Article, id=self.kwargs["id"], slug=self.kwargs["slug"])
 
+    def form_valid(self, form):
+        article = self.get_object()
+        form.instance.article = article
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
-class BuyArticle(LoginRequiredMixin, View):
-    '''Buy an article'''
-
-    def get(self, request, *args, **kwargs):
-        object = get_object_or_404(Article, Q(id=self.kwargs["id" ]) & Q(slug=self.kwargs["slug"])
-        & Q(published=True) & ~Q(price=0))
-        return render(self.request, "blog/buy-article.html", {"article" : object})
-
-
-    def post(self, request, *args, **kwargs):
-        object = get_object_or_404(Article, Q(id=self.kwargs["id"]) & Q(slug=self.kwargs["slug"])
-                                   & Q(published=True) & ~Q(price=0))
-        if not self.request.user in object.allowed_members.all():
-            if self.request.user.balance >= object.price:
-                self.request.user.balance = self.request.user.balance - object.price
-                object.author.balance = object.author.balance + object.price
-                object.allowed_members.add(self.request.user)
-
-                self.request.user.save()
-                object.save()
-                object.author.save()
-                messages.success(self.request, "Article Purchased")
-                return redirect("article:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
-
-            messages.success(self.request, "You dont have enough money :(", "success")
-
-        messages.success(self.request, "You have already bought this item", "success")
-        return redirect("article:article-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+    def get_success_url(self):
+        article = self.get_object()
+        return reverse('article:article-detail', kwargs={'id': article.id, 'slug': article.slug})
