@@ -1,5 +1,5 @@
 from django import forms
-from forum.models import Forum
+from forums.models import Forum
 
 
 class ForumForm(forms.ModelForm):

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from forum.models import Forum
+from forums.models import Forum
 
 
 @admin.register(Forum)

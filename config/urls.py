@@ -14,8 +14,9 @@ LOCAL_URLS = [
     path("products/", include("apps.products.urls")),
     path("chats/", include("apps.chats.urls")),
     path("orders/", include("apps.orders.urls")),
+    
     path("articles/", include("apps.articles.urls")),
-    path("forum/", include("apps.forum.urls")),
+    path("forums/", include("apps.forums.urls")),
 
     path("vote/", include("apps.votes.urls")),
     path("comment/", include("apps.comment.urls")),

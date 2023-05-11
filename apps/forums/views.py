@@ -7,7 +7,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
 
 from .forms import ForumForm
-from forum.models import Forum
+from forums.models import Forum
 
 
 class ForumList(LoginRequiredMixin, ListView):
@@ -46,11 +46,11 @@ class CreateForum(LoginRequiredMixin, FormView):
 
         data.allowed_members.add(self.request.user.id)
         messages.success(self.request, "Forum created successfully!", "success")
-        return redirect("forum:user-forums")
+        return redirect("forums:user-forums")
 
     def form_invalid(self, form):
         messages.success(self.request, "Sth went wrong with your information.", "danger")
-        return redirect("forum:user-forums")
+        return redirect("forums:user-forums")
 
 
 class UpdateForum(LoginRequiredMixin, UpdateView):
@@ -66,7 +66,7 @@ class UpdateForum(LoginRequiredMixin, UpdateView):
                                  author=self.request.user)
 
     def get_success_url(self):
-        return reverse_lazy("forum:user-forums")
+        return reverse_lazy("forums:user-forums")
 
 
 class DeleteForum(LoginRequiredMixin, DeleteView):
@@ -79,7 +79,7 @@ class DeleteForum(LoginRequiredMixin, DeleteView):
                                  author=self.request.user)
 
     def get_success_url(self):
-        return reverse_lazy("forum:user-forums")
+        return reverse_lazy("forums:user-forums")
 
 
 class ForumDetail(LoginRequiredMixin, View):
@@ -98,7 +98,7 @@ class ForumDetail(LoginRequiredMixin, View):
             if self.request.user in self.object.allowed_members.all():
                 return super().dispatch(request, *args, **kwargs)
 
-            return redirect("forum:buy-forum", self.object.id, self.object.slug)
+            return redirect("forums:buy-forum", self.object.id, self.object.slug)
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -132,13 +132,13 @@ class BuyForum(LoginRequiredMixin, View):
                 object.save()
                 object.author.save()
                 messages.success(self.request, "Forum Purchased")
-                return redirect("forum:forum-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+                return redirect("forums:forum-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
 
             messages.success(self.request, "You dont have enough money :(", "danger")
-            return redirect("forum:forum-list")
+            return redirect("forums:forum-list")
 
         messages.success(self.request, "You have already bought this item", "warning")
-        return redirect("forum:forum-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
+        return redirect("forums:forum-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
 
 class ForumSearch(ListView):
     '''Result of search'''
