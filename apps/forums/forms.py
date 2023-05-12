@@ -7,4 +7,4 @@ class ForumForm(forms.ModelForm):
 
     class Meta:
         model = Forum
-        fields = fields = ("title", "body", "price")
+        fields = fields = ("title", "body")

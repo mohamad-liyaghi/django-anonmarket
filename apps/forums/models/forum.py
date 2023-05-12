@@ -16,9 +16,6 @@ class Forum(models.Model):
 
     author = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="forums", blank=True, null=True)
 
-    # this field is just for vip forums
-    price = models.IntegerField(default=0)
-
     closed = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True)
 
