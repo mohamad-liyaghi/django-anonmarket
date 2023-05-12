@@ -73,9 +73,9 @@ class ForumUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy("forums:forum-detail", kwargs={"id": self.kwargs["id"],"slug": self.kwargs["slug"]})
 
 
-class DeleteForum(LoginRequiredMixin, DeleteView):
+class ForumDeleteView(LoginRequiredMixin, DeleteView):
     '''Delete a forum'''
-    template_name = "forum/delete-forum.html"
+    template_name = "forums/delete-forum.html"
 
     def get_object(self):
         k = self.kwargs
@@ -83,7 +83,7 @@ class DeleteForum(LoginRequiredMixin, DeleteView):
                                  author=self.request.user)
 
     def get_success_url(self):
-        return reverse_lazy("forums:user-forums")
+        return reverse_lazy("forums:forum-list")
 
 
 class ForumDetail(LoginRequiredMixin, View):
