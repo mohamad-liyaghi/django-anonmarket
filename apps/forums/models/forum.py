@@ -17,6 +17,7 @@ class Forum(models.Model):
     author = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="forums", blank=True, null=True)
 
     closed = models.BooleanField(default=False)
+    updated = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True)
 
     votes = GenericRelation(Vote, related_query_name="forum_vote")
@@ -27,6 +28,8 @@ class Forum(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.slug = unique_slug_generator(self.title, self.__class__)
-            
+            return super().save(*args, **kwargs)
+        
+        self.updated = True
         return super().save(*args, **kwargs)
     

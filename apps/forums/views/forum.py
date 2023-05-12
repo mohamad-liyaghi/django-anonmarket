@@ -59,20 +59,18 @@ class ForumCreateView(LoginRequiredMixin, FormView):
         return redirect("forums:create-forum")
 
 
-class UpdateForum(LoginRequiredMixin, UpdateView):
+class ForumUpdateView(LoginRequiredMixin, UpdateView):
     '''Update a forum (close or change price)'''
 
-    template_name = "forum/update-forum.html"
-    fields = ["price", "closed", "title", "body"]
+    template_name = "forums/update-forum.html"
+    fields = ["title", "body", "closed"]
 
     def get_object(self):
-        k = self.kwargs
-
-        return get_object_or_404(Forum, id=k["id"], slug=k["slug"],
+        return get_object_or_404(Forum, id=self.kwargs["id"], slug=self.kwargs["slug"],
                                  author=self.request.user)
 
     def get_success_url(self):
-        return reverse_lazy("forums:user-forums")
+        return reverse_lazy("forums:forum-detail", kwargs={"id": self.kwargs["id"],"slug": self.kwargs["slug"]})
 
 
 class DeleteForum(LoginRequiredMixin, DeleteView):
