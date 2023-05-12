@@ -3,9 +3,9 @@
 {% block title %} Forum List {% endblock title %}
 
 {% block body %}
-    <form method="get" action="{% url 'forums:search-forum' %}">{% csrf_token %}
+    <form method="get" action="">
             <div class="input-group mb-3">
-                    <input type="text" name="q" class="form-control" placeholder="Global search for Forums" aria-describedby="basic-addon2">
+                    <input type="text" name="title" class="form-control" placeholder="Global search for Forums" aria-describedby="basic-addon2">
                       <div class="input-group-append">
                         <button class="btn btn-outline-secondary" type="button">GO</button>
                       </div>
@@ -15,7 +15,7 @@
 
       <div class="card text-center">
         <div class="card-body">
-          <a href="{% url 'forums:forum-detail' forum.id forum.slug %}"><h5 class="card-title">{{ forum.title | truncatechars:90 }}  {% if forum.price != 0%} | <h5 style="color:red;">Premium</h5> {% endif %}</h5></a>
+          <a href="{% url 'forums:forum-detail' forum.id forum.slug %}"><h5 class="card-title">{{ forum.title | truncatechars:90 }}  {% if forum.closed%} | <h5 style="color:red;">Closed</h5> {% endif %}</h5></a>
             <small>{{ forum.body | truncatechars:120 }}</small>
         </div>
         <div class="card-footer text-muted">

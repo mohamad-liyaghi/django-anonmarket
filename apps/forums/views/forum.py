@@ -2,21 +2,45 @@ from django.views.generic import FormView, UpdateView, DeleteView, View, ListVie
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.defaultfilters import slugify
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
 
-from .forms import ForumForm
+from ..forms import ForumForm
 from forums.models import Forum
+from accounts.models import Account
 
 
-class ForumList(LoginRequiredMixin, ListView):
+class ForumListView(LoginRequiredMixin, ListView):
     '''Show all newest forums'''
-    template_name = "forum/forum-list.html"
+    template_name = "forums/forum-list.html"
     context_object_name = "forums"
 
     def get_queryset(self):
-        return Forum.objects.all().order_by("-date")[:20]
+        forums = None
+        user_token = self.request.GET.get('user')
+        latest = self.request.GET.get('latest')
+        title = self.request.GET.get('title')
+
+        if user_token:
+            # Get a users Forums
+            user = get_object_or_404(Account, token=user_token)
+            forums = user.forums.all()
+        
+        if latest:
+            forums = Forum.objects.all().order_by('-date')
+
+        # Filter article by its title
+        if title:
+            forums = Forum.objects.filter(title__icontains=title)
+
+        else:
+            forums = Forum.objects.all().annotate(
+                vote_count=Count('votes')
+            ).order_by('-vote_count')
+
+
+        return forums.order_by('-closed')[:20]
 
 
 class UserForum(LoginRequiredMixin, ListView):
