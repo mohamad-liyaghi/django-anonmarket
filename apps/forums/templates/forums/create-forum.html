@@ -4,12 +4,10 @@
 {% block title %} Create Forum {% endblock title %}
 
 {% block body %}
-
+<h2>Create a new forum post</h2> <br>
 <form method="post"> {% csrf_token  %}
     {{ form.title | as_crispy_field }} <br>
     {{ form.body | as_crispy_field }} <br>
-    <small>Leave it empty if this forum is free</small>
-    {{ form.price | as_crispy_field }} <br>
 
     <button class="btn btn-success">Create</button>
 </form>

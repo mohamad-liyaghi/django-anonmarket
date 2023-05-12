@@ -43,38 +43,20 @@ class ForumListView(LoginRequiredMixin, ListView):
         return forums.order_by('-closed')[:20]
 
 
-class UserForum(LoginRequiredMixin, ListView):
-    '''Show all user forums'''
-    template_name = "forum/forum-list.html"
-    context_object_name = "forums"
-
-    def get_queryset(self):
-        return Forum.objects.filter(author=self.request.user)
-
-
-class CreateForum(LoginRequiredMixin, FormView):
+class ForumCreateView(LoginRequiredMixin, FormView):
     '''Create a new forum'''
 
-    template_name = "forum/create-forum.html"
+    template_name = "forums/create-forum.html"
     form_class = ForumForm
 
     def form_valid(self, form):
-        form = self.form_class(self.request.POST)
-        data = form.save(commit=False)
-
-        data.slug = slugify(data.title)
-        data.author = self.request.user
-
-        form.save()
-        form.save_m2m()
-
-        data.allowed_members.add(self.request.user.id)
-        messages.success(self.request, "Forum created successfully!", "success")
-        return redirect("forums:user-forums")
+        forum = form.save(commit=True, author=self.request.user)
+        messages.success(self.request, 'Forum Created!', 'suceess')
+        return redirect('forums:forum-detail', id=forum.id, slug=forum.slug)
 
     def form_invalid(self, form):
-        messages.success(self.request, "Sth went wrong with your information.", "danger")
-        return redirect("forums:user-forums")
+        messages.success(self.request, "Invalid information, try again.", "danger")
+        return redirect("forums:create-forum")
 
 
 class UpdateForum(LoginRequiredMixin, UpdateView):
@@ -163,19 +145,3 @@ class BuyForum(LoginRequiredMixin, View):
 
         messages.success(self.request, "You have already bought this item", "warning")
         return redirect("forums:forum-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
-
-class ForumSearch(ListView):
-    '''Result of search'''
-
-    template_name = "forum/forum-list.html"
-    context_object_name = "forums"
-
-    def get_queryset(self):
-        q = self.request.GET.get('q')
-
-        if q:
-            return Forum.objects.filter(
-                Q(title__icontains=q) | Q(author__username=q)
-            )
-
-        return None

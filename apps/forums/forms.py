@@ -8,3 +8,9 @@ class ForumForm(forms.ModelForm):
     class Meta:
         model = Forum
         fields = fields = ("title", "body")
+
+    def save(self, commit=True, author=None):
+        forum = super().save(commit=False)
+        forum.author = author
+        forum.save()
+        return forum
