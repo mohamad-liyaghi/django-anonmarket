@@ -6,7 +6,11 @@
 {% block body %}
 
 <div>
-    <h3>{{ forum.title }}</h3>
+        <h3 style='display: inline-block;'>{{ forum.title }}</h3>
+        {% if forum.closed %}
+            <h4 style="color: red; display: inline-block;">closed</h4>
+        {% endif %}
+    
     <hr>
     <small>Created by: <a href="{% url 'accounts:profile' forum.author.id forum.author.token %}">{{ forum.author }}</a>
     at: {{ forum.date }}</small>
@@ -25,8 +29,10 @@
     <h2>Rate this forum</h2>
     {% include "vote/vote.html" %}
     <hr>
+    {% include "answers/forum-answer-create.html" %}
+    <hr>
     <h2>Top Answers</h2><br>
-    <div class="card-deck">
+    <div id="top-answers-container" class="card-deck">
         {% for answer in top_answers %}
             <div class="card mb-3">
                 <div class="card-body">

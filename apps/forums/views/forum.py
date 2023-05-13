@@ -53,7 +53,7 @@ class ForumDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['top_answers'] = self.get_object().answers.select_related('user').all().annotate(
                 vote_count=Count('votes')
-            ).order_by('-vote_count')
+            ).order_by('-vote_count')[:5]
         return context
 
 
