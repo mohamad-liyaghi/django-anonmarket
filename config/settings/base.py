@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     'apps.chats.apps.ChatsConfig',
     'apps.orders.apps.OrdersConfig',
     'apps.articles.apps.ArticleConfig',
-    'apps.forum.apps.ForumConfig',
+    'apps.forums.apps.ForumsConfig',
     'apps.votes.apps.VotesConfig',
     'apps.comment.apps.CommentConfig',
 ]

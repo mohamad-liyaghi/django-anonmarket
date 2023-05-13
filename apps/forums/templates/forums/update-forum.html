@@ -4,11 +4,10 @@
 {% block title %} Update Forum {% endblock title %}
 
 {% block body %}
-
+<h3>Update Forum</h3><br>
 <form method="post"> {% csrf_token  %}
     {{ form.title | as_crispy_field }} <br>
     {{ form.body | as_crispy_field }}   <br>
-    {{ form.price | as_crispy_field }}  <br>
     {{ form.closed | as_crispy_field }}  <br>
 
     <button class="btn btn-success">Update</button>

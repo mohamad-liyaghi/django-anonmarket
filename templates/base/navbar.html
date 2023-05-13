@@ -62,9 +62,10 @@
               Forum
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url 'forum:forum-list' %}">Top Forums</a>
-              <a class="dropdown-item" href="{% url 'forum:user-forums' %}">My Forums</a>
-              <a class="dropdown-item" href="{% url 'forum:create-forum' %}">Create Forum</a>
+              <a class="dropdown-item" href="{% url 'forums:forum-list' %}">Top Forums</a>
+              <a class="dropdown-item" href="{% url 'forums:forum-list' %}?latest=true">Latest Forums</a>
+              <a class="dropdown-item" href="{% url 'forums:forum-list' %}?user={{request.user.token}}">My Forums</a>
+              <a class="dropdown-item" href="{% url 'forums:create-forum' %}">Create Forum</a>
             </div>
           </li>
 
