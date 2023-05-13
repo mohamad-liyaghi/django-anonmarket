@@ -12,14 +12,19 @@
     at: {{ forum.date }}</small>
     <br>
     <hr>
+    <h1>Question:</h1>
     <p>{{ forum.body }}</p>
     <hr>
-    <h2>Rate this forum</h2>
-      {% include "vote/vote.html" %}
-
-    <hr>
-    {% include "comment/comment.html" %}
     
+    {% if user.is_authenticated and user == forum.author %}
+        <a href="{% url 'forums:update-forum' forum.id forum.slug %}" class="btn btn-primary">Update</a>
+        <a href="{% url 'forums:delete-forum' forum.id forum.slug %}" class="btn btn-danger">Delete</a>
+        <hr>
+    {% endif %}
+    
+    <h2>Rate this forum</h2>
+    {% include "vote/vote.html" %}
+    <hr>
 </div>
 
 {% endblock body %}

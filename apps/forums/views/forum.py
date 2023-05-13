@@ -1,9 +1,8 @@
-from django.views.generic import FormView, UpdateView, DeleteView, View, ListView
+from django.views.generic import FormView, UpdateView, DeleteView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.template.defaultfilters import slugify
 from django.contrib import messages
-from django.db.models import Q, Count
-from django.shortcuts import redirect, get_object_or_404, render
+from django.db.models import Count
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 
 from ..forms import ForumForm
@@ -41,6 +40,16 @@ class ForumListView(LoginRequiredMixin, ListView):
 
 
         return forums.order_by('-closed')[:20]
+
+class ForumDetailView(LoginRequiredMixin, DetailView):
+    '''Detail page of forum'''
+
+    template_name = "forums/forum-detail.html"
+
+    def get_object(self):
+        return get_object_or_404(Forum, id=self.kwargs['id'], slug=self.kwargs['slug'])
+    
+    # TODO add top answers
 
 
 class ForumCreateView(LoginRequiredMixin, FormView):
@@ -84,62 +93,3 @@ class ForumDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy("forums:forum-list")
-
-
-class ForumDetail(LoginRequiredMixin, View):
-    '''Detail page of forum and add comment'''
-
-    template_name = "forum/forum-detail.html"
-
-    def dispatch(self, request, *args, **kwargs):
-        # get the object
-        self.object = get_object_or_404(Forum, id=self.kwargs["id"],
-                                   slug=self.kwargs["slug"])
-
-        # check if object is free
-        if self.object.price != 0:
-            # check if user has permission to access forum
-            if self.request.user in self.object.allowed_members.all():
-                return super().dispatch(request, *args, **kwargs)
-
-            return redirect("forums:buy-forum", self.object.id, self.object.slug)
-
-        return super().dispatch(request, *args, **kwargs)
-
-
-    def get(self, request, *args, **kwargs):
-
-        context = {"forum" : self.object, "object" : self.object}
-        return render(self.request, self.template_name, context)
-
-
-
-class BuyForum(LoginRequiredMixin, View):
-    '''Buy a forum in order to read comments'''
-
-    def get(self, request, *args, **kwargs):
-        object = get_object_or_404(Forum, Q(id=self.kwargs["id" ]) & Q(slug=self.kwargs["slug"])
-        & ~Q(price=0))
-        return render(self.request, "forum/buy-forum.html", {"forum" : object})
-
-    def post(self, request, *args, **kwargs):
-        object = get_object_or_404(Forum, Q(id=self.kwargs["id"]) & Q(slug=self.kwargs["slug"])
-                                   & ~Q(price=0))
-
-        if not self.request.user in object.allowed_members.all():
-            if self.request.user.balance >= object.price:
-                self.request.user.balance = self.request.user.balance - object.price
-                object.author.balance = object.author.balance + object.price
-                object.allowed_members.add(self.request.user)
-
-                self.request.user.save()
-                object.save()
-                object.author.save()
-                messages.success(self.request, "Forum Purchased")
-                return redirect("forums:forum-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
-
-            messages.success(self.request, "You dont have enough money :(", "danger")
-            return redirect("forums:forum-list")
-
-        messages.success(self.request, "You have already bought this item", "warning")
-        return redirect("forums:forum-detail", id=self.kwargs["id"], slug=self.kwargs["slug"])
