@@ -25,6 +25,25 @@
     <h2>Rate this forum</h2>
     {% include "vote/vote.html" %}
     <hr>
+    <h2>Top Answers</h2><br>
+    <div class="card-deck">
+        {% for answer in top_answers %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p class="card-text"><small class="text-muted">Answered by <a href='{% url 'accounts:profile' answer.user.id answer.user.token  %}'>{{ answer.user.username }}</a> on {{ answer.date }}</small> {% if answer.is_correct_answer %}
+                         <strong style="color: green;">Correct</strong>
+                    {% endif %}</p>
+                    <p class="card-text"> {{ answer.answer }}</p>
+                </div>
+            </div>
+        {% empty %}
+            <h3>No answers were found, Add a new one!.</h3>
+        {% endfor %}
+        <a href="{% url 'forums:forum-answer-list' forum.id forum.slug %}">Show all answers</a>
+    </div>
+
+
+    <hr>
 </div>
 
 {% endblock body %}
