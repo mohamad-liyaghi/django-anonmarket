@@ -4,7 +4,9 @@
 
 <input type="hidden" id="Url" data-url="{% url 'votes:vote' %}" />
 <input type="hidden" id="CSRF" data="{{ csrf_token }}" />
-<input type="hidden" id="objectContentTypeId" value="{{ object|get_model_content_type_id }}" />
+{% if object %}
+        <input type="hidden" id="objectContentTypeId" value="{{ object|get_model_content_type_id }}" />
+{% endif %}
 
 
 <script src="https://code.jquery.com/jquery-3.6.2.js" integrity="sha256-pkn2CUZmheSeyssYw3vMp1+xyub4m+e+QK4sQskvuo4=" crossorigin="anonymous"></script>

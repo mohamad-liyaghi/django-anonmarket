@@ -1,7 +1,9 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericRelation
 from accounts.models import Account
 from .forum import Forum
 from forums.utils import unique_token_generator
+from votes.models import Vote
 
 class ForumAnswer(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='forum_answers')
@@ -13,6 +15,8 @@ class ForumAnswer(models.Model):
 
     is_edited = models.BooleanField(default=False)
     is_correct_answer = models.BooleanField(default=False)
+
+    votes = GenericRelation(Vote, related_query_name="forum_answer_vote")
 
     def save(self, *args, **kwargs):
         if not self.pk:

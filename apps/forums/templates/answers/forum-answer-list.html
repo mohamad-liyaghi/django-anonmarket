@@ -1,0 +1,29 @@
+{% extends 'base/_base.html' %}
+
+{% block title %} Forum Answer List {% endblock title %}
+
+{% block body %}
+    <h1>{{ forum.title }}</h1>
+        <div class="card-deck">
+        {% for object in answers %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p class="card-text"><small class="text-muted">Answered by <a href='{% url 'accounts:profile' object.user.id object.user.token  %}'>{{ object.user.username }}</a> on {{ answer.date }}</small> {% if answer.is_correct_answer %}
+                         <strong style="color: green;">Correct</strong>
+                    {% endif %}</p>
+                    <p class="card-text"> {{ object.answer }}</p>
+                    <input type="hidden" id="objectContentTypeId" value="{{ model_content_type_id }}" />
+                    {% include "vote/vote.html" %}
+                    {% if request.user == object.user %}
+                        <div class="d-flex justify-content-end">
+                            <a href="#" class="btn btn-primary mr-2">Update</a>
+                            <a href="#" class="btn btn-danger">Delete</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <h3>No answers were found.</h3>
+        {% endfor %}
+    </div>
+{% endblock body %}
