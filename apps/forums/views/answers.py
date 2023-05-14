@@ -1,8 +1,10 @@
-from django.views.generic import ListView, View
-from django.shortcuts import redirect
+from django.views.generic import ListView, View, DeleteView
+from django.shortcuts import redirect, get_object_or_404
 from django.contrib.contenttypes.models import ContentType
+from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 from forums.models import ForumAnswer
 from forums.mixins import ForumObject
 
@@ -38,10 +40,29 @@ class ForumAnswerListView(ForumObject, ListView):
     context_object_name = 'answers'
 
     def get_queryset(self):
-        return ForumAnswer.objects.filter(forum=self.forum).order_by('-is_correct_answer', '-date')
+        return ForumAnswer.objects.select_related('user').filter(forum=self.forum).order_by('-is_correct_answer', '-date')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         content_type = ContentType.objects.get_for_model(ForumAnswer)
         context['model_content_type_id'] = content_type.id
+        context['forum'] = self.forum
         return context
+    
+class ForumAnswerDeleteView(LoginRequiredMixin, ForumObject, DeleteView):
+    
+    template_name = 'answers/forum-answer-delete.html'
+
+    def get_object(self):
+        return get_object_or_404(
+            ForumAnswer, forum=self.forum, user=self.request.user,
+            id=self.kwargs['answer_id'],
+            token=self.kwargs['answer_token'],
+        )
+    
+    def post(self, request, *args, **kwargs):
+        messages.success(request, 'Answer Deleted!', 'success')
+        return super().post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy("forums:forum-detail", kwargs={"id" : self.forum.id, "slug" : self.forum.slug})

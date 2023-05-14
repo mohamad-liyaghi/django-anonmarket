@@ -12,12 +12,10 @@
                          <strong style="color: green;">Correct</strong>
                     {% endif %}</p>
                     <p class="card-text"> {{ object.answer }}</p>
-                    <input type="hidden" id="objectContentTypeId" value="{{ model_content_type_id }}" />
-                    {% include "vote/vote.html" %}
                     {% if request.user == object.user %}
                         <div class="d-flex justify-content-end">
                             <a href="#" class="btn btn-primary mr-2">Update</a>
-                            <a href="#" class="btn btn-danger">Delete</a>
+                            <a href="{% url 'forums:forum-answer-delete' forum.id forum.slug object.id object.token %}" class="btn btn-danger">Delete</a>
                         </div>
                     {% endif %}
                 </div>

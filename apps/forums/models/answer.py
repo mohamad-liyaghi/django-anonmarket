@@ -16,8 +16,6 @@ class ForumAnswer(models.Model):
     is_edited = models.BooleanField(default=False)
     is_correct_answer = models.BooleanField(default=False)
 
-    votes = GenericRelation(Vote, related_query_name="forum_answer_vote")
-
     def save(self, *args, **kwargs):
         if not self.pk:
             self.token = unique_token_generator(self.__class__)

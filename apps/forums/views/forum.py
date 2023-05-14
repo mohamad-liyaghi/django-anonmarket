@@ -51,9 +51,7 @@ class ForumDetailView(LoginRequiredMixin, DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['top_answers'] = self.get_object().answers.select_related('user').all().annotate(
-                vote_count=Count('votes')
-            ).order_by('-vote_count')[:5]
+        context['top_answers'] = self.get_object().answers.select_related('user').all().order_by('-is_correct_answer', '-date')[:5]
         return context
 
 

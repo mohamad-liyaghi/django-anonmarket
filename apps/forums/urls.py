@@ -15,4 +15,5 @@ urlpatterns = [
 
     path("<int:id>/<str:slug>/answers/", answers.ForumAnswerListView.as_view(), name="forum-answer-list"),
     path("<int:id>/<str:slug>/answers/create/", answers.ForumAnswerCreateView.as_view(), name="forum-answer-create"),
+    path("<int:id>/<str:slug>/answers/delete/<int:answer_id>/<str:answer_token>/", answers.ForumAnswerDeleteView.as_view(), name="forum-answer-delete"),
 ]
