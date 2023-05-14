@@ -1,6 +1,6 @@
 {% load base_tags %}
 {% load static %}
-<input type="hidden" id="Answer-Url" data-url="{% url 'forums:forum-answer-create' object.id object.slug %}" />
+<input type="hidden" id="Answer-Url" data-url="{% url 'forums:create-forum-answer' object.id object.slug %}" />
 <input type="hidden" id="CSRF" data="{{ csrf_token }}" />
 
 <script src="{% static 'js/create_forum_answer.js' %}" type="text/javascript"></script>

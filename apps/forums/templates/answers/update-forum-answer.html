@@ -1,0 +1,14 @@
+{% extends 'base/_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} Update Forum Answer {% endblock title %}
+
+{% block body %}
+<h3>Update Your answer</h3><br>
+<form method="post"> {% csrf_token  %}
+    {{ form.answer | as_crispy_field }} <br>
+
+    <button class="btn btn-success">Update</button>
+</form>
+
+{% endblock body %}

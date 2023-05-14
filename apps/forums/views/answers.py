@@ -1,8 +1,9 @@
-from django.views.generic import ListView, View, DeleteView
+from django.forms.models import BaseModelForm
+from django.views.generic import ListView, View, UpdateView, DeleteView
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from forums.models import ForumAnswer
@@ -48,10 +49,31 @@ class ForumAnswerListView(ForumObject, ListView):
         context['model_content_type_id'] = content_type.id
         context['forum'] = self.forum
         return context
+
+
+class ForumAnswerUpdateView(LoginRequiredMixin, ForumObject, UpdateView):
     
+    template_name = 'answers/update-forum-answer.html'
+    fields = ['answer']
+
+    def get_object(self):
+        return get_object_or_404(
+            ForumAnswer, forum=self.forum, user=self.request.user,
+            id=self.kwargs['answer_id'],
+            token=self.kwargs['answer_token'],
+        )
+    
+    def form_valid(self, form):
+        messages.success(self.request, 'Answer Updated', 'success')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("forums:forum-answer-list", kwargs={"id" : self.forum.id, "slug" : self.forum.slug})
+
+
 class ForumAnswerDeleteView(LoginRequiredMixin, ForumObject, DeleteView):
     
-    template_name = 'answers/forum-answer-delete.html'
+    template_name = 'answers/delete-forum-answer.html'
 
     def get_object(self):
         return get_object_or_404(
@@ -61,8 +83,8 @@ class ForumAnswerDeleteView(LoginRequiredMixin, ForumObject, DeleteView):
         )
     
     def post(self, request, *args, **kwargs):
-        messages.success(request, 'Answer Deleted!', 'success')
+        messages.success(request, 'Answer Deleted!', 'danger')
         return super().post(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse_lazy("forums:forum-detail", kwargs={"id" : self.forum.id, "slug" : self.forum.slug})
+        return reverse_lazy("forums:forum-answer-list", kwargs={"id" : self.forum.id, "slug" : self.forum.slug})
