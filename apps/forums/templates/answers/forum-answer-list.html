@@ -18,8 +18,16 @@
                         <div class="d-flex justify-content-end">
                             <a href="{% url 'forums:update-forum-answer' forum.id forum.slug object.id object.token %}" class="btn btn-primary mr-2">Update</a>
                             <a href="{% url 'forums:delete-forum-answer' forum.id forum.slug object.id object.token %}" class="btn btn-danger">Delete</a>
+                            {% if request.user == forum.author %}
+                                {% if object.is_correct_answer %}
+                                    <a href="{% url 'forums:accept-forum-answer' forum.id forum.slug object.id object.token %}" class="btn btn-danger">Mark as InCorrect</a>
+                                {% else %}
+                                    <a href="{% url 'forums:accept-forum-answer' forum.id forum.slug object.id object.token %}" class="btn btn-success">Mark as Correct</a>
+                                {% endif %}
+                            {% endif %}
                         </div>
                     {% endif %}
+                    
                 </div>
             </div>
         {% empty %}

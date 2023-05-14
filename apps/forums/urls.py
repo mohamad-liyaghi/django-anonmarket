@@ -27,6 +27,11 @@ forum_answers_urlpatterns = [
         answers.ForumAnswerDeleteView.as_view(), 
         name="delete-forum-answer"
     ),
+    path(
+        "<int:id>/<str:slug>/answers/accept/<int:answer_id>/<str:answer_token>/", 
+        answers.ForumAnswerAcceptView.as_view(), 
+        name="accept-forum-answer"
+    ),
 ]
 
 urlpatterns = [

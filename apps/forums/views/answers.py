@@ -88,3 +88,23 @@ class ForumAnswerDeleteView(LoginRequiredMixin, ForumObject, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy("forums:forum-answer-list", kwargs={"id" : self.forum.id, "slug" : self.forum.slug})
+
+
+class ForumAnswerAcceptView(LoginRequiredMixin, ForumObject, UpdateView):
+    
+    template_name = 'answers/update-forum-answer.html'
+    fields = ['is_correct_answer']
+
+    def get_object(self):
+        return get_object_or_404(
+            ForumAnswer, forum=self.forum, forum__author=self.request.user.id,
+            id=self.kwargs['answer_id'],
+            token=self.kwargs['answer_token'],
+        )
+    
+    def form_valid(self, form):
+        messages.success(self.request, 'Answer updated', 'success')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("forums:forum-answer-list", kwargs={"id" : self.forum.id, "slug" : self.forum.slug})
