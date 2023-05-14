@@ -1,0 +1,26 @@
+{% load base_tags %}
+{% load static %}
+<input type="hidden" id="Answer-Url" data-url="{% url 'forums:create-forum-answer' object.id object.slug %}" />
+<input type="hidden" id="CSRF" data="{{ csrf_token }}" />
+
+<script src="{% static 'js/create_forum_answer.js' %}" type="text/javascript"></script>
+
+{% if request.user.is_authenticated %}
+    {% if object.closed %}
+        <h4>Forum is closed, you cannot add any answers to it</h4>
+    {% else %}
+        <div class="input-group mb-3">
+            <input type="text" name="body" id="id_answer" class="form-control" placeholder="Add Comment"  aria-describedby="basic-addon2">
+            <div class="input-group-append">
+            <button class="btn btn-outline-success" type="button" id="answer-submit"
+            onclick="create_forum_answer({{object.id}}, '{{object.slug}}')">
+                Submit
+            </button>
+            </div>
+        </div>
+    {% endif %}
+
+
+{% else %}
+    <a href={% url 'account_login' %}>Login to answer this object.</a>
+{% endif %}

@@ -6,7 +6,11 @@
 {% block body %}
 
 <div>
-    <h3>{{ forum.title }}</h3>
+        <h3 style='display: inline-block;'>{{ forum.title }}</h3>
+        {% if forum.closed %}
+            <h4 style="color: red; display: inline-block;">closed</h4>
+        {% endif %}
+    
     <hr>
     <small>Created by: <a href="{% url 'accounts:profile' forum.author.id forum.author.token %}">{{ forum.author }}</a>
     at: {{ forum.date }}</small>
@@ -24,6 +28,27 @@
     
     <h2>Rate this forum</h2>
     {% include "vote/vote.html" %}
+    <hr>
+    {% include "answers/create-forum-answer.html" %}
+    <hr>
+    <h2>Top Answers</h2><br>
+    <div id="top-answers-container" class="card-deck">
+        {% for answer in top_answers %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p class="card-text"><small class="text-muted">Answered by <a href='{% url 'accounts:profile' answer.user.id answer.user.token  %}'>{{ answer.user.username }}</a> on {{ answer.date }}</small> {% if answer.is_correct_answer %}
+                         <strong style="color: green;">Correct</strong>
+                    {% endif %}</p>
+                    <p class="card-text"> {{ answer.answer }}</p>
+                </div>
+            </div>
+        {% empty %}
+            <h3>No answers were found, Add a new one!.</h3>
+        {% endfor %}
+        <a href="{% url 'forums:forum-answer-list' forum.id forum.slug %}">Show all answers</a>
+    </div>
+
+
     <hr>
 </div>
 

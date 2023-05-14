@@ -1,7 +1,9 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericRelation
 from accounts.models import Account
 from .forum import Forum
 from forums.utils import unique_token_generator
+from votes.models import Vote
 
 class ForumAnswer(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='forum_answers')

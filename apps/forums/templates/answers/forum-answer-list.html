@@ -1,0 +1,37 @@
+{% extends 'base/_base.html' %}
+
+{% block title %} Forum Answer List {% endblock title %}
+
+{% block body %}
+    <h1>{{ forum.title }}</h1>
+    <hr>
+        <div class="card-deck">
+        {% for object in answers %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p class="card-text"><small class="text-muted">Answered by <a href='{% url 'accounts:profile' object.user.id object.user.token  %}'>{{ object.user.username }}</a> on {{ object.date }}</small> {% if object.is_correct_answer %}
+                         <strong style="color: green;">Correct</strong>
+                    {% endif %}</p>
+                    {% if object.is_edited %}<small style='color: red;'>Edited</small>{% endif %}
+                    <p class="card-text"> {{ object.answer }}</p>
+                    {% if request.user == object.user %}
+                        <div class="d-flex justify-content-end">
+                            <a href="{% url 'forums:update-forum-answer' forum.id forum.slug object.id object.token %}" class="btn btn-primary mr-2">Update</a>
+                            <a href="{% url 'forums:delete-forum-answer' forum.id forum.slug object.id object.token %}" class="btn btn-danger">Delete</a>
+                            {% if request.user == forum.author %}
+                                {% if object.is_correct_answer %}
+                                    <a href="{% url 'forums:accept-forum-answer' forum.id forum.slug object.id object.token %}" class="btn btn-danger">Mark as InCorrect</a>
+                                {% else %}
+                                    <a href="{% url 'forums:accept-forum-answer' forum.id forum.slug object.id object.token %}" class="btn btn-success">Mark as Correct</a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    
+                </div>
+            </div>
+        {% empty %}
+            <h3>No answers were found.</h3>
+        {% endfor %}
+    </div>
+{% endblock body %}

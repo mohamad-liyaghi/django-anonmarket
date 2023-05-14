@@ -49,7 +49,10 @@ class ForumDetailView(LoginRequiredMixin, DetailView):
     def get_object(self):
         return get_object_or_404(Forum, id=self.kwargs['id'], slug=self.kwargs['slug'])
     
-    # TODO add top answers
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['top_answers'] = self.get_object().answers.select_related('user').all().order_by('-is_correct_answer', '-date')[:5]
+        return context
 
 
 class ForumCreateView(LoginRequiredMixin, FormView):
