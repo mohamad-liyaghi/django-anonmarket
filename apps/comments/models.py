@@ -28,10 +28,7 @@ class Comment(models.Model):
 
 
     def __str__(self) -> str:
-        if not self.parent:
-            return f"Comment by {self.user}: {self.content[:20]}"
-
-        return f"Reply by {self.user}: {self.content[:20]}"
+        return str(self.user)
 
     def save(self, *args, **kwargs):
         if self.pk:

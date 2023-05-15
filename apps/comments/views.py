@@ -4,7 +4,6 @@ from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
 from comments.models import Comment
-import datetime
 
 
 def is_ajax(request):
@@ -19,29 +18,34 @@ class AddCommentView(LoginRequiredMixin, View):
         return redirect("product-list")
 
     def post(self, request):
-        if is_ajax(request):
+        if not is_ajax(request):
+            return redirect("product-list")
 
-            # check if object_id and content_type and comment content exists
-            if (object_id:=request.POST.get('object_id')) and \
-                (content_type_id:=request.POST.get('content_type_id')) and \
-                    (content:=request.POST.get('content')): 
-                
-                    content_type_model = get_object_or_404(ContentType, id=content_type_id)
-                    object = get_object_or_404(content_type_model.model_class(), id=object_id)
+        object_id = request.POST.get('object_id')
+        content_type_id = request.POST.get('content_type_id')
+        body = request.POST.get('body')
 
-                    time = datetime.datetime.now() - datetime.timedelta(minutes=5)
+        if not all([object_id, content_type_id, body]):
+            return JsonResponse({'error': 'invalid information'})
 
-                    if Comment.objects.filter(user=self.request.user, date__gte=time).count() <= 5:
-                        Comment.objects.create(user=request.user, content=content, 
-                                        content_object= object)
-                        return JsonResponse({'created':'Comment created'})                                                    
+        content_type = get_object_or_404(ContentType, id=content_type_id)
+        obj = get_object_or_404(content_type.model_class(), id=object_id)
 
-                    return JsonResponse({'limit-error':'more than 5 comments in 5 mins is not allowed'})            
+        comment = Comment.objects.create(
+            user=request.user,
+            body=body,
+            content_object=obj
+        )
 
+        response_data = {
+            'created': {
+                'user': comment.user.username,
+                'body': comment.body,
+                'date': comment.date
+            }
+        }
 
-            return JsonResponse({'error':'invalid information'})    
-
-        return redirect("product-list")
+        return JsonResponse(response_data)
 
 
 

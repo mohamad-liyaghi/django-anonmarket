@@ -4,9 +4,9 @@ from django.db.models import Q
 register = template.Library()
 
 @register.filter
-def get_object_comments(obj):
-    if obj.comment:
-        return obj.comment.filter(parent=None).order_by("-pinned", "-votes", "-date")
+def get_object_top_comments(obj):
+    if obj.comments:
+        return obj.comments.select_related('user').filter(parent=None).order_by("-is_pinned", "-votes", "-date")[:5]
 
     return None
 

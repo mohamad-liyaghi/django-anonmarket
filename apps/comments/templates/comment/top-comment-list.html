@@ -1,0 +1,47 @@
+{% load comment_tags %}
+{% load base_tags %}
+{% load static %}
+
+<style>
+.comment-user {
+    display: inline-block;
+    font-weight: bold;
+}
+
+.comment-date {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 14px;
+    color: #999;
+}
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card my-4">
+                <h3 class="card-header text-center">Comments</h3>
+                <div class="card-body">
+                    <ul class="list-unstyled" id="comment-list">
+                    {% for comment in object|get_object_top_comments %}
+                        <li class="media my-4">
+                            <div class="media-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="mt-0 comment-user">{{ comment.user }}</h5>
+                                        <p class="comment-date">{{ comment.date }}</p>
+                                    </div>
+                                </div>
+                                <p class="mb-0">{{ comment.body }}</p>
+
+                            </div>
+                        </li>
+                    {% empty %}
+                        No comment available
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

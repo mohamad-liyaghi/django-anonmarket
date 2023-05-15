@@ -108,6 +108,11 @@
         </div>
         <div class="card-footer w-100 text-muted">
             <hr>
+            <h3>Comments</h3>
+            {% include "comment/comment.html" %}
+        </div>
+        <div class="card-footer w-100 text-muted">
+            <hr>
             <h5><a class="dropdown-item" href="{% url 'article:article-list' %}?product={{product.slug}}">Product Articles</a></h5>
         </div>
 
