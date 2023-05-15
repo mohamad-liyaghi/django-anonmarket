@@ -12,13 +12,13 @@ class Comment(models.Model):
                             related_name="comments")
 
     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True,
-                                related_name="children")   
+                                related_name="replies")   
 
     date = models.DateTimeField(auto_now_add=True)                                
-    content = models.TextField()
+    body = models.TextField()
 
-    edited = models.BooleanField(default=False)
-    pinned = models.BooleanField(default=False)
+    is_edited = models.BooleanField(default=False)
+    is_pinned = models.BooleanField(default=False)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
@@ -33,9 +33,10 @@ class Comment(models.Model):
 
         return f"Reply by {self.user}: {self.content[:20]}"
 
-    @property
-    def is_edited(self):
-        return self.edited
+    def save(self, *args, **kwargs):
+        if self.pk:
+            self.is_edited = True
+        return super().save(*args, **kwargs)
     
 
 
