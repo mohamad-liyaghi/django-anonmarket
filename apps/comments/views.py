@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
-from comment.models import Comment
+from comments.models import Comment
 import datetime
 
 

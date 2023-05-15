@@ -1,7 +1,7 @@
 {% load base_tags %}
 {% load static %}
 
-<input type="hidden" id="Comment-Url" data-url="{% url 'comment:add-comment' %}" />
+<input type="hidden" id="Comment-Url" data-url="{% url 'comments:add-comment' %}" />
 <input type="hidden" id="CSRF" data="{{ csrf_token }}" />
 
 <script src="{% static 'js/add_comment.js' %}" type="text/javascript"></script>

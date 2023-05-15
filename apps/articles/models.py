@@ -4,7 +4,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from products.models import Product
 from accounts.models import Account
 from votes.models import Vote
-from comment.models import Comment
+from comments.models import Comment
 from articles.utils import unique_slug_generator, unique_token_generator
 
 

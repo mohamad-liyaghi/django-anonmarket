@@ -19,7 +19,7 @@ LOCAL_URLS = [
     path("forums/", include("apps.forums.urls")),
 
     path("vote/", include("apps.votes.urls")),
-    path("comment/", include("apps.comment.urls")),
+    path("comments/", include("apps.comments.urls")),
 ]
 
 urlpatterns = [
