@@ -1,10 +1,10 @@
-from django.views import View
+from django.views.generic import View, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
 from comments.models import Comment
-
+from comments.mixins import ObjectMixin
 
 def is_ajax(request):
     '''Check if a request is ajax or not'''
@@ -46,6 +46,13 @@ class AddCommentView(LoginRequiredMixin, View):
         }
 
         return JsonResponse(response_data)
+    
+class CommentListView(ObjectMixin, ListView):
+    template_name = 'comments/comment-list.html'
+    context_object_name = 'comments'
+
+    def get_queryset(self):
+        return self.object.comments.all().order_by('-is_pinned')
 
 
 

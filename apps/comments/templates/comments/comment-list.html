@@ -1,0 +1,29 @@
+{% extends 'base/_base.html' %}
+
+{% block title %} Comment List{% endblock title %}
+
+{% block body %}
+    <div class="card-deck">
+        {% for comment in comments %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p class="card-text"><small class="text-muted">Answered by <a href='{% url 'accounts:profile' comment.user.id comment.user.token  %}'>{{ comment.user.username }}</a> on {{ comment.date }} {% if comment.is_pinned %}
+                        [Pinned]
+                    {% endif %}</small> 
+                    </p>
+                    {% if comment.is_edited %}<small style='color: red;'>Edited</small>{% endif %}
+                    <a href="#"><p class="card-text"> {{ comment.body }}</p></a>
+                    {% if request.user == comment.user %}
+                        <div class="d-flex justify-content-end">
+                            <a href="#" class="btn btn-primary mr-2">Update</a>
+                            <a href="#" class="btn btn-danger">Delete</a>
+                        </div>
+                    {% endif %}
+                    
+                </div>
+            </div>
+        {% empty %}
+            <h3>No comments were found.</h3>
+        {% endfor %}
+    </div>
+{% endblock body %}
