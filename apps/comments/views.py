@@ -1,4 +1,5 @@
-from django.views.generic import View, ListView, UpdateView, DeleteView
+from typing import Any, Dict
+from django.views.generic import View, ListView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
@@ -56,6 +57,17 @@ class CommentListView(ObjectMixin, ListView):
     def get_queryset(self):
         return self.object.comments.all().order_by('-is_pinned')
 
+class CommentDetailView(LoginRequiredMixin, DetailView):
+     template_name = 'comments/comment-detail.html'
+     context_object_name = 'comment'
+
+     def get_object(self):
+          return get_object_or_404(Comment.objects.select_related('user'), id=self.kwargs['comment_id'])
+     
+     def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['replies'] = self.get_object().replies.all().order_by('-date')
+        return context
 
 class CommentUpdateView(LoginRequiredMixin, UpdateView):
     '''Update a comment by its writer'''
@@ -67,7 +79,7 @@ class CommentUpdateView(LoginRequiredMixin, UpdateView):
         return get_object_or_404(Comment, id=self.kwargs['comment_id'], user=self.request.user)
     
     def get_success_url(self) -> str:
-        return reverse_lazy("comments:comment-detail", kwargs={"id" : self.kwargs["comment_id"]})
+        return reverse_lazy("comments:comment-detail", kwargs={"comment_id" : self.kwargs["comment_id"]})
     
     def post(self, request, *args, **kwargs):
             messages.success(request, 'Comment updated.', 'success')
