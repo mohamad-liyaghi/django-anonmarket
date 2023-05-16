@@ -1,0 +1,67 @@
+{% extends 'base/_base.html' %}
+
+{% block title %}Comment Detail{% endblock title %}
+
+{% block body %}
+    
+  <input type="hidden" id="parentCommentID" data-url="{{comment.id}}" />
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title"><a href="{% url 'accounts:profile' comment.user.id comment.user.token %}">{{ comment.user }}</a></h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{ comment.date }}</h6>
+      {% if comment.is_pinned %}
+      <span class="badge badge-pill badge-warning mb-2">Pinned</span>
+      {% endif %}
+      {% if comment.is_edited %}
+      <span class="badge badge-pill badge-danger mb-2">Edited</span>
+      {% endif %}
+      <p class="card-text">{{ comment.body }}</p>
+      {% if request.user == comment.user %}
+      <div class="d-flex justify-content-end">
+        <a href="{% url 'comments:update-comment' comment.id %}" class="btn btn-primary mr-2">Edit</a>
+        <a href="{% url 'comments:delete-comment' comment.id %}" class="btn btn-danger">Delete</a>
+      </div> <br>
+      {% endif %}
+      {% include "vote/vote.html" %}
+    </div>
+  </div>
+  
+  <hr>
+  
+  <h3>Replies</h3>
+  {% include 'comments/create-comment.html' %}
+  {% if replies %}
+    <div class="container">
+      <div class="row">
+          <div class="col-md-12">
+              <div class="card my-4">
+                  <h3 class="card-header text-center">Comments</h3>
+                  <div class="card-body">
+                      <ul class="list-unstyled" id="comment-list">
+                      {% for reply in replies %}
+                          <li class="media my-4">
+                              <div class="media-body">
+                                  <div class="row">
+                                      <div class="col-md-6">
+                                          <h5 class="mt-0 comment-user">{{ reply.user }}</h5>
+                                          <p class="comment-date">{{ reply.date }}</p>
+                                      </div>
+                                  </div>
+                                  <a href="{% url 'comments:comment-detail' reply.id %}"><p class="mb-0">{{ reply.body }}</p></a>
+    
+                              </div>
+                          </li>
+                      {% empty %}
+                          No comment available
+                      {% endfor %}
+                      </ul>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  {% endif %}
+  
+{% endblock body %}
+
+

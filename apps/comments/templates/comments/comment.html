@@ -1,0 +1,7 @@
+{% load base_tags %}
+{% include 'comments/create-comment.html' %}
+
+{% include 'comments/top-comment-list.html' %}
+
+
+<a href="{% url 'comments:comment-list' object|get_model_content_type_id object.id %}" id="show-comments-link">Show all comments</a>

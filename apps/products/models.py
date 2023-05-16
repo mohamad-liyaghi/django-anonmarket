@@ -5,6 +5,7 @@ from django_countries.fields import CountryField
 
 from accounts.models import Account
 from votes.models import Vote
+from comments.models import Comment
 from products.utils import unique_slug_generator
 
 
@@ -26,6 +27,7 @@ class Product(models.Model):
     is_available = models.BooleanField(default=False)
 
     votes = GenericRelation(Vote, related_query_name="product_vote")
+    comments = GenericRelation(Comment, related_query_name="product_comment")
 
     def __str__(self):
         return self.title
