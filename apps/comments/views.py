@@ -1,8 +1,9 @@
-from django.views.generic import View, ListView
+from django.views.generic import View, ListView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
+from django.urls import reverse_lazy
 from comments.models import Comment
 from comments.mixins import ObjectMixin
 
@@ -54,6 +55,20 @@ class CommentListView(ObjectMixin, ListView):
     def get_queryset(self):
         return self.object.comments.all().order_by('-is_pinned')
 
+
+class CommentUpdateView(LoginRequiredMixin, UpdateView):
+    '''Update a comment by its writer'''
+    
+    template_name = 'comments/update-comment.html'
+    fields = ['body']
+
+    def get_object(self):
+        return get_object_or_404(Comment, id=self.kwargs['comment_id'], user=self.request.user)
+    
+    def get_success_url(self) -> str:
+        return reverse_lazy("comments:comment-detail", kwargs={"id" : self.kwargs["comment_id"]})
+
+    
 
 
 class CommentDeleteView(LoginRequiredMixin, View):
