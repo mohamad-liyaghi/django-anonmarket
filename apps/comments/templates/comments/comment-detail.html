@@ -4,9 +4,10 @@
 
 {% block body %}
     
+  <input type="hidden" id="parentCommentID" data-url="{{comment.id}}" />
   <div class="card mb-4">
     <div class="card-body">
-      <h5 class="card-title">{{ comment.user }}</h5>
+      <h5 class="card-title"><a href="{% url 'accounts:profile' comment.user.id comment.user.token %}">{{ comment.user }}</a></h5>
       <h6 class="card-subtitle mb-2 text-muted">{{ comment.date }}</h6>
       {% if comment.is_pinned %}
       <span class="badge badge-pill badge-warning mb-2">Pinned</span>
@@ -28,21 +29,39 @@
   <hr>
   
   <h3>Replies</h3>
-  
+  {% include 'comments/create-comment.html' %}
   {% if replies %}
-  <ul class="list-unstyled">
-    {% for reply in replies %}
-    <li class="media my-4">
-      <div class="media-body">
-        <h5 class="mt-0 mb-1">{{ reply.user }}</h5>
-        <p class="text-muted">{{ reply.date }}</p>
-        <p>{{ reply.body }}</p>
+    <div class="container">
+      <div class="row">
+          <div class="col-md-12">
+              <div class="card my-4">
+                  <h3 class="card-header text-center">Comments</h3>
+                  <div class="card-body">
+                      <ul class="list-unstyled" id="comment-list">
+                      {% for reply in replies %}
+                          <li class="media my-4">
+                              <div class="media-body">
+                                  <div class="row">
+                                      <div class="col-md-6">
+                                          <h5 class="mt-0 comment-user">{{ reply.user }}</h5>
+                                          <p class="comment-date">{{ reply.date }}</p>
+                                      </div>
+                                  </div>
+                                  <a href="{% url 'comments:comment-detail' reply.id %}"><p class="mb-0">{{ reply.body }}</p></a>
+    
+                              </div>
+                          </li>
+                      {% empty %}
+                          No comment available
+                      {% endfor %}
+                      </ul>
+                  </div>
+              </div>
+          </div>
       </div>
-    </li>
-    {% endfor %}
-  </ul>
-  {% else %}
-  <p class="text-muted">No replies yet.</p>
+    </div>
   {% endif %}
   
 {% endblock body %}
+
+

@@ -23,13 +23,32 @@ class AddCommentView(LoginRequiredMixin, View):
     def post(self, request):
         if not is_ajax(request):
             return redirect("product-list")
-
+        parent_id = request.POST.get('parent_id')
         object_id = request.POST.get('object_id')
         content_type_id = request.POST.get('content_type_id')
         body = request.POST.get('body')
 
         if not all([object_id, content_type_id, body]):
             return JsonResponse({'error': 'invalid information'})
+        
+        if parent_id:
+            # Reply if there is any parent id.
+            parent_comment = get_object_or_404(Comment, id=parent_id)
+            comment = Comment.objects.create(
+                user=request.user,
+                body=body,
+                content_object=parent_comment,
+                parent=parent_comment
+            )
+            response_data = {
+            'created': {
+                'user': comment.user.username,
+                'body': comment.body,
+                'date': comment.date
+                }
+            }
+            return JsonResponse(response_data)
+            
 
         content_type = get_object_or_404(ContentType, id=content_type_id)
         obj = get_object_or_404(content_type.model_class(), id=object_id)
@@ -66,7 +85,7 @@ class CommentDetailView(LoginRequiredMixin, DetailView):
      
      def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['replies'] = self.get_object().replies.all().order_by('-date')
+        context['replies'] = self.get_object().replies.select_related('user').all().order_by('-date')
         return context
 
 class CommentUpdateView(LoginRequiredMixin, UpdateView):

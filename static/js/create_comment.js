@@ -1,4 +1,6 @@
 var objectContentTypeId = document.getElementById("objectContentTypeId").value;
+var parentCommentID = document.getElementById("parentCommentID").getAttribute("data-url");
+
 
 function add_comment(object_id){
 
@@ -11,6 +13,7 @@ function add_comment(object_id){
             object_id: object_id,
             content_type_id: objectContentTypeId,
             body: comment_content.value,
+            parent_id: parentCommentID,
             csrfmiddlewaretoken: $("#CSRF").attr("data"),
             action: 'post'
         },
@@ -32,7 +35,6 @@ function add_comment(object_id){
                 comment_list.insertAdjacentHTML('afterbegin', new_comment);
             }
             comment_content.value = "";
-            console.log(json)
             
         },
     })

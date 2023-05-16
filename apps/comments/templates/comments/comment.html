@@ -5,12 +5,3 @@
 
 
 <a href="{% url 'comments:comment-list' object|get_model_content_type_id object.id %}" id="show-comments-link">Show all comments</a>
-
-<script>
-    {% comment %} const objectContentTypeId = parseInt(document.getElementById('objectContentTypeId').value);
-    const objectId = {{ object.id }};
-    const showCommentsLink = document.getElementById('show-comments-link');
-    const commentsUrl = "{% url 'comments:comment-list' " + objectContentTypeId + " " + objectId + " %}";
-
-    showCommentsLink.href = commentsUrl;
-</script> {% endcomment %}
