@@ -1,9 +1,10 @@
-from django.views.generic import View, ListView, UpdateView
+from django.views.generic import View, ListView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse_lazy
+from django.contrib import messages
 from comments.models import Comment
 from comments.mixins import ObjectMixin
 
@@ -58,7 +59,7 @@ class CommentListView(ObjectMixin, ListView):
 
 class CommentUpdateView(LoginRequiredMixin, UpdateView):
     '''Update a comment by its writer'''
-    
+
     template_name = 'comments/update-comment.html'
     fields = ['body']
 
@@ -67,32 +68,20 @@ class CommentUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_success_url(self) -> str:
         return reverse_lazy("comments:comment-detail", kwargs={"id" : self.kwargs["comment_id"]})
+    
+    def post(self, request, *args, **kwargs):
+            messages.success(request, 'Comment updated.', 'success')
+            return super().post(request, *args, **kwargs)
 
     
 
+class CommentDeleteView(LoginRequiredMixin, DeleteView):
+        template_name = 'comments/delete-comment.html'
+        success_url = '/'
 
-class CommentDeleteView(LoginRequiredMixin, View):
-    def get(self, request):
-        return redirect("orders:")
-
-    def post(self, request):
-        if is_ajax(request):
-            # check if object_id and content_type and comment content exists
-            if (object_id:=request.POST.get('object_id')) and \
-                (content_type_id:=request.POST.get('content_type_id')) and \
-                    (comment_id:=request.POST.get('comment_id')): 
-                
-                    content_type_model = get_object_or_404(ContentType, id=content_type_id)
-                    object = get_object_or_404(content_type_model.model_class(), id=object_id)
-                    comment = object.comment.filter(user=self.request.user, id=comment_id)
-
-                    if comment:
-                        comment.first().delete()
-                        return JsonResponse({'deleted':'Comment deleted'})                      
-
-                    return JsonResponse({'not found':'Comment does not found'})
-
-
-            return JsonResponse({'error':'invalid information'})    
-
-        return redirect("product-list")
+        def get_object(self):
+            return get_object_or_404(Comment, id=self.kwargs['comment_id'], user=self.request.user)
+        
+        def post(self, request, *args, **kwargs):
+            messages.success(request, 'Comment deleted.', 'danger')
+            return super().post(request, *args, **kwargs)

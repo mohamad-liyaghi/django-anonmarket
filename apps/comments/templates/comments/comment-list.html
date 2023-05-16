@@ -16,7 +16,7 @@
                     {% if request.user == comment.user %}
                         <div class="d-flex justify-content-end">
                             <a href="{% url 'comments:update-comment' comment.id %}" class="btn btn-primary mr-2">Update</a>
-                            <a href="#" class="btn btn-danger">Delete</a>
+                            <a href="{% url 'comments:delete-comment' comment.id %}" class="btn btn-danger">Delete</a>
                         </div>
                     {% endif %}
                     
