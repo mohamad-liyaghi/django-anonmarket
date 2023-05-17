@@ -7,9 +7,7 @@
         {% for comment in comments %}
             <div class="card mb-3">
                 <div class="card-body">
-                    <p class="card-text"><small class="text-muted">Answered by <a href='{% url 'accounts:profile' comment.user.id comment.user.token  %}'>{{ comment.user.username }}</a> on {{ comment.date }} {% if comment.is_pinned %}
-                        [Pinned]
-                    {% endif %}</small> 
+                    <p class="card-text"><small class="text-muted">Answered by <a href='{% url 'accounts:profile' comment.user.id comment.user.token  %}'>{{ comment.user.username }}</a> on {{ comment.date }}</small> 
                     </p>
                     {% if comment.is_edited %}<small style='color: red;'>Edited</small>{% endif %}
                     <a href="{% url 'comments:comment-detail' comment.id %}"><p class="card-text"> {{ comment.body }}</p></a>

@@ -18,7 +18,6 @@ class Comment(models.Model):
     body = models.TextField()
 
     is_edited = models.BooleanField(default=False)
-    is_pinned = models.BooleanField(default=False)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()

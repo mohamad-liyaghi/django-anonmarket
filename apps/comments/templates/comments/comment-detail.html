@@ -9,9 +9,6 @@
     <div class="card-body">
       <h5 class="card-title"><a href="{% url 'accounts:profile' comment.user.id comment.user.token %}">{{ comment.user }}</a></h5>
       <h6 class="card-subtitle mb-2 text-muted">{{ comment.date }}</h6>
-      {% if comment.is_pinned %}
-      <span class="badge badge-pill badge-warning mb-2">Pinned</span>
-      {% endif %}
       {% if comment.is_edited %}
       <span class="badge badge-pill badge-danger mb-2">Edited</span>
       {% endif %}

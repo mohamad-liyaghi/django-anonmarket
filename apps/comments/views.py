@@ -74,7 +74,7 @@ class CommentListView(ObjectMixin, ListView):
     context_object_name = 'comments'
 
     def get_queryset(self):
-        return self.object.comments.all().order_by('-is_pinned')
+        return self.object.comments.select_related('user').all().order_by('-votes')
 
 class CommentDetailView(LoginRequiredMixin, DetailView):
      template_name = 'comments/comment-detail.html'
