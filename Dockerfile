@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python:3.11-alpine
 
 ENV PYTHONUNBUFFERED=1
 
@@ -6,9 +6,9 @@ WORKDIR /backend
 
 RUN pip install --upgrade pip 
 
-COPY requirement.txt /backend
+COPY requirements.txt /backend
 
-RUN pip install -r requirement.txt
+RUN pip install -r requirements.txt
 
 COPY . /backend
 

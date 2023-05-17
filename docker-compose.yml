@@ -22,9 +22,10 @@ services:
     
     depends_on:
       - db
+      - redis
 
   db:
-    image: postgres:11
+    image: postgres:12
 
     container_name: database
     restart: on-failure
@@ -34,3 +35,11 @@ services:
 
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
+
+  redis:
+    image: redis:6.2-alpine
+    
+    ports:
+      - 6379:6379
+
+    restart: always
