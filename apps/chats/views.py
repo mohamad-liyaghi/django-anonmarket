@@ -21,6 +21,9 @@ class ChatCreateView(LoginRequiredMixin, ChatExistsMixin, View):
 
     def get(self, request, *args, **kwargs):
         chat = Chat.objects.create()
+        if self.participant == request.user:
+            messages.success(request, 'You cannot contact yourself!', 'danger')
+            return redirect('product-list')
         set_chat_participant(participant_model=ChatParticipant,chat=chat, participants=[self.request.user, self.participant])
         messages.success(request, 'Chat created successfully', 'success')
         return redirect('chats:chat-detail', id=chat.id, code=chat.code)

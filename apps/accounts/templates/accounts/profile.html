@@ -12,24 +12,14 @@
 <hr>
 <p>You can also rate this user via links below</p>
 {% include "vote/vote.html" %}
-<br><a href="{% url 'chats:create-chat' user.id user.token %}">Contact This User</a>
+{% if user.id != request.user.id %}
+    <br><a href="{% url 'chats:create-chat' user.id user.token %}">Contact This User</a>
+{% endif %}
 <hr>
-<h6>Products:</h6>
-{% for product in products %}
-    <div class="card" style="width: 18rem; display:inline-block;">
-          {% if product.picture %}
-            <img class="card-img-top" src="{{ product.picture.url }}" alt="Card image cap" width="70px;" height="250px;">
-          {% endif %}
-          <div class="card-body">
-              <a href="{% url 'products:product-detail' product.id product.slug %}"> <p class="card-text">{{ product.title }}</p> </a>
-              <hr>
-              <p class="card-text">©{{ product.price }}</p>
-          </div>
-    </div>
-{% empty %}
-    <h6>This User has not added any product yet.</h6>
-{% endfor %}
+
 <hr>
-<h6>Articles:</h6>
-<a href="{% url 'article:article-list' %}?user={{user.token}}">User Articles List</a>
+<h6>Links:</h6>
+<a href="{% url 'products:product-list' %}?user={{user.token}}">User Products List</a> <br>
+<a href="{% url 'article:article-list' %}?user={{user.token}}">User Articles List</a> <br>
+<a href="{% url 'forums:forum-list' %}?user={{user.token}}">User Forums List</a>
 {% endblock body %}

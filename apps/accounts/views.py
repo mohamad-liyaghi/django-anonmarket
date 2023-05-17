@@ -16,10 +16,6 @@ class ProfileView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ProfileView, self).get_context_data(**kwargs)
-        # TODO remove query and add links
-        # context['products'] = self.get_object().products.all().order_by("-votes")
-        # context["articles"] = self.get_object().articles.all().filter(published=True)[:5]
-
         return context
 
 
