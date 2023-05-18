@@ -1,118 +1,96 @@
-# Django AnonMarket
-
 ## Introduction
-<p>
-D-A-M (Django Anon Market) is an online shop that users can shop  anonymously. <br><br>
-The reason that we call it anonymous is that users can not be tracked by their banking logs cuz they are not using real money, they pay for orders using website currency. <br><br>
-Users can create an account and exchange their money to websites digital currency and order items. <br> <br>
-This project contains 6 applications. <br>
+Django AnonMarket is an online marketplace that allows users to shop anonymously using website currency instead of real money. 
+<br>
+As an anonymous marketplace, Django AnonMarket prioritizes the privacy and security of its users, allowing them to enjoy a level of anonymity where nobody can keep track of them by being careful and following best practices.
+<br>Users can create an account, exchange real money to website currency, and order products from the website. They can also add their own products for sale. 
+<br>
 
-</p>
-<ol>
-  <li>Authentication</li>
-  <li>Vendor</li>
-  <li>Customer</li>
-  <li>Forum</li>
-  <li>Blog</li>
-  <li>Messages</li>
-</ol>
+The project consists of several modular and scalable applications: 
 
-### Authentication
-<p>
-    This project is using django-allauth package for authentication purposes but they are other functionalities that are stored in Auth app, such as:
-</p>
-<ol>
-  <li>User Profile page</li>
-  <li>Exchange Money</li>
-  <li>Rate a user</li>
-</ol>
+- Accounts
+- Products
+- Orders
+- Forums
+- Articles
+- Chats
+- Votes
+- Comments
 <hr>
 
-### Vendor
-<p>
-    This application is only for Selling purposes. vendors can simply Add product or manage customer orders. other features:   
-</p>
-<ol>
-  <li>Update/Delete Product.</li>
-  <li>Rate Products.</li>
-  <li>Accept/Decline User Orders</li>
-  <li>Other Order Management like send product & list of products.</li>
-</ol>
+## Here's a complete overview of each application:
+
+### Accounts
+The Accounts app is responsible for user authentication and includes additional functionalities such as a user profile page, registration, login, and logout. Django Allauth is used for authentication.
+
+- User Profile page: Allows users to view and edit their profile information.
+- Registration: Allows new users to register.
+- Login: Allows users to log in.
+- Logout: Allows users to log out.
+
+### Products
+The Products app is responsible for managing products and includes functionalities such as adding, updating, and deleting products, and searching for products.
+
+- Add/Delete Product: Allows vendors to add or delete products .
+- Update Product: Allows vendors to update product information.
+- Search Products: Allows customers to search for products.
+
+### Orders
+The Orders app is responsible for managing user orders and includes functionalities such as adding or deleting orders, paying for orders, and viewing a list of orders.
+
+- Add/Delete Order: Allows users to add or delete orders [Ajax] .
+- Pay for Orders: Allows users to pay for their orders using website currency.
+- Orders List: Allows users to view a list of their orders.
+
+### Chats
+The Chats app is responsible for communication between customers and vendors through a real-time messaging system using Django Channels.
+
+- Send Message: Allows customers to send new messages [Socket].
+- Update/Delete Message: Allows customers to update or delete messages [Socket].
+- Chat List: Allows customers to view a list of their chats.
+
+### Forums
+The Forums app allows users to create and participate in forums to discuss products or providers.
+
+- Create/Update/Delete Forum: Allows users to create, update, or delete forums.
+- Answer Forums: Allows users to answer forums.
+- Close Forum: Allows users to close forums.
+
+### Articles
+The Articles app is a simple blogging platform that vendors can use to write articles for advertising purposes. It includes a rating/comment system and an option for users to purchase access to VIP articles.
+
+- Create/Update/Delete Article: Allows vendors to create, update, or delete articles.
+- Rating/Comment System: Allows users to rate and comment on articles.
+- Buy Article: Allows users to purchase access to VIP articles.
 <hr>
 
-### Customer
-<p>
-       As its obvious from its name, this app is for Selling purposes. Users can Order Products and pay for it.
-</p>
-<ol>
-  <li>Add/Delete Order.</li>
-  <li>Pay for Orders.</li>
-  <li>Orders list and so on.</li>
-</ol>
+## Generic apps 
+
+### Votes
+The Votes app is a generic app that provides functionalities for users to vote on any model in the project.
+
+- Add/Delete Vote: Allows users to add or delete votes [Ajax].
+
+### Comments
+The Comments app is a generic app that provides functionalities for users to comment on any model in the project.
+
+- Add/Delete Comment: Allows users to add or delete comments [Ajax].
+- Comment list
+
 <hr>
 
-### Message
-<p>
-       This application is for communicating purposes. Customers can communicate with vendors, in order to ask questions and so on.
-</p>
-<ol>
-  <li>Send Message.</li>
-  <li>Update/Delete Message.</li>
-  <li>Chat List.</li>
-</ol>
-<hr>
+## How to use
+To use the project, follow these steps:
 
-### Blog
-<p>
-       This application is a simple blog that vendors can write articles for advertising purposes. <br>
-        Also it is possible to create a vip article and people must pay in order to access that article.
-</p>
-<ol>
-  <li>Create/Update/Delete Article.</li>
-  <li>Rate/Comment System.</li>
-  <li>Chat List.</li>
-  <li>Buy Article.</li>
+1. Clone the repository and navigate to the project directory:
+   ```
+   git clone https://github.com/mohamad-liyaghi/django-anonmarket.git && cd django-anonmarket
+   ```
+   
+2. Run it via docker:
+   ````
+   docker-compose up --build
+   ```````
 
-</ol>
-<hr>
+5. Go to http://127.0.0.1/ to access the website.
 
-### Forum
-<p>
-       Users can also create Forums in order to ask questions from people. they can ask about a product or provider for insuring that the provider is reliable. <br>
-        Same as articles, forums can be vip too, People needs to purchase that forum in order to access its comments.
-</p>
-<ol>
-  <li>Create/Update/Delete Forum.</li>
-  <li>Answer Forums.</li>
-  <li>Close forum.</li>
-  <li>Purchase forum</li>
-
-</ol>
-<hr>
-
-## How to use?
-
-### First you have to clone this project and cd to the source folder.
-
-```commandline
-$ git clone https://github.com/mohamad-liyaghi/django-anonmarket.git && cd django-anonmarket 
-```
-
-### If you have docker installed of your pc, you can run the project with one command
-
-```commandline
-   $ docker-compose up --build
-```
-
-### Otherwise You have to follow this steps.
-
-```commandline
-    $ pip install -r requirement.txt
-```
-
-```commandline
-    $ python manage.py migrate && python manage.py runserver --insecure
-```
-
-
-<small>Good luck.</small>
+That's it! Enjoy using Django AnonMarket.
