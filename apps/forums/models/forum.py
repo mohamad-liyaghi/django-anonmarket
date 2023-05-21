@@ -10,7 +10,7 @@ class Forum(models.Model):
     '''The Forum model'''
 
     title = models.CharField(max_length=250)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=100)
 
     body = models.TextField()
 

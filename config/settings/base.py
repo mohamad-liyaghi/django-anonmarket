@@ -22,6 +22,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'allauth',
     'allauth.account',
+    'channels',
+    'channels_redis',
 
     # local apps
     'apps.accounts.apps.AccountsConfig',

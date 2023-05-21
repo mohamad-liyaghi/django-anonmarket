@@ -7,8 +7,7 @@ services:
     build: .
     command: sh docker-entrypoint.sh
 
-
-    container_name: backend
+    container_name: anonmarket-backend
     restart: on-failure
 
     ports:
@@ -26,10 +25,35 @@ services:
     networks:
       - backend_network
 
+  websocket:
+
+    image: django-anonmarket-backend
+    command: 'daphne -b 0.0.0.0 -p 9000 config.asgi:websocket_application'
+
+    container_name: anonmarket-websocket
+    restart: on-failure
+
+    ports:
+      - 9000:9000
+
+    volumes:
+      - .:/backend      
+
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.production
+    
+    depends_on:
+      - db
+      - redis
+      - backend
+
+    networks:
+      - backend_network
+
   db:
     image: postgres:12
 
-    container_name: database
+    container_name: anonmarket-database
     restart: on-failure
 
     ports: 
@@ -43,15 +67,18 @@ services:
 
   redis:
     image: redis:6.2-alpine
+    container_name: anonmarket-redis
     
     ports:
       - 6379:6379
 
     restart: always
+    networks:
+      - backend_network
 
   nginx:
     image: nginx
-    container_name: nginx
+    container_name: anonmarket-nginx
     restart: always
     ports:
       - 80:80

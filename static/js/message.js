@@ -6,7 +6,8 @@ const userName = document.getElementById('username').textContent;
 // create a connection
 const chatSocket = new WebSocket(
     'ws://'
-    + window.location.host
+    + window.location.hostname
+    + ':9000'
     + '/ws/chats/'
     + chatID
     + '/'

@@ -10,7 +10,7 @@ from articles.utils import unique_slug_generator, unique_token_generator
 
 class Article(models.Model):
     title = models.CharField(max_length=250)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=100)
 
     body = models.TextField()
 
