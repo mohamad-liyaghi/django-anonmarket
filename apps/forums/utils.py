@@ -15,7 +15,7 @@ def unique_slug_generator(title:str, cls):
     return slug
 
 def unique_token_generator(cls):
-    token = secrets.token_hex(randint(1, 20))
+    token = secrets.token_hex()[:randint(1, 19)]
     if cls.objects.filter(token=token).exists():
         unique_token_generator(cls)
     

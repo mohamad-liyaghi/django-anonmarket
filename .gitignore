@@ -8,3 +8,4 @@ venv/
 db.sqlite3
 media/
 static/admin
+postgres-data

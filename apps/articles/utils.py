@@ -7,7 +7,7 @@ def unique_slug_generator(title:str, cls):
 
     slugified_title = slugify(title)
 
-    prefix = secrets.token_hex(randint(1, 5))
+    prefix = secrets.token_hex()[:randint(1, 5)]
     slug = slugified_title + prefix
 
     # Check if user with this token does not exist
@@ -18,7 +18,7 @@ def unique_slug_generator(title:str, cls):
 
 def unique_token_generator(cls):
     '''Create unique token for each article purchase'''
-    token = secrets.token_hex(randint(1, 20))
+    token = secrets.token_hex()[:randint(1, 19)]
     if cls.objects.filter(token=token).exists():
         unique_token_generator(cls)
     

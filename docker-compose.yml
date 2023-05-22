@@ -65,6 +65,9 @@ services:
     networks:
       - backend_network
 
+    volumes:
+            - /var/lib/postgresql/data:/var/lib/postgresql/data
+
   redis:
     image: redis:6.2-alpine
     container_name: anonmarket-redis
