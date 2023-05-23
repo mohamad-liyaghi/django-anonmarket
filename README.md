@@ -93,4 +93,35 @@ To use the project, follow these steps:
 
 5. Go to http://127.0.0.1/ to access the website.
 
-That's it! Enjoy using Django AnonMarket.
+
+## Shots
+
+### Product List
+<img src='https://github.com/mohamad-liyaghi/django-anonmarket/blob/main/shots/sample-product-list.jpg' alt='sample-product-list'>
+
+### Product Detail
+
+<img src='https://github.com/mohamad-liyaghi/django-anonmarket/blob/main/shots/sample-product-detail.jpg' alt='sample-product-detail'>
+
+### Order List
+
+<img src='https://github.com/mohamad-liyaghi/django-anonmarket/blob/main/shots/sample-order-list.jpg' alt='sample-order-list'>
+
+### Article List
+<img src='https://github.com/mohamad-liyaghi/django-anonmarket/blob/main/shots/sample-article-list.jpg' alt='sample-order-list'>
+
+### Article Detail
+
+<img src='https://github.com/mohamad-liyaghi/django-anonmarket/blob/main/shots/sample-article-detail.jpg' alt='sample-order-detail'>
+
+### Forum Detail
+
+<img src='https://github.com/mohamad-liyaghi/django-anonmarket/blob/main/shots/sample-forum-detail.jpg' alt='sample-forum-detail'>
+
+### Forum Answer
+
+<img src='https://github.com/mohamad-liyaghi/django-anonmarket/blob/main/shots/sample-forum-answer.jpg' alt='sample-forum-answer'>
+
+### Chat Detail
+
+<img src='https://github.com/mohamad-liyaghi/django-anonmarket/blob/main/shots/sample-real-time-chat.jpg' alt='sample-chat-detail'>
