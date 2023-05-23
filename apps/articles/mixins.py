@@ -11,4 +11,4 @@ class ArticleAccessMixin:
         if article.price == 0 or request.user == article.author or user.article_purchases.filter(article=article).exists():
             return super().dispatch(request, *args, **kwargs)
         
-        return redirect('article:purchase-article')
+        return redirect('article:purchase-article', id=article.id, slug=article.slug)

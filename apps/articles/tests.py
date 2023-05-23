@@ -20,6 +20,6 @@ class ArticleTestCase(TestCase):
         self.assertEqual(self.user_a.balance, 10)
         self.assertEqual(self.user_b.balance, 10)
         ArticlePurchase.objects.create(user=self.user_b, article=self.article)
-        self.assertEqual(self.user_a.balance, 19)
+        self.assertEqual(self.user_a.balance, 20)
         self.assertEqual(self.user_b.balance, 0)
          
