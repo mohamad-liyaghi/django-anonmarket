@@ -5,13 +5,14 @@ services:
   backend:
 
     build: .
+    image: anonmarket-backend
     command: sh docker-entrypoint.sh
 
     container_name: anonmarket-backend
     restart: on-failure
 
-    ports:
-      - 8000:8000
+    expose:
+      - 8000
 
     volumes:
       - .:/backend      
@@ -27,7 +28,7 @@ services:
 
   websocket:
 
-    image: django-anonmarket-backend
+    image: anonmarket-backend
     command: 'daphne -b 0.0.0.0 -p 9000 config.asgi:websocket_application'
 
     container_name: anonmarket-websocket
