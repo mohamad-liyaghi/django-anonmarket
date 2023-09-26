@@ -1,4 +1,12 @@
 #!/bin/bash
 
-echo "Apply database migrations and run"
-python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000
+echo "Apply database migrations"
+
+python manage.py makemigrations
+python manage.py migrate
+
+echo "Collecting statis files"
+python manage.py collectstatic --noinput
+
+echo "Running the server"
+gunicorn config.wsgi:application --bind 0.0.0.0:8000

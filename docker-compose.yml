@@ -7,19 +7,14 @@ services:
     build: .
     image: anonmarket-backend
     command: sh docker-entrypoint.sh
-
     container_name: anonmarket-backend
     restart: on-failure
-
     expose:
       - 8000
-
     volumes:
-      - .:/backend      
-
+      - .:/backend
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings.production
-    
     depends_on:
       - db
       - redis
@@ -53,29 +48,22 @@ services:
 
   db:
     image: postgres:12
-
     container_name: anonmarket-database
     restart: on-failure
-
-    ports: 
-          - "5432:5432"
-
+    expose:
+      - 5432
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
-    
     networks:
       - backend_network
-
     volumes:
             - /var/lib/postgresql/data:/var/lib/postgresql/data
 
   redis:
     image: redis:6.2-alpine
     container_name: anonmarket-redis
-    
-    ports:
-      - 6379:6379
-
+    expose:
+      - 6379
     restart: always
     networks:
       - backend_network
